@@ -1,0 +1,8 @@
+- app flow (screen by screen, wireframe)
+- update player position on minimap
+- lap counter
+- lap timer
+
+- draw brake tracks (burnin' rubber)
+
+- multiplayer (nodejs -> firehost?)

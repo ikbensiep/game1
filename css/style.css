@@ -46,6 +46,90 @@ dd {
     margin-right: 20px;
 }
 
+#menu {
+    position: absolute;
+    z-index: 20;
+    width: calc(100% - 4em);
+    background-color: rgba(0,0,0,0.7);
+    top: 2em;
+    bottom: 2em;
+    left: 2em;
+    transition: all .5s;
+}
+
+#menu.closed { 
+	opacity: 0;
+	transform: translateY(-100vh);
+}
+
+#menu h1 {
+	text-align: center;
+}
+
+#menu ul {
+	list-style: none;
+	text-align: center;
+}
+#menu ul li {
+	display: inline-block;
+}
+
+#menu ul label {
+	cursor: pointer;
+}
+
+#menu ul input {
+	opacity: 0;
+}
+
+#menu ul input ~ span {
+	display: block;
+	height: 130px;
+	width: 210px;
+	position: relative;
+	background-position: -60px -27px;
+	background-size: 250px;
+	-webkit-filter: grayscale(1);
+	transform: scale(0.8);
+	transition: all .7s;
+
+}
+
+#menu ul input:checked ~ span {
+	-webkit-filter: grayscale(0);
+	transform: scale(1);
+}
+
+#menu ul input:checked ~ span:after {
+    content: "";
+    display: block;
+    background-color: transparent;
+    height: 20px;
+    width: 20px;
+    border: 1px solid white;
+    transform: rotateZ(45deg);
+    border-bottom: 0;
+    border-right: 0;
+    position: absolute;
+    top: 110px;
+    left: 60px;
+}
+
+input[value="porsche"] ~ span {
+    background-image: url(../img/porsche-0.png);
+}
+
+input[value="lamborghini"] ~ span {
+    background-image: url(../img/lamborghini-0.png);
+}
+
+#menu button {
+	display: block;
+	padding: 1em;
+	border-radius: .5em;
+	margin: 0 auto;
+}
+
 #game {
 	position: absolute;
 	left: 0;
@@ -57,9 +141,8 @@ dd {
 	margin: 0 auto;
 	
 	box-shadow: inset 0 0 100px 10px black;
-	opacity: .95;
 	transform: scale(1);
-	transition: opacity 2s .5s, transform .5s .5s;
+	transition: opacity 2s .5s, transform 2.5s .5s;
 	background: rgb(37,73,0);
 	/*
 	background: #919293 url(../img/hpr-track-map-large.gif);
@@ -98,8 +181,8 @@ dd {
 }
 
 body[unresolved] #game {
-	opacity: 0;
-	transform: scale(2);
+	opacity: 0.5;
+	transform: rotateX(45deg) rotateZ(180deg) scale(2);
 }
 
 body[unresolved] #minimap {

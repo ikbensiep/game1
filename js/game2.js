@@ -6,6 +6,7 @@ var Game = function() {
 Game.prototype = {
 
 	keys : [],
+	team: 'porsche',
 	car : null,
 	ctx : null,
 
@@ -13,8 +14,14 @@ Game.prototype = {
 	lapstarttime: new Date().getTime(),
 	laptime: null,
 	req: null,
+	
+	setup: function () {
+		window.addEventListener("change", this.radio_handler.bind(this), false);
+		window.addEventListener("click", this.button_handler.bind(this), false);
+	},
 
 	init : function() {
+		console.log(this.team);
 		//this.time = new Date().getTime() / 1000;
 		hud = document.querySelector('output');
 		canvas = document.getElementById("game");
@@ -28,7 +35,7 @@ Game.prototype = {
 			name: 'Barcelona',
 			images: ['img/track.svg?r=' + Math.floor(Math.random() * 100)],
 			x: 0,
-			y: 7000,
+			y: 4350,
 			height: 3200 * 6,
 			width: 3200 * 6
 		});
@@ -37,7 +44,7 @@ Game.prototype = {
 			name: 'Barcelona racetrack objects',
 			images: ['img/track-bridges.svg?r=' + Math.floor(Math.random() * 100)],
 			x: 0,
-			y: 7000,
+			y: 4350,
 			height: 3200 * 6,
 			width: 3200 * 6
 		});
@@ -50,8 +57,8 @@ Game.prototype = {
 		this.car = new Sprite({
 			name: 'user1',
 			images: [
-				'img/porsche-0.png',
-				'img/porsche-1.png'
+				'img/' + this.team + '-0.png',
+				'img/' + this.team + '-1.png'
 			],
 			x: canvas.width / 2,
 			y: canvas.height / 2,
@@ -70,6 +77,7 @@ Game.prototype = {
 		window.addEventListener("keydown", this.keydown_handler.bind(this), false);
 		window.addEventListener("keyup", this.keyup_handler.bind(this), false);
 		
+		
 		document.body.removeAttribute('unresolved');
 
 		setInterval(function() {
@@ -81,13 +89,15 @@ Game.prototype = {
 				document.querySelector('.laptimes').appendChild(li);
 			})
 
-		}.bind(this), 1000);
-
+		}.bind(this), 200);
 		this.req = window.requestAnimationFrame(this.draw.bind(this));	
+		
 	},
+
 
 	draw : function() {
 		this.checkUserInput();
+
 		this.engine.updateEngine(this.car.speed);
 
 		this.drawHUD();
@@ -111,14 +121,19 @@ Game.prototype = {
 	checkGroundType: function () {
 		var image = this.ctx.getImageData(canvas.width/2, canvas.height/2, 1,1);
 		
-		if (image.data[0] > 40 || image.data[0] == 0) {
-			this.car.maxspeed = 20;
-		} else {
+		if (image.data[0] == 26) {
 			this.car.maxspeed = 50;
 		}
 
+
+		if (image.data[0] == 0 || image.data[0] > 80) {
+			if(image.data[0] !== 219) {
+				this.car.maxspeed = 20;
+			}
+		} 
+
 		if(this.car.speed > this.car.maxspeed) {
-			this.car.speed -= this.car.speed * 0.1;
+			this.car.speed -= this.car.speed * 0.02;
 		}
 
 		if(image.data[0] === 205) {
@@ -133,27 +148,22 @@ Game.prototype = {
 	},
 
 	setLapTime: function () {
-		//if (!this.laptimes.length) this.lapstarttime = new Date().getTime();
+		
 
 		var lapfinish = new Date().getTime();
 		// ms to s.
 		laptime = (lapfinish - this.lapstarttime ) / 1000;
 
-		if(laptime > 10) {
+		if(laptime > 20) {
 			this.laptimes.push ( laptime );
 			this.lapstarttime = new Date().getTime();
-		} else {
-			// this.laptimes.push ( new Date().getTime() )	
-		}
+		} 
 
 	},
 
 	drawHUD : function() {
+		hud.setAttribute('data-speed', Number(this.car.speed * 2).toFixed(3));
 		hud.querySelector('.needle').style.transform = 'rotateZ(' + Math.floor(this.car.speed * 2 * 1.8) + 'deg)';
-		
-		// hud.getElementsByTagName("b")[0].innerHTML = this.car.speed.toFixed(1) * 2;
-		// hud.getElementsByTagName("pre")[0].innerHTML = 'y: ' + this.car.y;
-
 	},
 
 	drawFloor : function() {
@@ -172,9 +182,13 @@ Game.prototype = {
 			
 			this.car.mod = 1;
 
-			if (this.car.speed < this.car.maxspeed) {
+			if (this.car.speed < this.car.maxspeed && !this.keys[90]) {
 				//this.car.speed = 1 + (this.car.speed * 1.001);
 				this.car.speed += 1;
+			}
+
+			if (this.car.speed > this.car.maxspeed) {
+				this.car.speed -= this.car.speed * 0.1;
 			}
 
 			if (this.car.speed <= 0) this.car.speed = 0.1;
@@ -214,7 +228,6 @@ Game.prototype = {
 				this.car.angle += 3.5;
 			}
 		}
-
 	},
 
 	keyup_handler : function (event) {
@@ -226,17 +239,30 @@ Game.prototype = {
 		}
 
 		if (event.keyCode == 27) {
-			window.cancelAnimationFrame(this.req);
+			document.querySelector('#menu').className = '';
 		}
 	},
 
 	keydown_handler : function(event) {
 		this.keys[event.keyCode] = true;
+	},
+
+	radio_handler : function (event) {
+		this.team = event.target.value;
+	},
+
+	button_handler : function (event) {
+		if(event.target.name == 'race-start') {
+			document.querySelector('#menu').className = 'closed';
+			this.laptimes = [];
+			this.init();
+		}
 	}
 
 }
 
 window.onload = function() {
 	var game = new Game();
-	game.init();
+	game.setup();
+	//game.init();
 };

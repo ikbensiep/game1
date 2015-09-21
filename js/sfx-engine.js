@@ -42,7 +42,7 @@ Engine.prototype = {
 			this.sourceBuffer.buffer = buffer;
 			this.sourceBuffer.connect(this.audioCtx.destination);
 			this.sourceBuffer.loop = true;
-			this.sourceBuffer.playbackRate.value = 1;
+			this.sourceBuffer.playbackRate.value = 0.5;
 			this.sourceBuffer.start(this.audioCtx.currentTime);
 		    }.bind(this));
 		}.bind(this);
@@ -51,7 +51,7 @@ Engine.prototype = {
 	},
 
 	updateEngine: function (speed) {
-		this.sourceBuffer.playbackRate.value = 1 + (speed / 75);
+		this.sourceBuffer.playbackRate.value = 0.5 + (speed / 50);
 	},
 
 	stopEngine: function () {

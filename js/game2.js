@@ -80,16 +80,6 @@ Game.prototype = {
 		
 		document.body.removeAttribute('unresolved');
 
-		setInterval(function() {
-			document.querySelector('.laptimes').innerHTML = '';
-			this.laptimes.forEach(function(lap){
-				var li = document.createElement('li');
-				var text = document.createTextNode(lap);
-				li.appendChild(text);
-				document.querySelector('.laptimes').appendChild(li);
-			})
-
-		}.bind(this), 200);
 		this.req = window.requestAnimationFrame(this.draw.bind(this));	
 		
 	},
@@ -141,7 +131,7 @@ Game.prototype = {
 			this.car.speed = this.car.speed / 2;
 		}
 
-		if(image.data[0] === 219) {
+		if(image.data[0] === 219 && image.data[1] === 33 && image.data[2] === 204 ) {
 			this.setLapTime();
 		}
 
@@ -157,7 +147,16 @@ Game.prototype = {
 		if(laptime > 20) {
 			this.laptimes.push ( laptime );
 			this.lapstarttime = new Date().getTime();
-		} 
+		}
+
+		var laptimes = this.laptimes;
+		var last = laptimes[laptimes.length - 1];
+		var best = laptimes.sort();
+
+		
+		document.querySelector('.laps').innerHTML = laptimes.length;
+		document.querySelector('.best').innerHTML = best[0] ? best[0] : '--.---';
+		document.querySelector('.last').innerHTML = last ? last : '--.---';
 
 	},
 
@@ -239,7 +238,12 @@ Game.prototype = {
 		}
 
 		if (event.keyCode == 27) {
-			document.querySelector('#menu').className = '';
+			var menu = document.querySelector('#menu');
+			if(menu.className === '' ){
+				menu.className = 'closed';
+			} else {
+				menu.className = '';
+			}
 		}
 	},
 

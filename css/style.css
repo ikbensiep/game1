@@ -174,11 +174,22 @@ input[value="lamborghini"] ~ span {
 }
 
 .laptimes {
-
 	position: fixed;
 	top: 0;
-	right: 0;
+	right: 1ex;
+	list-style: none;
+	width: 10em;
 }
+
+.laptimes li {text-transform: uppercase; clear: left;}
+.laps:before {content: "lap ";}
+.best, .last {
+	text-align: right;
+}
+.best:before,
+.last:before {float: left; }
+.best:before {content: "best ";}
+.last:before {content: "last ";}
 
 body[unresolved] #game {
 	opacity: 0.5;

@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Game 1</title>
 	<link rel="stylesheet" href="css/style.css">
-	<!-- <link href='//fonts.googleapis.com/css?family=Racing+Sans+One' rel='stylesheet' type='text/css'> -->
+	<link href='//fonts.googleapis.com/css?family=Racing+Sans+One' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="js/sprite.js"></script>
 	<script type="text/javascript" src="js/sfx-engine.js"></script>
 	<script type="text/javascript" src="js/game2.js"></script>
@@ -12,14 +12,19 @@
 <body unresolved>
 	
 	<section id="menu">
-		<h1>Choose car</h1>
+		<h1>Driver</h1>
+		<h2><input type="text" name="driver-name" placeholder="Player 1 name" autofocus>
+			<br></h2>
+		<h1>Team</h1>
 		<ul>
 			<li>
-				<label><input type="radio" name="player-car" value="porsche" autofocus checked><span></span></label></li>
+				<label><input type="radio" name="player-car" value="porsche"><span></span></label></li>
 			<li><label><input type="radio" name="player-car" value="lamborghini"><span></span></label></li>
 		</ul>
 		<button name="race-start">RACE</button>
-
+		<h1><br><br>Lap Record<br>
+			<span class="lap-record"></span>
+		</h1>
 	</section>
 
 	<canvas id="game"></canvas>

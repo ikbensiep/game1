@@ -7,6 +7,7 @@ Game.prototype = {
 
 	keys : [],
 	team: 'porsche',
+	player: 'Player1',
 	car : null,
 	ctx : null,
 
@@ -16,18 +17,27 @@ Game.prototype = {
 	req: null,
 	
 	setup: function () {
-		window.addEventListener("change", this.radio_handler.bind(this), false);
+		var cars = document.querySelectorAll('input[type=radio]');
+		cars[0].addEventListener("change", this.radio_handler.bind(this), false);
+		cars[1].addEventListener("change", this.radio_handler.bind(this), false);
 		window.addEventListener("click", this.button_handler.bind(this), false);
+		var best = localStorage.getItem('Racer_best');
+		document.querySelector('.lap-record').innerHTML = best ? best : '-:--.---'
 	},
 
 	init : function() {
-		console.log(this.team);
-		//this.time = new Date().getTime() / 1000;
+		
+		
 		hud = document.querySelector('output');
 		canvas = document.getElementById("game");
 		this.ctx = canvas.getContext("2d");
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
+
+		this.player = {
+			name: document.querySelector('input[name=driver-name]').value,
+			laptimes: this.laptimes
+		};
 
 		this.keys = [];
 
@@ -65,7 +75,7 @@ Game.prototype = {
 			angle: 180,
 			mod: 1,
 			speed: 0.5,
-			maxspeed: 50,
+			maxspeed: 52,
 			width: 240,
 			height: 180
 		});
@@ -112,13 +122,13 @@ Game.prototype = {
 		var image = this.ctx.getImageData(canvas.width/2, canvas.height/2, 1,1);
 		
 		if (image.data[0] == 26) {
-			this.car.maxspeed = 50;
+			this.car.maxspeed = 52;
 		}
 
 
 		if (image.data[0] == 0 || image.data[0] > 80) {
 			if(image.data[0] !== 219) {
-				this.car.maxspeed = 20;
+				this.car.maxspeed = 22;
 			}
 		} 
 
@@ -139,30 +149,41 @@ Game.prototype = {
 
 	setLapTime: function () {
 		
-
+		//record current time to compare against last recorded lapstarttime. 
 		var lapfinish = new Date().getTime();
 		// ms to s.
 		laptime = (lapfinish - this.lapstarttime ) / 1000;
 
+		// 0:00.000
+		var mins = Math.floor(laptime / 60);
+		var secs = laptime - mins * 60; 
+		if (secs < 10) secs = '0' + secs.toFixed(3);
+
+		// it must be a 'valid' lap
 		if(laptime > 20) {
-			this.laptimes.push ( laptime );
+			this.laptimes.push ( mins + ':' + secs );
 			this.lapstarttime = new Date().getTime();
 		}
 
+		//update HUD
 		var laptimes = this.laptimes;
 		var last = laptimes[laptimes.length - 1];
 		var best = laptimes.sort();
 
-		
 		document.querySelector('.laps').innerHTML = laptimes.length;
 		document.querySelector('.best').innerHTML = best[0] ? best[0] : '--.---';
 		document.querySelector('.last').innerHTML = last ? last : '--.---';
 
+		
+    	var p = this.player.name;
+    	
+    	localStorage.setItem('Racer_best', p + ' ' + best[0]);
+
 	},
 
 	drawHUD : function() {
-		hud.setAttribute('data-speed', Number(this.car.speed * 2).toFixed(3));
-		hud.querySelector('.needle').style.transform = 'rotateZ(' + Math.floor(this.car.speed * 2 * 1.8) + 'deg)';
+		hud.setAttribute('data-speed', Number(this.car.speed * 2).toFixed(0));
+		hud.querySelector('.needle').style.transform = 'rotateZ(' + Math.ceil(this.car.speed * 2 * 1.8) + 'deg)';
 	},
 
 	drawFloor : function() {
@@ -187,7 +208,7 @@ Game.prototype = {
 			}
 
 			if (this.car.speed > this.car.maxspeed) {
-				this.car.speed -= this.car.speed * 0.1;
+				this.car.speed -= this.car.speed * 0.01;
 			}
 
 			if (this.car.speed <= 0) this.car.speed = 0.1;
@@ -207,13 +228,12 @@ Game.prototype = {
 				this.car.speed = this.car.speed * 0.98;
 			}
 			
-			// if (this.car.speed <= 15 && this.car.speed > 0) {
-			// 	this.car.speed = Math.floor(this.car.speed * 0.95);
-			// }
+			if (this.car.speed <= 15 && this.car.speed > 0) {
+				this.car.speed -= 0.5;
+			}
 
-			if (this.car.speed <= 0) {
-				//console.log(this.car.speed);
-				this.car.speed = (this.car.speed - 1) * 2.5;
+			if (this.car.speed <= 0) {			
+				this.car.speed -= 1;
 			}
 		}
 

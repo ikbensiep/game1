@@ -18,6 +18,8 @@ output {
     bottom: -70px;
     left: calc(50% - 100px);
     overflow: hidden;
+    opacity: 1;
+    transition: opacity 1s 1s;
 }
 
 output .needle {
@@ -28,10 +30,28 @@ output .needle {
     bottom: 100px;
     left: calc(50% - 80px);
     height: 2px;
-    overflow: hidden;
     background-color: white;
     width: 80px;
     transform-origin: right;
+}
+
+.needle:after {
+    content: "";
+    display: block;
+    background-color: red;
+    height: 1em;
+    width: 1em;
+    border-radius: 50%;
+    margin-top: -.5em;
+    margin-left: 70px;
+}
+
+output#speedometer:before {
+	font-family: 'Racing Sans One';
+    content: attr(data-speed);
+    position: absolute;
+    top: 106px;
+    left: 46%;
 }
 
 .help {
@@ -66,6 +86,22 @@ dd {
 #menu h1 {
 	text-align: center;
 }
+#menu input {
+	background: transparent;
+	border: none;
+	color: white;
+	display: block;
+	font-size: 1.2em;
+	font-family: 'Racing Sans One';
+	margin: 0 auto;
+	text-align: center;
+	text-shadow: 0px 0px 10px transparent;
+	transition: all .3s;
+}
+
+#menu input:focus {
+	text-shadow: 0px 0px 10px palegoldenrod;
+}
 
 #menu ul {
 	list-style: none;
@@ -95,12 +131,12 @@ dd {
 	transition: all .7s;
 
 }
-
+#menu ul input:focus ~ span,
 #menu ul input:checked ~ span {
 	-webkit-filter: grayscale(0);
 	transform: scale(1);
 }
-
+#menu ul input:focus ~ span:after,
 #menu ul input:checked ~ span:after {
     content: "";
     display: block;
@@ -200,6 +236,11 @@ body[unresolved] #game {
 body[unresolved] #minimap {
 	transform: translateX(-311px);
 }
+
+body[unresolved] output {
+	opacity: 0;
+}
+
 input[type=range] {
 	display: none;
 }

@@ -7,7 +7,7 @@
 	<link href='//fonts.googleapis.com/css?family=Racing+Sans+One' rel='stylesheet' type='text/css'>
 	<script type="text/javascript" src="js/sprite.js"></script>
 	<script type="text/javascript" src="js/sfx-engine.js"></script>
-	<script type="text/javascript" src="js/game2.js"></script>
+	<script type="text/javascript" src="js/game2.js?r=456"></script>
 </head>
 <body unresolved>
 	
@@ -18,16 +18,23 @@
 		<h1>Team</h1>
 		<ul>
 			<li>
-				<label><input type="radio" name="player-car" value="porsche"><span></span></label></li>
-			<li><label><input type="radio" name="player-car" value="lamborghini"><span></span></label></li>
+				<label><input type="radio" name="player-car" value="porsche"><span>PORSCHE</span></label></li>
+			<li><label><input type="radio" name="player-car" value="lamborghini"><span>LAMBORGHINI</span></label></li>
 		</ul>
-		<button name="race-start">RACE</button>
+		<h1>Settings</h1>
+		<ul>
+			<li>
+				<label><input type="radio" name="settings-quality" value="low"><span>LOW <br>(800x600)</span></label></li>
+			<li><label><input type="radio" name="settings-quality" value="medium"><span>MED <br>(1024x768)</span></label></li>
+			<li><label><input type="radio" name="settings-quality" value="high"><span>HIGH <br>(1280x1024)</span></label></li>
+		</ul>
+		<button name="race-start">START</button>
 		<h1><br><br>Lap Record<br>
 			<span class="lap-record"></span>
 		</h1>
 	</section>
 
-	<canvas id="game"></canvas>
+	<canvas id="game" width="1024" height="768"></canvas>
 	<div id="minimap">
 		<span class="blip"></span>
 	</div>

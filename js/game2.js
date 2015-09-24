@@ -6,6 +6,7 @@ var Game = function() {
 Game.prototype = {
 
 	keys : [],
+	quality: null,
 	team: 'porsche',
 	player: 'Player1',
 	car : null,
@@ -17,22 +18,27 @@ Game.prototype = {
 	req: null,
 	
 	setup: function () {
-		var cars = document.querySelectorAll('input[type=radio]');
-		cars[0].addEventListener("change", this.radio_handler.bind(this), false);
-		cars[1].addEventListener("change", this.radio_handler.bind(this), false);
+		var cars = document.querySelectorAll('input[name=player-car]');
+		var q =    document.querySelectorAll('input[name=settings-quality]');
+		cars[0].addEventListener("change", this.radio_car_handler.bind(this), false);
+		cars[1].addEventListener("change", this.radio_car_handler.bind(this), false);
+		q[0].addEventListener("change", this.radio_quality_handler.bind(this), false);
+		q[1].addEventListener("change", this.radio_quality_handler.bind(this), false);
+		q[2].addEventListener("change", this.radio_quality_handler.bind(this), false);
+
 		window.addEventListener("click", this.button_handler.bind(this), false);
+
 		var best = localStorage.getItem('Racer_best');
 		document.querySelector('.lap-record').innerHTML = best ? best : '-:--.---'
 	},
 
 	init : function() {
-		
-		
+
 		hud = document.querySelector('output');
 		canvas = document.getElementById("game");
 		this.ctx = canvas.getContext("2d");
-		canvas.width = window.innerWidth;
-		canvas.height = window.innerHeight;
+		canvas.width = this.quality.height || 800;
+		canvas.height = this.quality.width || 600;
 
 		this.player = {
 			name: document.querySelector('input[name=driver-name]').value,
@@ -43,7 +49,7 @@ Game.prototype = {
 
 		this.world = new Sprite ({
 			name: 'Barcelona',
-			images: ['img/track.svg?r=' + Math.floor(Math.random() * 100)],
+			images: ['img/track.svg'],
 			x: 0,
 			y: 4350,
 			height: 3200 * 6,
@@ -52,7 +58,7 @@ Game.prototype = {
 
 		this.world_bridges = new Sprite ({
 			name: 'Barcelona racetrack objects',
-			images: ['img/track-bridges.svg?r=' + Math.floor(Math.random() * 100)],
+			images: ['img/track-bridges.svg'],
 			x: 0,
 			y: 4350,
 			height: 3200 * 6,
@@ -93,6 +99,7 @@ Game.prototype = {
 		this.req = window.requestAnimationFrame(this.draw.bind(this));	
 		
 	},
+
 
 
 	draw : function() {
@@ -187,8 +194,8 @@ Game.prototype = {
 	},
 
 	drawFloor : function() {
-		var x = (this.car.speed*this.car.mod) * Math.cos(Math.PI/180 * this.car.angle);
-		var y = (this.car.speed*this.car.mod) * Math.sin(Math.PI/180 * this.car.angle);
+		var x = Math.floor((this.car.speed*this.car.mod) * Math.cos(Math.PI/180 * this.car.angle));
+		var y = Math.floor((this.car.speed*this.car.mod) * Math.sin(Math.PI/180 * this.car.angle));
 		
 		this.world.x -= x;
 		this.world.y -= y;
@@ -249,6 +256,21 @@ Game.prototype = {
 		}
 	},
 
+	setScreenSize : function (size) {
+		switch(size) {
+			default:
+			case 'low' : 
+				return {'height': 800, 'width': 600};
+				break;
+			case 'medium' :
+				return {'height': 1024,'width': 768};
+				break;
+			case 'high' :
+				return {'height': 1280,'width': 1024};
+				break;
+		}
+	},
+
 	keyup_handler : function (event) {
 		this.keys[event.keyCode] = false;
 	
@@ -271,8 +293,13 @@ Game.prototype = {
 		this.keys[event.keyCode] = true;
 	},
 
-	radio_handler : function (event) {
+	radio_car_handler : function (event) {
 		this.team = event.target.value;
+	},
+
+	radio_quality_handler : function (event) {
+		console.log(event.target.value)
+		this.quality = this.setScreenSize(event.target.value);
 	},
 
 	button_handler : function (event) {

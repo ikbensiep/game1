@@ -75,7 +75,7 @@ dd {
     top: 2em;
     bottom: 2em;
     left: 2em;
-    transition: all .5s;
+    transition: all .5s .2s;
 }
 
 #menu.closed { 
@@ -119,37 +119,30 @@ dd {
 	opacity: 0;
 }
 
+
+
 #menu ul input ~ span {
 	display: block;
-	height: 130px;
-	width: 210px;
 	position: relative;
 	background-position: -60px -27px;
 	background-size: 250px;
 	-webkit-filter: grayscale(1);
 	transform: scale(0.8);
-	transition: all .7s;
-
+	transition: all .4s;
+	text-shadow: 0 1px 0px black, 0 0 0.7ex #F1D22F;
+	letter-spacing: 1px;
+	font-size: 1.4em;
 }
+
 #menu ul input:focus ~ span,
 #menu ul input:checked ~ span {
 	-webkit-filter: grayscale(0);
 	transform: scale(1);
 }
-#menu ul input:focus ~ span:after,
-#menu ul input:checked ~ span:after {
-    content: "";
-    display: block;
-    background-color: transparent;
-    height: 20px;
-    width: 20px;
-    border: 1px solid white;
-    transform: rotateZ(45deg);
-    border-bottom: 0;
-    border-right: 0;
-    position: absolute;
-    top: 110px;
-    left: 60px;
+
+input[name=player-car] ~ span {
+	height: 130px;
+	width: 210px;
 }
 
 input[value="porsche"] ~ span {
@@ -168,12 +161,8 @@ input[value="lamborghini"] ~ span {
 }
 
 #game {
-	position: absolute;
-	left: 0;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	
+	min-width: 800px;
+	min-height: 600px;
 	display: block;
 	margin: 0 auto;
 	
@@ -182,6 +171,7 @@ input[value="lamborghini"] ~ span {
 	transition: opacity 2s .5s, transform 2.5s .5s;
 	background: rgb(37,73,0);
 	/*
+	visibility: hidden;
 	background: #919293 url(../img/hpr-track-map-large.gif);
 	background-position-y: 0;
 	background-size: 2500%;

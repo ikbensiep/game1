@@ -40,7 +40,7 @@ Sprite.prototype = {
 	height: null,
 
 	draw: function (ctx) {
-		
+
 		ctx.save();
 		ctx.translate(this.x, this.y);
 		ctx.rotate(Math.PI/180 * this.angle);
@@ -56,8 +56,8 @@ Sprite.prototype = {
 		} else {
 			ctx.drawImage(
 				this.images[this.state],
-				-(this.images[this.state].width/2),
-				-(this.images[this.state].height/2)
+				-(Math.floor(this.images[this.state].width/2)),
+				-(Math.floor(this.images[this.state].height/2))
 			);
 		}
 		ctx.restore();

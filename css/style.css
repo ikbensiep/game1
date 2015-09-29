@@ -33,6 +33,7 @@ output .needle {
     background-color: white;
     width: 80px;
     transform-origin: right;
+    transition: transform .15s;
 }
 
 .needle:after {
@@ -61,6 +62,7 @@ output#speedometer:before {
 dt {
 	display: inline;
 }
+
 dd {
     display: inline;
     margin-left: 10px;
@@ -99,7 +101,7 @@ dd {
 	transition: all .3s;
 }
 
-#menu input:focus {
+#menu input:not(:invalid) {
 	text-shadow: 0px 0px 10px palegoldenrod;
 }
 
@@ -113,19 +115,22 @@ dd {
 
 #menu ul label {
 	cursor: pointer;
+	display: inline-block;
+	padding: 0 1ex;
 }
 
 #menu ul input {
-	opacity: 0;
+	display: none;
 }
 
+#menu input:checked + label,
+#menu input:checked + span {
+	text-shadow: 0px 0px 10px palegoldenrod;
+}
 
-
-#menu ul input ~ span {
+#menu ul input ~ #car-preview {
 	display: block;
 	position: relative;
-	background-position: -60px -27px;
-	background-size: 250px;
 	-webkit-filter: grayscale(1);
 	transform: scale(0.8);
 	transition: all .4s;
@@ -134,24 +139,25 @@ dd {
 	font-size: 1.4em;
 }
 
-#menu ul input:focus ~ span,
-#menu ul input:checked ~ span {
+#menu ul input:focus ~ #car-preview,
+#menu ul input:checked ~ #car-preview {
 	-webkit-filter: grayscale(0);
 	transform: scale(1);
 }
 
-input[name=player-car] ~ span {
-	height: 130px;
-	width: 210px;
+div#car-preview {
+    background-image: url(../img/ferrari-1.png), url(../img/lamborghini-1.png), url(../img/porsche-1.png);
+    height: 130px;
+    width: 210px;
+    background-size: 210px 150px, 210px 150px, 210px 150px;
+    background-position: -420px 0, -210px 0px, 0 0;
+    background-repeat: no-repeat;
+    transition: background-position .5s;
 }
 
-input[value="porsche"] ~ span {
-    background-image: url(../img/porsche-0.png);
-}
-
-input[value="lamborghini"] ~ span {
-    background-image: url(../img/lamborghini-0.png);
-}
+input#car-1:checked ~ #car-preview { background-position: -420px 0, -210px 0, 0 0;}
+input#car-2:checked ~ #car-preview { background-position: -210px 0, 0px 0, 210px 0;}
+input#car-3:checked ~ #car-preview { background-position: 0 0, 210px 0, 420px 0;}
 
 #menu button {
 	display: block;
@@ -170,6 +176,7 @@ input[value="lamborghini"] ~ span {
 	transform: scale(1);
 	transition: opacity 2s .5s, transform 2.5s .5s;
 	background: rgb(37,73,0);
+	/*background: #529c4a;*/
 	/*
 	visibility: hidden;
 	background: #919293 url(../img/hpr-track-map-large.gif);
@@ -196,7 +203,7 @@ input[value="lamborghini"] ~ span {
 	position: absolute;
 	border-radius: 50%;
 	left: 50%;
-	top: 70%;
+	top: 95%;
 	transition: transform .5s;
 }
 
@@ -208,7 +215,7 @@ input[value="lamborghini"] ~ span {
 	width: 10em;
 }
 
-.laptimes li {text-transform: uppercase; clear: left;}
+.laptimes li {text-transform: uppercase; clear: left; transition: color .5s;}
 .laps:before {content: "lap ";}
 .best, .last {
 	text-align: right;

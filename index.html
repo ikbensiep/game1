@@ -13,18 +13,26 @@
 	
 	<section id="menu">
 		<h1>Driver</h1>
-		<h2><input type="text" name="driver-name" placeholder="Player 1 name" autofocus>
+		<h2><input type="text" name="driver-name" placeholder="Player 1 name" autofocus required minlength="3">
 			<br></h2>
 		<h1>Team</h1>
 		<ul>
 			<li>
-				<label><input type="radio" name="player-car" value="porsche"><span>PORSCHE</span></label></li>
-			<li><label><input type="radio" name="player-car" value="lamborghini"><span>LAMBORGHINI</span></label></li>
+				<input type="radio" name="player-car" value="porsche" id="car-1">
+				<label for="car-1" tabindex="1"><span>PORSCHE</span></label>
+				<input type="radio" name="player-car" value="lamborghini" id="car-2">
+				<label for="car-2" tabindex="2"><span>LAMBORGHINI</span></label>
+				<input type="radio" name="player-car" value="ferrari" id="car-3">
+				<label for="car-3" tabindex="3"><span>FERRARI</span></label>
+				<div id="car-preview">
+					
+				</div>
+			</li>
 		</ul>
 		<h1>Settings</h1>
 		<ul>
 			<li>
-				<label><input type="radio" name="settings-quality" value="low"><span>LOW <br>(800x600)</span></label></li>
+				<label><input type="radio" name="settings-quality" value="low" checked><span>LOW <br>(800x600)</span></label></li>
 			<li><label><input type="radio" name="settings-quality" value="medium"><span>MED <br>(1024x768)</span></label></li>
 			<li><label><input type="radio" name="settings-quality" value="high"><span>HIGH <br>(1280x1024)</span></label></li>
 		</ul>

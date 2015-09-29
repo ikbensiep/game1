@@ -6,11 +6,13 @@ var Game = function() {
 Game.prototype = {
 
 	keys : [],
-	quality: null,
+	quality: {width: 800, height: 600},
 	team: 'porsche',
 	player: 'Player1',
 	car : null,
 	ctx : null,
+	ocvs : null,
+	octx : null,
 
 	laptimes: ['00.000'],
 	lapstarttime: new Date().getTime(),
@@ -22,6 +24,7 @@ Game.prototype = {
 		var q =    document.querySelectorAll('input[name=settings-quality]');
 		cars[0].addEventListener("change", this.radio_car_handler.bind(this), false);
 		cars[1].addEventListener("change", this.radio_car_handler.bind(this), false);
+		cars[2].addEventListener("change", this.radio_car_handler.bind(this), false);
 		q[0].addEventListener("change", this.radio_quality_handler.bind(this), false);
 		q[1].addEventListener("change", this.radio_quality_handler.bind(this), false);
 		q[2].addEventListener("change", this.radio_quality_handler.bind(this), false);
@@ -37,8 +40,13 @@ Game.prototype = {
 		hud = document.querySelector('output');
 		canvas = document.getElementById("game");
 		this.ctx = canvas.getContext("2d");
-		canvas.width = this.quality.height || 800;
-		canvas.height = this.quality.width || 600;
+		canvas.width = this.quality.width || 800;
+		canvas.height = this.quality.height || 600;
+
+		this.ocvs = document.createElement('canvas');
+		this.ocvs.width = this.quality.width;
+		this.ocvs.height = this.quality.height;
+		this.octx = this.ocvs.getContext('2d');
 
 		this.player = {
 			name: document.querySelector('input[name=driver-name]').value,
@@ -49,7 +57,7 @@ Game.prototype = {
 
 		this.world = new Sprite ({
 			name: 'Barcelona',
-			images: ['img/track.svg'],
+			images: ['img/interlagos.svg'],
 			x: 0,
 			y: 4350,
 			height: 3200 * 6,
@@ -92,41 +100,59 @@ Game.prototype = {
 
 		window.addEventListener("keydown", this.keydown_handler.bind(this), false);
 		window.addEventListener("keyup", this.keyup_handler.bind(this), false);
-		
-		
+
 		document.body.removeAttribute('unresolved');
 
 		this.req = window.requestAnimationFrame(this.draw.bind(this));	
 		
+		// var that = this;
+		// setInterval(function(){
+		// 	that.drawHUD();
+		// }, 100);
+
 	},
 
 
 
 	draw : function() {
+
+		// checking what keys were pressed
 		this.checkUserInput();
 
+		// update engine sound
 		this.engine.updateEngine(this.car.speed);
+		// draw speedometer
+		// this.drawHUD();
 
-		this.drawHUD();
+		// moving the floor
 		this.drawFloor();
 
+		this.octx.clearRect(0, 0, canvas.width, canvas.height);
 		this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-		this.world.draw(this.ctx)
-		this.checkGroundType();
-		this.car.draw(this.ctx)
+		
+		this.world.draw(this.octx);
+		this.ctx.drawImage(this.ocvs, 0, 0)
 
-		this.world_bridges.draw(this.ctx)
+		this.checkGroundType();
+		
+
+		this.car.draw(this.octx)
+		this.ctx.drawImage(this.ocvs, 0, 0)
+		
+		this.world_bridges.draw(this.octx)
+		this.ctx.drawImage(this.ocvs, 0, 0)
 
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
 
-		var tx = 'translateX(' + (Math.floor(this.world.x / this.world.width * 100) * 3.1 * -1) + 'px)';
-		var ty = 'translateY(' + (Math.floor(this.world.y / this.world.height * 100) * 1.9 * -1) + 'px)';
+		// var tx = 'translateX(' + (Math.floor(this.world.x / this.world.width * 100) * 3.1 * -1) + 'px)';
+		// var ty = 'translateY(' + (Math.floor(this.world.y / this.world.height * 100) * 3.1 * -1) + 'px)';
 
-		this.blip.style.transform = tx + ' ' + ty;
+		// this.blip.style.transform = tx + ' ' + ty;
 	},
 
 	checkGroundType: function () {
-		var image = this.ctx.getImageData(canvas.width/2, canvas.height/2, 1,1);
+		
+		var image = this.octx.getImageData(canvas.width/2, canvas.height/2, 1,1);
 		
 		if (image.data[0] == 26) {
 			this.car.maxspeed = 52;
@@ -163,8 +189,8 @@ Game.prototype = {
 
 		// 0:00.000
 		var mins = Math.floor(laptime / 60);
-		var secs = laptime - mins * 60; 
-		if (secs < 10) secs = '0' + secs.toFixed(3);
+		var secs = (laptime - mins * 60).toFixed(3); 
+		if (secs < 10) secs = '0' + secs;
 
 		// it must be a 'valid' lap
 		if(laptime > 20) {
@@ -177,13 +203,29 @@ Game.prototype = {
 		var last = laptimes[laptimes.length - 1];
 		var best = laptimes.sort();
 
+
 		document.querySelector('.laps').innerHTML = laptimes.length;
 		document.querySelector('.best').innerHTML = best[0] ? best[0] : '--.---';
 		document.querySelector('.last').innerHTML = last ? last : '--.---';
-
 		
+		// highlight fastest laptime in green
+		// if last lap == best lap, update time in green
+		var pb = false;
+		if(last && last === best[0]) {
+			pb = true;
+		}
+
+		if(pb) {
+			document.querySelector('.last').style.color = "#00ff00";
+			setTimeout(function(){
+				document.querySelector('.last').style.color = "";
+			}, 5000)
+		} else {
+			document.querySelector('.last').style.color = "";
+		}
+		
+		// store player's best laptime (poorly)
     	var p = this.player.name;
-    	
     	localStorage.setItem('Racer_best', p + ' ' + best[0]);
 
 	},
@@ -211,11 +253,11 @@ Game.prototype = {
 
 			if (this.car.speed < this.car.maxspeed && !this.keys[90]) {
 				//this.car.speed = 1 + (this.car.speed * 1.001);
-				this.car.speed += 1;
+				this.car.speed += 0.5;
 			}
 
 			if (this.car.speed > this.car.maxspeed) {
-				this.car.speed -= this.car.speed * 0.01;
+				this.car.speed -= Number(this.car.speed * 0.01).toFixed(2);
 			}
 
 			if (this.car.speed <= 0) this.car.speed = 0.1;
@@ -246,12 +288,12 @@ Game.prototype = {
 
 		if (this.keys[37]) {
 			if(Math.floor(this.car.speed) !== 0) {
-				this.car.angle -= 3.5;
+				this.car.angle -= 3;
 			}
 		}
 		if (this.keys[39]) {
 			if(Math.floor(this.car.speed) !== 0) {
-				this.car.angle += 3.5;
+				this.car.angle += 3;
 			}
 		}
 	},
@@ -260,13 +302,13 @@ Game.prototype = {
 		switch(size) {
 			default:
 			case 'low' : 
-				return {'height': 800, 'width': 600};
+				return {'height': 600, 'width': 800};
 				break;
 			case 'medium' :
-				return {'height': 1024,'width': 768};
+				return {'height': 768,'width': 1024};
 				break;
 			case 'high' :
-				return {'height': 1280,'width': 1024};
+				return {'height': 1024,'width': 1280};
 				break;
 		}
 	},

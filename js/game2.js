@@ -9,10 +9,13 @@ Game.prototype = {
 	quality: {width: 800, height: 600},
 	team: 'porsche',
 	player: 'Player1',
-	car : null,
+
 	ctx : null,
 	ocvs : null,
 	octx : null,
+
+	car : null,
+	track : null,
 
 	laptimes: ['00.000'],
 	lapstarttime: new Date().getTime(),
@@ -33,9 +36,15 @@ Game.prototype = {
 
 		var best = localStorage.getItem('Racer_best');
 		document.querySelector('.lap-record').innerHTML = best ? best : '-:--.---'
+
+
+
 	},
 
 	init : function() {
+		var selectedtrack = document.querySelector('input[name=track]:checked');
+		
+
 
 		hud = document.querySelector('output');
 		canvas = document.getElementById("game");
@@ -57,21 +66,21 @@ Game.prototype = {
 
 		this.world = new Sprite ({
 			name: 'Barcelona',
-			images: ['img/interlagos.svg'],
-			x: 0,
-			y: 4350,
+			images: [selectedtrack.dataset.track],
+			x: selectedtrack.dataset.x,
+			y: selectedtrack.dataset.y,
 			height: 3200 * 6,
 			width: 3200 * 6
 		});
 
-		this.world_bridges = new Sprite ({
-			name: 'Barcelona racetrack objects',
-			images: ['img/track-bridges.svg'],
-			x: 0,
-			y: 4350,
-			height: 3200 * 6,
-			width: 3200 * 6
-		});
+		// this.world_bridges = new Sprite ({
+		// 	name: 'Barcelona racetrack objects',
+		// 	images: ['img/track-bridges.svg'],
+		// 	x: 0,
+		// 	y: 500,
+		// 	height: 3200 * 6,
+		// 	width: 3200 * 6
+		// });
 
 		floor = {
 			x:0,
@@ -86,9 +95,9 @@ Game.prototype = {
 			],
 			x: canvas.width / 2,
 			y: canvas.height / 2,
-			angle: 180,
+			angle: 90,
 			mod: 1,
-			speed: 0.5,
+			speed: 0,
 			maxspeed: 52,
 			width: 240,
 			height: 180
@@ -102,6 +111,9 @@ Game.prototype = {
 		window.addEventListener("keyup", this.keyup_handler.bind(this), false);
 
 		document.body.removeAttribute('unresolved');
+
+		document.querySelector('#minimap').style.backgroundImage = 'url("' + this.world.images[0].src + '")'; 
+		//console.log(this.world.images[0].src);
 
 		this.req = window.requestAnimationFrame(this.draw.bind(this));	
 		
@@ -131,16 +143,15 @@ Game.prototype = {
 		this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 		
 		this.world.draw(this.octx);
-		this.ctx.drawImage(this.ocvs, 0, 0)
+		this.ctx.drawImage(this.ocvs, 0, 0);
 
 		this.checkGroundType();
 		
+		this.car.draw(this.octx);
+		this.ctx.drawImage(this.ocvs, 0, 0);
 
-		this.car.draw(this.octx)
-		this.ctx.drawImage(this.ocvs, 0, 0)
-		
-		this.world_bridges.draw(this.octx)
-		this.ctx.drawImage(this.ocvs, 0, 0)
+		//this.world_bridges.draw(this.octx)
+		//this.ctx.drawImage(this.ocvs, 0, 0);
 
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
 
@@ -154,26 +165,25 @@ Game.prototype = {
 		
 		var image = this.octx.getImageData(canvas.width/2, canvas.height/2, 1,1);
 		
-		if (image.data[0] == 26) {
-			this.car.maxspeed = 52;
-		}
+		// on track
+		if (image.data[0] == 26) { this.car.maxspeed = 52; }
 
+		// in pits
+		if (image.data[0] == 28 || image.data[0] == 28) { this.car.maxspeed = 15; }
 
+		// off track
 		if (image.data[0] == 0 || image.data[0] > 80) {
 			if(image.data[0] !== 219) {
 				this.car.maxspeed = 22;
 			}
 		} 
 
-		if(this.car.speed > this.car.maxspeed) {
-			this.car.speed -= this.car.speed * 0.02;
-		}
+		// if(this.car.speed > this.car.maxspeed) {
+		// 	this.car.speed -= this.car.speed * 0.02;
+		// }
 
-		if(image.data[0] === 205) {
-			//this.car.angle = 360 - this.car.angle;
-			this.car.speed = this.car.speed / 2;
-		}
-
+		
+		// trigger lap timer by pink start/finish line
 		if(image.data[0] === 219 && image.data[1] === 33 && image.data[2] === 204 ) {
 			this.setLapTime();
 		}
@@ -241,12 +251,12 @@ Game.prototype = {
 		
 		this.world.x -= x;
 		this.world.y -= y;
-		this.world_bridges.x -= x;
-		this.world_bridges.y -= y;
+		// this.world_bridges.x -= x;
+		// this.world_bridges.y -= y;
 	},
 
 	checkUserInput : function() {
-
+		// accelerate
 		if (this.keys[65] == true) {
 			
 			this.car.mod = 1;
@@ -263,12 +273,13 @@ Game.prototype = {
 			if (this.car.speed <= 0) this.car.speed = 0.1;
 
 		} else {
-			
+			// release accelerator	
 			if (this.car.speed > 0) this.car.speed = this.car.speed * 0.975;
 			
 			if (this.car.speed < 0) this.car.speed = 0;
 		}
 
+		// brake
 		if (this.keys[90]) {
 			this.car.state = 1;
 			//this.car.mod = -1;
@@ -286,6 +297,7 @@ Game.prototype = {
 			}
 		}
 
+		// steering
 		if (this.keys[37]) {
 			if(Math.floor(this.car.speed) !== 0) {
 				this.car.angle -= 3;
@@ -329,6 +341,10 @@ Game.prototype = {
 				menu.className = '';
 			}
 		}
+
+		if(event.keyCode == 76) {
+			console.log(this.world.x, this.world.y);
+		}
 	},
 
 	keydown_handler : function(event) {
@@ -357,5 +373,4 @@ Game.prototype = {
 window.onload = function() {
 	var game = new Game();
 	game.setup();
-	//game.init();
 };

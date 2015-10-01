@@ -61,6 +61,5 @@ Sprite.prototype = {
 			);
 		}
 		ctx.restore();
-		
 	}
 }

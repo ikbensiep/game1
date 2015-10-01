@@ -159,6 +159,22 @@ input#car-1:checked ~ #car-preview { background-position: -420px 0, -210px 0, 0 
 input#car-2:checked ~ #car-preview { background-position: -210px 0, 0px 0, 210px 0;}
 input#car-3:checked ~ #car-preview { background-position: 0 0, 210px 0, 420px 0;}
 
+div#track-preview {
+	height: 130px;
+    width: 210px;
+    margin: 0 auto;
+    background-image: url(../img/barcelona.svg), url(../img/interlagos.svg), url(../img/abu-dhabi.svg);
+    background-size: 250px 200px;
+    background-position: -420px 20px, -210px 0px, 0px 0;
+    background-repeat: no-repeat;
+    background-color: #3b7934;
+    transition: background-position .5s;
+}
+
+input#track-1:checked ~ #track-preview { background-position: -20px 20px, 210px 0px, 420px 0;}
+input#track-2:checked ~ #track-preview { background-position: -210px 20px, 0px 0px, 210px 0;}
+input#track-3:checked ~ #track-preview { background-position: -420px 20px, -210px 0px, 0px 0;}
+
 #menu button {
 	display: block;
 	padding: 1em;
@@ -188,7 +204,8 @@ input#car-3:checked ~ #car-preview { background-position: 0 0, 210px 0, 420px 0;
 #minimap {
 	width: 311px;
 	height: 162px;
-	background: url(../img/track.svg) no-repeat;
+	/*background-image: url(../img/track.svg);*/
+	background-repeat: no-repeat;
 	background-size: cover;
 	position: absolute;
 	bottom: 0;

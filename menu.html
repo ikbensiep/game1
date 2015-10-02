@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Menu</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<style>
+	body {
+		margin: 0;
+		padding: 0;
+		font-family: sans-serif;
+		color: white;
+		background-color: #1B8433;
+		background-image: url(img/interlagos.svg);
+		background-position: center 25%;
+
+	}
+	fieldset {
+		border: none;
+	}
+	form > fieldset {
+		height: 120px;
+	}
+	fieldset > fieldset {
+		position: absolute;
+		top: 140px;
+		left: 0;
+		display: none;
+	}
+	fieldset > input:checked + label +  fieldset {
+		display: block;
+	}
+	input {
+		opacity: 0.01;
+	}
+	label {
+		display: inline-block;
+		height: 100px;
+		width: 100px;
+		border: 1px solid transparent;
+		line-height: 3em;
+		text-align: center;
+		background: black;
+	}
+
+	input:checked + label {
+		background: red;
+		border: 1px solid white;
+	}
+	input:focus + label {
+		border: 1px dashed white!important;
+	}
+	i.fa {
+		display: block;
+		margin-top: 1.5em;
+	}
+	</style>
+</head>
+<body>
+	<form action="#">
+		<fieldset>
+			<input type="radio" name="option" value="1" id="car-select"><label for="car-select"><i class="fa fa-car"></i> Car</label>
+			<fieldset>
+				<legend>car</legend>
+				<input type="radio" name="car" id="car1"><label for="car1">Porsche</label>
+				<input type="radio" name="car" id="car2"><label for="car2">Lamborghini</label>
+				<input type="radio" name="car" id="car3"><label for="car3">Ferrari</label>
+			</fieldset>
+
+			<input type="radio" name="option" value="2" id="track-select"><label for="track-select"><i class="fa fa-flag-checkered"></i> Track</label>
+			<fieldset>
+				<legend>track</legend>
+				<input type="radio" name="track" id="track1"><label for="track1">Barcelona</label>
+				<input type="radio" name="track" id="track2"><label for="track2">Interlagos</label>
+				<input type="radio" name="track" id="track3"><label for="track3">Abu Dhabi</label>
+			</fieldset>
+
+			<input type="radio" name="option" value="3" id="screen-select"><label for="screen-select"><i class="fa fa-desktop"></i> Screen</label>
+			<fieldset>
+				<legend>Screen</legend>
+				<input type="radio" name="screen" id="screen1"><label for="screen1"><i class="fa fa-tablet fa-rotate-90"></i> 800&times;600</label>
+				<input type="radio" name="screen" id="screen2"><label for="screen2"><i class="fa fa-laptop"></i> 1024&times;768</label>
+				<input type="radio" name="screen" id="screen3"><label for="screen3"><i class="fa fa-tv"></i> 1280&times;1024</label>
+			</fieldset>
+		</fieldset>
+	</form>
+</body>
+</html>

@@ -2,64 +2,77 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Game 1</title>
+	<title>Race Game</title>
+
+<meta property="og:title" content="Race Game" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="http://www.ikbensiep.com/demo/game1/" />
+<meta property="og:image" content="http://www.ikbensiep.com/demo/game1/img/screenshot.png" />
+<meta property="og:image:width" content="1278" />
+<meta property="og:image:height" content="704" />
+
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/menu.css">
 	<link href='//fonts.googleapis.com/css?family=Racing+Sans+One' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
 	<script type="text/javascript" src="js/sprite.js"></script>
 	<script type="text/javascript" src="js/sfx-engine.js"></script>
 	<script type="text/javascript" src="js/game2.js?r=456"></script>
+
 </head>
 <body unresolved>
-	
-	<section id="menu">
-		<h1>Driver</h1>
-		<h2><input type="text" name="driver-name" placeholder="Player 1 name" autofocus required minlength="3">
-			<br></h2>
-		<h1>Team</h1>
-		<ul>
-			<li>
-				<input type="radio" name="player-car" value="porsche" id="car-1">
-				<label for="car-1" tabindex="1"><span>PORSCHE</span></label>
-				<input type="radio" name="player-car" value="lamborghini" id="car-2">
-				<label for="car-2" tabindex="2"><span>LAMBORGHINI</span></label>
-				<input type="radio" name="player-car" value="ferrari" id="car-3">
-				<label for="car-3" tabindex="3"><span>FERRARI</span></label>
-				<div id="car-preview">
-					
-				</div>
-			</li>
-		</ul>
-		<h1></h1>
-		<ul>
-			<li>
-				<input type="radio" name="track" value="Barcelona" id="track-1" data-x="-0" data-y="4500" data-track="img/barcelona.svg" checked>
-				<label for="track-1" tabindex="1"><span>Barcelona</span></label>
+	<div class="world">
+		<div class="track-preview interlagos">
+			<div class="car-preview"></div>
+			<div class="garage">
+				<section class="front"></section>
+				<section class="back"></section>
+				<section class="left"></section>
+				<section class="right"></section>
+				<section class="roof"></section>
+			</div>
+		</div>
+	</div>
+	<form action="#" onsubmit="return false;">
+		<fieldset>
+			<h1>RACE GAME</h1>
+			<input type="radio" name="option" value="1" id="car-select"><label for="car-select"><i class="fa fa-car"></i> Car</label>
+			<fieldset>
+				<input type="radio" name="car" id="car1" value="porsche" autofocus checked><label for="car1">Porsche</label>
+				<input type="radio" name="car" id="car2" value="lamborghini"><label for="car2">Lamborghini</label>
+				<input type="radio" name="car" id="car3" value="ferrari"><label for="car3">Ferrari</label>
+			</fieldset>
 
-				<input type="radio" name="track" value="Interlagos" id="track-2" data-x="-500" data-y="-400" data-track="img/interlagos.svg">
-				<label for="track-2" tabindex="1"><span>Interlagos</span></label>
+			<input type="radio" name="option" value="2" id="track-select"><label for="track-select"><i class="fa fa-flag-checkered"></i> Track</label>
+			<fieldset>
+				<!-- <legend>Track</legend> -->
+				<input type="radio" name="track" id="track1" value="barcelona" data-x="0" data-y="4500" data-mapfile="img/barcelona.svg" checked><label for="track1">Barcelona</label>
+				<input type="radio" name="track" id="track2" value="interlagos" data-x="-500" data-y="-400" data-mapfile="img/interlagos.svg"><label for="track2">Interlagos</label>
+				<input type="radio" name="track" id="track3" value="abu-dhabi" data-x="2210" data-y="1646" data-mapfile="img/abu-dhabi.svg"><label for="track3">Yas Marina</label>
+				<input type="radio" name="track" id="track4" value="sochi" data-x="-8000" data-y="-5050" data-mapfile="img/sochi.svg"><label for="track4">Sochi</label>
+				<input type="radio" name="track" id="track5" value="hockenheim" data-x="6500" data-y="-5500" data-mapfile="img/hockenheim.svg"><label for="track5">Hockenheim</label>
+			</fieldset>
 
-				<input type="radio" name="track" value="Yas Marina" id="track-3" data-x="2500" data-y="5000" data-track="img/abu-dhabi.svg">
-				<label for="track-3" tabindex="1"><span>Yas Marina, Abu Dhabi</span></label>
-				<div id="track-preview"></div>
-			</li>
-		</ul>
-		<h1>Settings</h1>
-		<ul>
-			<li>
-				<label><input type="radio" name="settings-quality" value="low" checked><span>LOW <br>(800x600)</span></label></li>
-			<li><label><input type="radio" name="settings-quality" value="medium"><span>MED <br>(1024x768)</span></label></li>
-			<li><label><input type="radio" name="settings-quality" value="high"><span>HIGH <br>(1280x1024)</span></label></li>
-		</ul>
-		<button name="race-start">START</button>
-		<h1><br><br>Lap Record<br>
-			<span class="lap-record"></span>
-		</h1>
-	</section>
+			<input type="radio" name="option" value="3" id="screen-select"><label for="screen-select"><i class="fa fa-desktop"></i> Screen</label>
+			<fieldset>
+				<!-- <legend>Screen</legend> -->
+				<input type="radio" name="screen" value="mobile" id="screen1"><label for="screen1"><i class="fa fa-tablet fa-rotate-90"></i> 800&times;600</label>
+				<input type="radio" name="screen" value="tablet" id="screen2"><label for="screen2"><i class="fa fa-laptop"></i> 1024&times;768</label>
+				<input type="radio" name="screen" value="desktop" id="screen3"><label for="screen3"><i class="fa fa-desktop"></i> 1280&times;1024</label>
+				<input type="radio" name="screen" value="fullscreen" id="screen4" checked><label for="screen4"><i class="fa fa-tv"></i> Fullscreen</label>
+			</fieldset>
+		</fieldset>
+	</form>
+
+	<div class="ui-hint">
+		<label>
+			<button class="ui-button toggle-start"><span>&times;</span>
+			</button> start race
+		</label>
+	</div>
 
 	<canvas id="game" width="1024" height="768"></canvas>
-	<div id="minimap">
-		<span class="blip"></span>
-	</div>
 
 	<output id="speedometer">
 		<div class="needle"></div>
@@ -69,8 +82,8 @@
 	<article class="help">
 
 		<input type="checkbox" name="controls-toggle">
-		
-		<!-- 
+
+		<!--
 		<dl class="key info">
 			<dt data-letter="a">A</dt><dd>Accelerate</dd>
 			<dt>Z</dt><dd>Brake</dd>
@@ -84,8 +97,16 @@
 			<li class="best"></li>
 			<li class="last"></li>
 		</ol>
-
 	</article>
+
+	<div class="preload" style="display:none">
+		<img src="img/barcelona.svg" class="barcelona">
+		<img src="img/interlagos.svg" class="interlagos">
+		<img src="img/abu-dhabi.svg" class="abu-dhabi">
+		<img src="img/sochi.svg" class="sochi">
+		<img src="img/hockenheim.svg" class="hockenheim">
+		<img src="img/screenshot.png" />
+	</div>
 
 </body>
 </html>

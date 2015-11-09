@@ -75,7 +75,7 @@ dd {
 	min-height: 600px;
 	display: block;
 	margin: 0 auto;
-	transform: scale(.1);
+	transform: scale(1.5);
 	opacity: 0;
 	transition: opacity 2s .5s, transform 2.5s .5s, box-shadow 2s 4s;
 }

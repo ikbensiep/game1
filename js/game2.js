@@ -95,7 +95,7 @@ Game.prototype = {
 			angle: 90,
 			mod: 1,
 			speed: 1,
-			maxspeed: 42,
+			maxspeed: 40,
 			width: 240,
 			height: 180
 		});
@@ -190,7 +190,7 @@ Game.prototype = {
 		if (secs < 10) secs = '0' + secs;
 
 		// it must be a 'valid' lap
-		if(laptime > 2) {
+		if(laptime > 20) {
 			this.laptimes.push ( mins + ':' + secs );
 			this.lapstarttime = new Date().getTime();
 		}
@@ -200,7 +200,6 @@ Game.prototype = {
 		var last = laptimes[laptimes.length - 1];
 		var best = laptimes.slice(0);
 		best.sort();
-
 
 		document.querySelector('.laps').innerHTML = laptimes.length;
 		document.querySelector('.best').innerHTML = best[0] ? best[0] : '--.---';
@@ -305,7 +304,7 @@ Game.prototype = {
 
 			if (this.car.speed < this.car.maxspeed && !this.keys[90]) {
 				//this.car.speed = 1 + (this.car.speed * 1.001);
-				this.car.speed += 0.5;
+				this.car.speed += 0.15;
 			}
 
 			if (this.car.speed > this.car.maxspeed) {

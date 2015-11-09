@@ -63,7 +63,7 @@ body[race-end] .laptimes li:nth-child(n+4) {
 	animation: laptimes 2s 1 forwards linear;
 }
 body[race-end] .laptimes li.pb {
-	color: rebeccapurple;
+	color: #D70AD5;
 }
 
 body[race-end] .laptimes li:nth-child(2),

@@ -12,6 +12,7 @@ body[race-start] .world {
 body[race-start] form {
 	transform: translateY(-100vh);
 }
+
 body[race-start] #game,
 body[race-end] #game {
 	opacity: 1;
@@ -146,11 +147,17 @@ body[race-end] .laptimes li:nth-child(n+9) {  animation-delay: .11s}
 }
 
 .abu-dhabi .garage {
-	transform: translateX(-391px) translateZ(0px) translateY(-146px) rotateZ(48deg) scale(0.6);
+	transform: translateX(-294px) translateZ(0px) translateY(-86px) rotateZ(48deg) scale(0.4);
 }
 
 .abu-dhabi .car-preview {
 	transform: translateX(-850%) rotate(50deg);
+}
+
+.hockenheim .garage {
+    left: 17%;
+    top: 75%;
+    transform: rotate(36deg);
 }
 
 .front,
@@ -211,14 +218,13 @@ body[unresolved] form {
 
 form {
 	width: 100vw;
-	height: 70vh;
-	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.11) 10%, transparent 50%);
+	height: 100vh;
+	background: rgba(0,0,0,.5);
 	text-align: center;
 	position: absolute;
 	padding: 3em;
 	box-sizing: border-box;
 	margin: 0 auto;
-	opacity: 0.75;
 	z-index: 1000;
 	transition: opacity 2s 1s;
 }
@@ -230,9 +236,10 @@ form:hover fieldset {
 
 fieldset {
 	border: none;
-	opacity: 0;
+	opacity: .75;
 	transition: opacity 5s .5s cubic-bezier(0.42, 0, 0, 1.01);
 }
+
 form > fieldset {
 	min-height: 6em;
 	height: 60%;
@@ -251,6 +258,7 @@ input {
 	opacity: 0.01;
 }
 label {
+	cursor: pointer;
 	display: inline-block;
 	min-height: 1em;
 	line-height: 2em;

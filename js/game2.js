@@ -17,7 +17,7 @@ Game.prototype = {
 	car : null,
 	track : null,
 
-	racelaps : 5,
+	racelaps : 3,
 	racestarttime: new Date().getTime(),
 	raceendtime: null,
 	laptimes: ['00.000'],
@@ -117,7 +117,7 @@ Game.prototype = {
 		// checking what keys were pressed
 		this.checkUserInput();
 
-		if (this.laptimes.length == this.racelaps && !this.racefinished) {
+		if (this.laptimes.length === this.racelaps && !this.racefinished) {
 			this.racefinished = true;
 			this.endRace();
 		}
@@ -125,7 +125,7 @@ Game.prototype = {
 		// update engine sound
 		this.engine.updateEngine(this.car.speed);
 		// draw speedometer
-		//this.drawHUD();
+		// this.drawHUD();
 
 		// moving the floor
 		this.drawFloor();
@@ -150,7 +150,6 @@ Game.prototype = {
 		// var ty = 'translateY(' + (Math.floor(this.world.y / this.world.height * 100) * 3.1 * -1) + 'px)';
 
 		// this.blip.style.transform = tx + ' ' + ty;
-		//
 	},
 
 	checkGroundType: function () {
@@ -158,20 +157,29 @@ Game.prototype = {
 		var image = this.octx.getImageData(canvas.width/2, canvas.height/2, 1,1);
 
 		// on track
-		if (image.data[0] == 26) { this.car.maxspeed = 52; }
+		if (image.data[0] === 26 && image.data[1] === 26 && image.data[2] === 26) { 
+			this.car.maxspeed = 52; 
+		}	
 
 		// in pits
-		if (image.data[0] == 28 || image.data[0] == 28) { this.car.maxspeed = 15; }
+		if (image.data[0] === 28 && image.data[1] === 28 && image.data[2] === 28 ) { 
+			this.car.maxspeed = 15; 
+		}
 
 		// off track
-		if (image.data[0] == 0 || image.data[0] > 80) {
+		if (image.data[0] === 0 || image.data[0] > 80) {
+			// wtf?
 			if(image.data[0] !== 219) {
-				this.car.maxspeed = 22;
+				this.car.maxspeed = 5;
 			}
 		}
 
+		if(this.racefinished) {
+			this.car.maxspeed = 0; 
+		}
+
 		// trigger lap timer by slightly lighter start/finish line area (see .svg#markings)
-		if(image.data[0] === 25 && image.data[1] === 25 && image.data[2] === 25 ) {
+		if(image.data[0] === 27 && image.data[1] === 27 && image.data[2] === 27 ) {
 			this.setLapTime();
 		}
 
@@ -377,6 +385,17 @@ Game.prototype = {
 			this.car.state = 0;
 		}
 
+		// M for mute/unmute
+		if(event.keyCode == 77) {
+			let sourceBuffer = this.engine.sourceBuffer;
+			console.log(sourceBuffer);
+			if(sourceBuffer.context.state === 'running') {
+				sourceBuffer.context.suspend();
+			} else {
+				sourceBuffer.context.resume();
+			}
+		}
+
 		if (event.keyCode == 27) {
 			var menu = document.forms[0];
 			if(menu.className === '' ){
@@ -410,7 +429,6 @@ Game.prototype = {
 				el.className = "laptime";
 			}
 		});
-
 
 		this.raceendtime = new Date().getTime();
 		racetime = (this.raceendtime - this.racestarttime ) / 1000;
@@ -457,5 +475,6 @@ window.addEventListener("change", function (e) {
 
 	if(e.target.name === 'track') {
 		trackpreview.className = 'track-preview ' + e.target.value;
+		document.body.className = (e.target.value);
 	}
 });

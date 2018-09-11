@@ -59,9 +59,6 @@ body[race-end] .laptimes li:nth-child(3) {
 body[race-end] .laptimes li:nth-child(n+5) { animation-delay: .7s}
 body[race-end] .laptimes li:nth-child(n+6) {  animation-delay: .8s}
 body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
-body[race-end] .laptimes li:nth-child(n+8) {  animation-delay: .10s}
-body[race-end] .laptimes li:nth-child(n+9) {  animation-delay: .11s}
-body[race-end] .laptimes li:nth-child(n+9) {  animation-delay: .11s}
 
 @keyframes laptimes {
 	from {
@@ -211,6 +208,7 @@ body[race-end] .laptimes li:nth-child(n+9) {  animation-delay: .11s}
 body.pause .track-preview {
 	animation: none;
 }
+
 body[unresolved] form {
 	opacity: 0;
 	transition: opacity 5s;

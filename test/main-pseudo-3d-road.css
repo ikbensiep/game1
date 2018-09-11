@@ -1,0 +1,116 @@
+    body {
+        margin: 0;
+        padding: 0;
+        perspective: 1000px;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        background: #cdfffa;
+    }
+    .world {
+        background: linear-gradient(#5faf00, green);
+        width: 200vw;
+        height: 100vh;
+        transform: rotateX(65deg) translateY(100px);
+        transform-origin: center;
+        margin-left: -50%;
+        transform-style: preserve-3d;
+    }
+
+    .road {
+        background-color: #181818;
+        border: 10px solid #f5d653;
+        height: 20vw;
+        width: 100%;
+        overflow: hidden;
+        top: 50%;
+        position: relative;
+
+    }
+    .road section {
+        background-color: #ffffff0a;
+
+        width: 50%;
+        height: 100%;
+        animation: road 1s linear infinite;
+    }
+
+    .road section:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        border-top: 13px dashed #ffffff1f;
+        width: 350%;
+        left: -100%;
+    }
+
+    .car {
+        top: -15%;
+        position: relative;
+        left: 35%;
+        transform: rotateX(-70deg) translateX(0vw);
+        height: 360px;
+        width: 960px;
+        transform-origin: bottom;
+        transition: all .2s;
+        animation: car 15s  ease-in-out infinite;
+    }
+
+    .car .tire {
+        background-image: url('https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2F9%2F9d%2FF1_tire_2013-hard.png&f=1');
+        background-color: #000e;
+        background-size: cover;
+        width: 142px;
+        height: 142px;
+        position: absolute;
+        border-radius: 50%;
+        animation: tire .2s linear infinite;
+    }
+
+    .car .tire.front {
+        top: 218px;
+        left: 692px;
+    }
+
+    .car .tire.back {
+        top: 220px;
+        left: 27px;
+    }
+
+    @keyframes road {
+        from {
+            transform: translateX(200%);
+        }
+
+        to {
+            transform: translateX(-100%);
+        }
+    }
+
+    @keyframes tire {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes car {
+        from {
+            transform: rotateX(-70deg) translateX(-110vw);
+        }
+        
+        45% {
+            transform: rotateX(-70deg) translateX(0);
+            top: 9%;
+        }
+        65% {
+            transform: rotateX(-70deg) translateX(0);
+            top: 10%;
+        }
+        
+        to {
+            transform: rotateX(-70deg) translateX(110vw);
+        }
+    }

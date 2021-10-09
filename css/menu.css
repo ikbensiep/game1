@@ -17,7 +17,6 @@ body[race-start] #game,
 body[race-end] #game {
 	opacity: 1;
 	transform: scale(1);
-	box-shadow: inset 0 0 100px 10px black;
 }
 
 body[race-start] .ui-hint {
@@ -86,7 +85,7 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 	transform: rotate(0deg) translateZ(-100px) translateY(-650px);
 	transform-style: preserve-3d;
 	transform-origin: center;
-	animation: rotate 30s 1s infinite ease-in-out;
+	/* animation: rotate 30s 1s infinite ease-in-out; */
 }
 
 .track-preview.interlagos {
@@ -100,15 +99,17 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 
 .track-preview.abu-dhabi {
 	background-image: url(../img/abu-dhabi.svg);
-	background-size: 110%;
 }
 
 .track-preview.sochi {
 	background-image: url(../img/sochi.svg);
+	transform-origin: 60% 60%;
+	transform: rotate(210deg) translateZ(-100px) translateY(-650px);
 }
 
 .track-preview.hockenheim {
 	background-image: url(../img/hockenheim.svg);
+	transform: rotate(90deg) translateZ(-100px) translateY(-650px);
 }
 
 .car-preview {
@@ -144,7 +145,7 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 }
 
 .abu-dhabi .garage {
-	transform: translateX(-294px) translateZ(0px) translateY(-86px) rotateZ(48deg) scale(0.4);
+	transform: translateX(-604px) translateZ(0px) translateY(-350px) rotateZ(48deg);
 }
 
 .abu-dhabi .car-preview {
@@ -155,6 +156,11 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
     left: 17%;
     top: 75%;
     transform: rotate(36deg);
+}
+
+.sochi .garage {
+	transform: rotate(22deg) translateY(760px) translateX(1000px);
+	transform-origin: bottom;
 }
 
 .front,
@@ -180,14 +186,14 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 
 .front {
 	top: 50%;
-	background-image: url(../img/garages-front.png), linear-gradient(to bottom, rgba(165, 236, 255, 1) 10%, rgba(65, 216, 255, 0.9) 34%, transparent 80%);
+	background-image: url(../img/pit-texture.png);
 	background-position: left bottom, left top;
 	background-repeat: repeat-x;
 	background-size: 34%, 100%;
 }
 .back {
 	top: -50%;
-	background-image: url(../img/garages-front.png), linear-gradient(to bottom, gray 10%, black 34%, transparent 98%);
+	background-image: url(../pit-texture.pngfront.png);
 	background-position: left bottom, left top;
 	background-repeat: repeat-x;
 	background-size: 34%, 100%;
@@ -369,6 +375,10 @@ button[data-comingsoon]:after {
 	to {
 		transform: rotate(360deg) translateZ(-100px) translateY(-150px) scale(1);
 	}
+}
+
+@keyframes test2 {
+
 }
 
 @keyframes grid {

@@ -71,13 +71,22 @@ Game.prototype = {
 		this.keys = [];
 
 		this.world = new Sprite ({
-			name: 'Barcelona',
-			images: [selectedtrack.dataset.mapfile],
+			name: [selectedtrack.value],
+			images: [`img/${selectedtrack.value}.svg`],
 			x: selectedtrack.dataset.x,
 			y: selectedtrack.dataset.y,
 			height: 3200 * 6,
 			width: 3200 * 6
 		});
+
+		this.world_bridges = new Sprite ({
+			name: 'bridges',
+			images: [`img/${selectedtrack.value}-bridges.svg`],
+			x: selectedtrack.dataset.x,
+			y: selectedtrack.dataset.y,
+			height: 3200 * 6,
+			width: 3200 * 6
+		})
 
 		floor = {
 			x:0,
@@ -125,7 +134,7 @@ Game.prototype = {
 		// update engine sound
 		this.engine.updateEngine(this.car.speed);
 		// draw speedometer
-		// this.drawHUD();
+		this.drawHUD();
 
 		// moving the floor
 		this.drawFloor();
@@ -134,21 +143,20 @@ Game.prototype = {
 		this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		this.world.draw(this.octx);
-		this.ctx.drawImage(this.ocvs, 0, 0);
+		// this.ctx.drawImage(this.ocvs, 0, 0);
 
 		this.checkGroundType();
 
 		this.car.draw(this.octx);
-		this.ctx.drawImage(this.ocvs, 0, 0);
-
-		//this.world_bridges.draw(this.octx)
 		//this.ctx.drawImage(this.ocvs, 0, 0);
+
+		this.world_bridges.draw(this.octx)
+		this.ctx.drawImage(this.ocvs, 0, 0);
 
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
 
 		// var tx = 'translateX(' + (Math.floor(this.world.x / this.world.width * 100) * 3.1 * -1) + 'px)';
 		// var ty = 'translateY(' + (Math.floor(this.world.y / this.world.height * 100) * 3.1 * -1) + 'px)';
-
 		// this.blip.style.transform = tx + ' ' + ty;
 	},
 
@@ -236,7 +244,7 @@ Game.prototype = {
 	},
 
 	drawHUD : function() {
-		hud.setAttribute('data-speed', Number(this.car.speed * 2).toFixed(0));
+		hud.setAttribute('data-speed', Number(this.car.speed * 4).toFixed(0));
 		hud.querySelector('.needle').style.transform = 'rotateZ(' + Math.ceil(this.car.speed * 2 * 1.8) + 'deg)';
 	},
 
@@ -246,12 +254,12 @@ Game.prototype = {
 
 		this.world.x -= x;
 		this.world.y -= y;
-		// this.world_bridges.x -= x;
-		// this.world_bridges.y -= y;
+		this.world_bridges.x -= x;
+		this.world_bridges.y -= y;
 	},
 
 	checkGamepad : function () {
-		this.gamepad = navigator.getGamepads()[0];
+		// this.gamepad = navigator.getGamepads()[0];
 	},
 
 	checkUserInput : function() {

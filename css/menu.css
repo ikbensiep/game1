@@ -37,6 +37,14 @@ body[race-end] .laptimes {
 	line-height: 2.5;
 }
 
+body[race-end] .laptimes .ui-hint {
+    opacity: 1 !important;
+    top: 35em;
+    left: calc(48% - 4em);
+	transition-delay: 3s;
+}
+
+
 body[race-end] .laptimes li:nth-child(2n+3) {
 	background-color: rgba(0,0,0,.25);
 }

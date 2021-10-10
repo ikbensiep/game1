@@ -49,9 +49,9 @@
 				<!-- <legend>Track</legend> -->
 				<input type="radio" name="track" id="track1" value="barcelona" data-x="0" data-y="4500" data-mapfile="img/barcelona.svg" checked><label for="track1">Barcelona</label>
 				<input type="radio" name="track" id="track2" value="interlagos" data-x="-500" data-y="-400" data-mapfile="img/interlagos.svg"><label for="track2">Interlagos</label>
-				<input type="radio" name="track" id="track3" value="abu-dhabi" data-x="2210" data-y="1646" data-mapfile="img/abu-dhabi.svg"><label for="track3">Yas Marina</label>
-				<input type="radio" name="track" id="track4" value="sochi" data-x="-8000" data-y="-5050" data-mapfile="img/sochi.svg"><label for="track4">Sochi</label>
-				<input type="radio" name="track" id="track5" value="hockenheim" data-x="6500" data-y="-5500" data-mapfile="img/hockenheim.svg"><label for="track5">Hockenheim</label>
+				<input type="radio" name="track" id="track3" value="abu-dhabi" data-x="2210" data-y="1646" data-angle="45" data-mapfile="img/abu-dhabi.svg"><label for="track3">Yas Marina</label>
+				<input type="radio" name="track" id="track4" value="sochi" data-x="-6000" data-y="-8050" data-angle="200" data-mapfile="img/sochi.svg"><label for="track4">Sochi</label>
+				<input type="radio" name="track" id="track5" value="hockenheim" data-x="6500" data-y="-5500" data-angle="230" data-mapfile="img/hockenheim.svg"><label for="track5">Hockenheim</label>
 			</fieldset>
 
 			<input type="radio" name="option" value="3" id="screen-select"><label for="screen-select"><i class="fa fa-desktop"></i> Screen</label>
@@ -82,24 +82,26 @@
 	<article class="help">
 		<input type="checkbox" name="controls-toggle">
 
-		<!--
+		
 		<dl class="key info">
 			<dt data-letter="a">A</dt><dd>Accelerate</dd>
 			<dt>Z</dt><dd>Brake</dd>
 			<dt>&larr;</dt><dd>Turn left</dd>
 			<dt>&rarr;</dt><dd>Turn right</dd>
 		</dl>
-		-->
 
 		<ol class="laptimes">
 			<li class="laps">0</li>
 			<li class="best"></li>
 			<li class="last"></li>
+			<section class="ui-hint">
+				<label>
+					<button class="ui-button toggle-menu"><span>&times;</span>
+					</button>continue
+				</label>
+			</section>
 		</ol>
-		<section>
-			<button>Save</button>
-			<button>Continue</button>
-		</section>
+		
 	</article>
 
 	<div class="preload" style="display:none">

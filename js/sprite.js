@@ -34,7 +34,7 @@ Sprite.prototype = {
 	images: [],
 	x: null,
 	y: null,
-	angle: 0,
+	angle: null,
 	state: 0,
 	width: null,
 	height: null,

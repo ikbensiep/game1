@@ -32,6 +32,9 @@ Game.prototype = {
 		var startRaceButton = document.querySelector('button.toggle-start');
 		startRaceButton.addEventListener("click", this.initGame.bind(this), false);
 
+		var endRaceButton = document.querySelector('button.toggle-menu');
+		endRaceButton.addEventListener("click", this.endGame.bind(this), false);
+
 		window.addEventListener("change", function (e) {
 			console.log("change: ", e.target.name, e.target.value);
 		});
@@ -75,8 +78,9 @@ Game.prototype = {
 			images: [`img/${selectedtrack.value}.svg`],
 			x: selectedtrack.dataset.x,
 			y: selectedtrack.dataset.y,
-			height: 3200 * 6,
-			width: 3200 * 6
+			angle: 0,
+			height: 3200 * 7,
+			width: 3200 * 7
 		});
 
 		this.world_bridges = new Sprite ({
@@ -84,8 +88,8 @@ Game.prototype = {
 			images: [`img/${selectedtrack.value}-bridges.svg`],
 			x: selectedtrack.dataset.x,
 			y: selectedtrack.dataset.y,
-			height: 3200 * 6,
-			width: 3200 * 6
+			height: 3200 * 7,
+			width: 3200 * 7
 		})
 
 		floor = {
@@ -101,12 +105,12 @@ Game.prototype = {
 			],
 			x: canvas.width / 2,
 			y: canvas.height / 2,
-			angle: 90,
+			angle: parseInt(selectedtrack.dataset.angle) || 0,
 			mod: 1,
 			speed: 1,
 			maxspeed: 40,
-			width: 240,
-			height: 180
+			width: 420,
+			height: 340
 		});
 
 		this.engine = new Engine(this.car);
@@ -124,7 +128,9 @@ Game.prototype = {
 		this.checkGamepad();
 
 		// checking what keys were pressed
+		
 		this.checkUserInput();
+		
 
 		if (this.laptimes.length === this.racelaps && !this.racefinished) {
 			this.racefinished = true;
@@ -133,53 +139,78 @@ Game.prototype = {
 
 		// update engine sound
 		this.engine.updateEngine(this.car.speed);
+
 		// draw speedometer
 		this.drawHUD();
 
 		// moving the floor
 		this.drawFloor();
 
-		this.octx.clearRect(0, 0, canvas.width, canvas.height);
 		this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+		this.octx.clearRect(0, 0, canvas.width, canvas.height);
 
+		// first draw the world on the off-screen canvas
 		this.world.draw(this.octx);
-		// this.ctx.drawImage(this.ocvs, 0, 0);
-
+		
+		// immediately check the center pixel of the world 
+		// (this is the car's location)
 		this.checkGroundType();
 
-		this.car.draw(this.octx);
-		//this.ctx.drawImage(this.ocvs, 0, 0);
+		// if the car is off track, make it semi-transparent
+		this.octx.globalAlpha = this.car.opacity;
 
+		// draw the car onto the off-screen canvas
+		this.car.draw(this.octx);
+		
+		// set opacity back to 1
+		this.octx.globalAlpha = 1;
+
+		// draw the bridges layer onto off-screen canvas
 		this.world_bridges.draw(this.octx)
+
+		// draw off-screen canvas to on-screen canvas
 		this.ctx.drawImage(this.ocvs, 0, 0);
 
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
 
-		// var tx = 'translateX(' + (Math.floor(this.world.x / this.world.width * 100) * 3.1 * -1) + 'px)';
-		// var ty = 'translateY(' + (Math.floor(this.world.y / this.world.height * 100) * 3.1 * -1) + 'px)';
-		// this.blip.style.transform = tx + ' ' + ty;
+		var tx = `translateX( ${(Math.floor(this.world.x / this.world.width * 100) * 3.1 * -1)}px)`;
+		var ty = `translateY( ${(Math.floor(this.world.y / this.world.height * 100) * 3.1 * -1)}px)`;
+		this.blip.style.transform = `${tx} ${ty}`;
 	},
 
 	checkGroundType: function () {
-
+		// sample 1x1 pixel in center of world (ie the location of the car)
 		var image = this.octx.getImageData(canvas.width/2, canvas.height/2, 1,1);
-
+		var pixel1 = image.data[0];
+		var pixel2 = image.data[1];
+		var pixel3 = image.data[2];
+		
 		// on track
-		if (image.data[0] === 26 && image.data[1] === 26 && image.data[2] === 26) { 
-			this.car.maxspeed = 52; 
+		if (pixel1 === 26 && pixel2 === 26 && pixel3 === 26) { 
+			this.car.maxspeed = 50; 
+			this.car.opacity = 1;
 		}	
 
 		// in pits
-		if (image.data[0] === 28 && image.data[1] === 28 && image.data[2] === 28 ) { 
+		if (pixel1 === 28 && pixel2 === 28 && pixel3 === 28 ) { 
 			this.car.maxspeed = 15; 
+			this.car.opacity = 1;
 		}
 
 		// off track
-		if (image.data[0] === 0 || image.data[0] > 80) {
-			// wtf?
-			if(image.data[0] !== 219) {
-				this.car.maxspeed = 5;
+		if (pixel1 === 0 || pixel1 > 80) {
+			
+			this.car.maxspeed = 5;
+			
+			this.car.opacity = 0.5;
+
+			if(pixel1 === 128) {
+				console.log('collision!')
+				this.car.mod = -1;
+			} else {
+				this.car.mod = 1;
 			}
+
 		}
 
 		if(this.racefinished) {
@@ -263,7 +294,7 @@ Game.prototype = {
 	},
 
 	checkUserInput : function() {
-
+		// gamepad
 		if(this.gamepad) {
 
 			if (this.gamepad.buttons[7].pressed) {
@@ -272,11 +303,8 @@ Game.prototype = {
 				this.car.state = 0;
 
 				if (this.car.speed < this.car.maxspeed) {
-
 					var acc = 2 * Number(this.gamepad.buttons[7].value.toFixed(3));
-
 					this.car.speed += acc;
-
 				}
 			}
 
@@ -313,44 +341,43 @@ Game.prototype = {
 			}
 		}
 
+		// keyboard
 		// accelerate
-		if (this.keys[65] == true) {
-
-			this.car.mod = 1;
+		if (this.keys[65] == true && this.car.mod == 1) {
 
 			if (this.car.speed < this.car.maxspeed && !this.keys[90]) {
-				//this.car.speed = 1 + (this.car.speed * 1.001);
-				this.car.speed += 0.15;
+				this.car.acc = (this.car.maxspeed - this.car.speed) / 100;
+				this.car.speed += this.car.acc;
 			}
 
 			if (this.car.speed > this.car.maxspeed) {
 				this.car.speed -= Number(this.car.speed * 0.01).toFixed(2);
 			}
 
-			if (this.car.speed <= 0) this.car.speed = 0.1;
+			
 
 		} else {
 			// release accelerator
-			if (this.car.speed > 0) this.car.speed = this.car.speed * 0.975;
+			if (this.car.speed > 0) this.car.speed = this.car.speed / 1.01;
 
-			if (this.car.speed < 0) this.car.speed = 0;
+			// if (this.car.speed < 0.05) this.car.speed = 0;
+			this.car.mod = 1;
 		}
 
 		// brake
 		if (this.keys[90]) {
 			this.car.state = 1;
-			//this.car.mod = -1;
-
+			
 			if( this.car.speed > 1) {
-				this.car.speed = this.car.speed * 0.98;
+				this.car.speed = this.car.speed * 0.975;
 			}
 
 			if (this.car.speed <= 15 && this.car.speed > 0) {
-				this.car.speed -= 0.5;
+				this.car.speed -= 0.25;
 			}
 
 			if (this.car.speed <= 0) {
-				this.car.speed -= 1;
+				this.car.speed = 0;
 			}
 		}
 
@@ -453,6 +480,10 @@ Game.prototype = {
 		document.querySelector('.laptimes').appendChild(el);
 	},
 
+	endGame : () => {
+		window.location.reload(false); 
+	},
+
 	initGame : function (event) {
 		// resetting lap times
 		var teaser = document.querySelector('.world').style.display = "none";
@@ -468,12 +499,6 @@ Game.prototype = {
 
 }
 
-window.onload = function() {
-	document.body.removeAttribute('unresolved');
-	var racegame = new Game();
-	racegame.setup();
-};
-
 window.addEventListener("change", function (e) {
 	var trackpreview = document.querySelector('.track-preview');
 
@@ -486,3 +511,9 @@ window.addEventListener("change", function (e) {
 		document.body.className = (e.target.value);
 	}
 });
+
+window.onload = function() {
+	document.body.removeAttribute('unresolved');
+	racegame.setup();
+};
+var racegame = new Game();

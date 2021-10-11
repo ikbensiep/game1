@@ -108,10 +108,19 @@ Game.prototype = {
 			angle: parseInt(selectedtrack.dataset.angle) || 0,
 			mod: 1,
 			speed: 1,
-			maxspeed: 40,
+			maxspeed: 50,
 			width: 420,
 			height: 320
 		});
+
+		this.dustclouds = new Sprite({
+			name: 'cloud',
+			images: ['img/dust-cloud-2.png'],
+			x: canvas.width / 2,
+			y: canvas.height / 2,
+			opacity: .9,
+			angle: 0
+		})
 
 		this.engine = new Engine(this.car);
 
@@ -154,10 +163,19 @@ Game.prototype = {
 		
 		// immediately check the center pixel of the world 
 		// (this is the car's location)
-		this.checkGroundType();
 
+		var wheresthecar = this.checkGroundType();
+		if (wheresthecar === 'offtrack') {
+			
+			this.car.opacity = 0.75;
+			this.dustclouds.opacity = 1;
+			this.dustclouds.angle = this.car.angle + Math.random() * 180;			
+			this.dustclouds.opacity = this.car.speed / 40;
+			this.dustclouds.draw(this.octx);
+		}
+		
 		// if the car is off track, make it semi-transparent
-		this.octx.globalAlpha = this.car.opacity;
+		this.octx.globalAlpha = 1;
 
 		// draw the car onto the off-screen canvas
 		this.car.draw(this.octx);
@@ -179,6 +197,7 @@ Game.prototype = {
 	},
 
 	checkGroundType: function () {
+		var ontrackStatus = undefined;
 		// sample 1x1 pixel in center of world (ie the location of the car)
 		var image = this.octx.getImageData(canvas.width/2, canvas.height/2, 1,1);
 		var pixel1 = image.data[0];
@@ -189,12 +208,14 @@ Game.prototype = {
 		if (pixel1 === 26 && pixel2 === 26 && pixel3 === 26) { 
 			this.car.maxspeed = 50; 
 			this.car.opacity = 1;
+			ontrackStatus = 'ontrack';
 		}	
 
 		// in pits
 		if (pixel1 === 28 && pixel2 === 28 && pixel3 === 28 ) { 
 			this.car.maxspeed = 15; 
 			this.car.opacity = 1;
+			ontrackStatus = 'pits';
 		}
 
 		// off track
@@ -202,15 +223,13 @@ Game.prototype = {
 			
 			this.car.maxspeed = 5;
 			
-			this.car.opacity = 0.5;
-
 			if(pixel1 === 128) {
 				console.log('collision!')
 				this.car.mod = -1;
 			} else {
 				this.car.mod = 1;
 			}
-
+			ontrackStatus = 'offtrack';
 		}
 
 		if(this.racefinished) {
@@ -221,6 +240,8 @@ Game.prototype = {
 		if(image.data[0] === 27 && image.data[1] === 27 && image.data[2] === 27 ) {
 			this.setLapTime();
 		}
+
+		return ontrackStatus;
 
 	},
 
@@ -354,11 +375,9 @@ Game.prototype = {
 				this.car.speed -= Number(this.car.speed * 0.01).toFixed(2);
 			}
 
-			
-
 		} else {
 			// release accelerator
-			if (this.car.speed > 0) this.car.speed = this.car.speed / 1.01;
+			if (this.car.speed > 0) this.car.speed = this.car.speed / 1.005;
 
 			// if (this.car.speed < 0.05) this.car.speed = 0;
 			this.car.mod = 1;
@@ -369,7 +388,7 @@ Game.prototype = {
 			this.car.state = 1;
 			
 			if( this.car.speed > 1) {
-				this.car.speed = this.car.speed * 0.975;
+				this.car.speed = this.car.speed * 0.985;
 			}
 
 			if (this.car.speed <= 15 && this.car.speed > 0) {
@@ -384,12 +403,21 @@ Game.prototype = {
 		// steering
 		if (this.keys[37]) {
 			if(Math.floor(this.car.speed) !== 0) {
-				this.car.angle -= 3;
+				if( this.car.speed > 20) {
+					this.car.angle -= (40 / this.car.speed) * 2;
+				} else {
+					this.car.angle -= 2;
+				}
 			}
+			
 		}
 		if (this.keys[39]) {
 			if(Math.floor(this.car.speed) !== 0) {
-				this.car.angle += 3;
+				if(this.car.speed > 20) {
+					this.car.angle += (40 / this.car.speed) * 2;
+				} else {
+					this.car.angle += 2;
+				}
 			}
 		}
 	},

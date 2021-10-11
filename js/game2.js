@@ -110,7 +110,7 @@ Game.prototype = {
 			speed: 1,
 			maxspeed: 40,
 			width: 420,
-			height: 340
+			height: 320
 		});
 
 		this.engine = new Engine(this.car);
@@ -175,7 +175,7 @@ Game.prototype = {
 
 		var tx = `translateX( ${(Math.floor(this.world.x / this.world.width * 100) * 3.1 * -1)}px)`;
 		var ty = `translateY( ${(Math.floor(this.world.y / this.world.height * 100) * 3.1 * -1)}px)`;
-		this.blip.style.transform = `${tx} ${ty}`;
+		// this.blip.style.transform = `${tx} ${ty}`;
 	},
 
 	checkGroundType: function () {

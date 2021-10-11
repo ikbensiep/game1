@@ -52,15 +52,17 @@ Engine.prototype = {
 
 	updateEngine: function (speed) {
 
-		var f = speed < 0.01 ? 0.35 :
-			speed < 10 ? 0.35 + speed / 12 :
-			speed < 20 ? 0.35 + speed / 22 :
-			speed < 30 ? 0.35 + speed / 38 : 0.35 + speed / 45;
+		var f = speed < 0.01 ? 0.30 :
+			speed < 8 ? 0.30 + speed / 10 :
+			speed < 15 ? 0.30 + speed / 20 :
+			speed < 27.5 ? 0.20 + speed / 40 : 
+			speed < 40 ? 0.20 + speed / 45 : 
+			0.20 + speed / 50;
 
 		this.sourceBuffer.playbackRate.value = f
 
-		//var C = 15;
-		//this.sourceBuffer.playbackRate.value = 0.35 + (speed/C - Math.floor(speed / C));
+		// var C = 15;
+		// this.sourceBuffer.playbackRate.value = 0.35 + (speed/C - Math.floor(speed / C));
 
 	},
 

@@ -17,6 +17,11 @@ body {
 	transition: transform 5s, background-color 1s;
 }
 
+body[race-start] {
+	background-color: transparent;
+	background-image: url('../img/TexturesCom_Grass0197_1_seamless_S.jpg');
+}
+
 body::after {
 	display: block;
 	position: absolute;

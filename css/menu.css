@@ -89,6 +89,7 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 .track-preview {
 	background-position: center 0;
 	background-size: cover;
+	background-repeat: no-repeat;
 	height: 200vw;
 	transform: rotate(0deg) translateZ(-100px) translateY(-650px);
 	transform-style: preserve-3d;
@@ -98,6 +99,7 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 
 .track-preview.interlagos {
 	background-image: url(../img/interlagos.svg);
+	transform: rotate(0deg) translateZ(-100px) translateY(130px);
 }
 
 .track-preview.barcelona {
@@ -105,14 +107,15 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 	background-position-y: 580px;
 }
 
-.track-preview.abu-dhabi {
-	background-image: url(../img/abu-dhabi.svg);
+.track-preview.monza {
+	background-image: url(../img/monza.svg);
+	transform: rotate(-10deg) translateZ(-100px) translateY(-650px) translateX(100px);
 }
 
 .track-preview.sochi {
 	background-image: url(../img/sochi.svg);
 	transform-origin: 60% 60%;
-	transform: rotate(210deg) translateZ(-100px) translateY(-650px);
+	transform: rotate(-80deg) translateZ(-200px) translateY(-650px) translateX(100px);
 }
 
 .track-preview.hockenheim {
@@ -122,8 +125,8 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 
 .car-preview {
 	background-image: url(../img/porsche-1.png);
-	height: 30px;
-	width: 50px;
+	height: 60px;
+	width: 90px;
 	background-size: cover;
 	left: 35%;
 	top: 54%;
@@ -144,21 +147,11 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 	transform-style: preserve-3d;
 }
 
-.barcelona .garage {
-	transform: translateY(-29px) scale(0.8);
-}
+.barcelona .garage {transform: translateY(-29px) scale(0.8);}
+.barcelona .car-preview { transform: translateY(-40px); }
 
-.barcelona .car-preview {
-	transform: translateY(-40px);
-}
-
-.abu-dhabi .garage {
-	transform: translateX(-604px) translateZ(0px) translateY(-350px) rotateZ(48deg);
-}
-
-.abu-dhabi .car-preview {
-	transform: translateX(-850%) rotate(50deg);
-}
+.abu-dhabi .garage { transform: translateX(-604px) translateZ(0px) translateY(-350px) rotateZ(48deg);}
+.abu-dhabi .car-preview { transform: translateX(-850%) rotate(50deg);}
 
 .hockenheim .garage {
     left: 17%;
@@ -169,6 +162,10 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 .sochi .garage {
 	transform: rotate(22deg) translateY(760px) translateX(1000px);
 	transform-origin: bottom;
+}
+.monza .garage {
+	top: 78%;
+	transform: rotate(30deg);
 }
 
 .front,
@@ -183,11 +180,11 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 .left,
 .right {
 	position: absolute;
-	height: 100px;
-	width: 50px;
+	height: 101px;
+	width: 27px;
 	transform: rotateX(0deg) rotateY(-270deg) translateY(0px) translateZ(-50px);
 	background: rgb(100, 100, 100);
-	left: 0;
+	left: 23px;
 	top: 0;
 	transform-origin: right;
 }
@@ -201,7 +198,7 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 }
 .back {
 	top: -50%;
-	background-image: url(../pit-texture.pngfront.png);
+	background-image: url(../img/pit-texture.png);
 	background-position: left bottom, left top;
 	background-repeat: repeat-x;
 	background-size: 34%, 100%;
@@ -215,7 +212,7 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 	width: 100%;
 	height: 100%;
 	background: white;
-	transform: translateZ(50px);
+	transform: translateZ(27px);
 }
 
 

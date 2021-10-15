@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                display: flex;
+                flex-direction: row;
+            }
+            form {
+                width: 25em;
+            }
+            label {
+                display: block;
+                line-height: 2em;
+                cursor: pointer;
+            }
+            img { 
+                width: 100%
+            }
+        </style>
+    </head>
+    <body>
+        <form action="#">
+            <fieldset>
+                <legend>
+                    inspect layer
+                </legend>
+                <label><input type="radio" value="elevated" name="layer">elevated</label>
+                <label><input type="radio" value="track" name="layer">racetrack</label>
+                <label><input type="radio" value="world" name="layer">environment</label>
+                <label><input type="radio" value="path" name="layer" checked>timing</label>
+            </fieldset>
+            <fieldset>
+                <img src="world-concept.svg" alt="">
+            </fieldset>
+        </form>
+        <div>
+            <img src="tracks/template.svg#path" alt="" style="max-width: 80vw; height: 80vh">
+        </div>
+        <script>
+            function changeHandler(e) {
+                let layer = e.target.value;
+                let ImgEl = document.querySelector('body>div>img');
+                
+                let newUrl = ImgEl.src.split('#')[0] + `#${layer}`;
+                ImgEl.src = newUrl;
+                
+            }
+            document.addEventListener('change', changeHandler);
+        </script>
+    </body>
+</html>

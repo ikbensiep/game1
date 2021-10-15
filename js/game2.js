@@ -18,10 +18,10 @@ Game.prototype = {
 	track : null,
 
 	racelaps : 3,
-	racestarttime: new Date().getTime(),
+	racestarttime: null,
 	raceendtime: null,
 	laptimes: ['00.000'],
-	lapstarttime: new Date().getTime(),
+	lapstarttime: null,
 	laptime: null,
 	racefinished: false,
 	req: null,
@@ -48,7 +48,7 @@ Game.prototype = {
 		}
 	},
 
-	init : function() {
+	startRace : function() {
 		var selectedtrack = document.querySelector('input[name=track]:checked');
 		var selectedcar = document.querySelector('input[name=car]:checked');
 		var quality = document.querySelector('input[name=screen]:checked').value;
@@ -85,7 +85,7 @@ Game.prototype = {
 
 		this.world_bridges = new Sprite ({
 			name: 'bridges',
-			images: [`img/${selectedtrack.value}-bridges.svg`],
+			images: [`img/${selectedtrack.value}.svg`],
 			x: selectedtrack.dataset.x,
 			y: selectedtrack.dataset.y,
 			height: 3200 * 7,
@@ -109,8 +109,8 @@ Game.prototype = {
 			mod: 1,
 			speed: 1,
 			maxspeed: 50,
-			width: 420,
-			height: 320
+			width: 320,
+			height: 220
 		});
 
 		this.dustclouds = new Sprite({
@@ -140,7 +140,6 @@ Game.prototype = {
 		
 		this.checkUserInput();
 		
-
 		if (this.laptimes.length === this.racelaps && !this.racefinished) {
 			this.racefinished = true;
 			this.endRace();
@@ -152,8 +151,8 @@ Game.prototype = {
 		// draw speedometer
 		this.drawHUD();
 
-		// moving the floor
-		this.drawFloor();
+		// move the floor
+		var groundLocation = this.drawFloor();
 
 		this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 		this.octx.clearRect(0, 0, canvas.width, canvas.height);
@@ -161,50 +160,64 @@ Game.prototype = {
 		// first draw the world on the off-screen canvas
 		this.world.draw(this.octx);
 		
-		// immediately check the center pixel of the world 
-		// (this is the car's location)
-
+		// then check center pixel and return a string ('ontrack','offtrack')
+		// if offtrack, draw dust clouds
 		var wheresthecar = this.checkGroundType();
-		if (wheresthecar === 'offtrack') {
+		if (wheresthecar === 'offtrack' && this.car.speed > 0) {
 			
 			this.car.opacity = 0.75;
-			this.dustclouds.opacity = 1;
-			this.dustclouds.angle = this.car.angle + Math.random() * 180;			
-			this.dustclouds.opacity = this.car.speed / 40;
+			
+			this.dustclouds.angle = this.car.angle + Math.random() * 180;		
+			this.dustclouds.opacity = this.car.speed / 30;
 			this.dustclouds.draw(this.octx);
+
+		// 	var secondDustcloud = new Sprite({
+		// 		name: 'secondDustcloud',
+		// 		images: ['img/dust-cloud.png'],
+		// 		x: groundLocation[0],
+		// 		y: groundLocation[1],
+		// 		opacity: .9,
+		// 		angle: Math.random() * 90
+		// 	});
+		// 	console.info(`CLOUD x:${secondDustcloud.x} y: ${secondDustcloud.y}`);
+			
+		// 	secondDustcloud.draw(this.octx);
 		}
 		
-		// if the car is off track, make it semi-transparent
-		this.octx.globalAlpha = 1;
-
+		// console.log(`world x:${this.world.x} (${this.world.width}) y: ${this.world.y}`);
+		
 		// draw the car onto the off-screen canvas
 		this.car.draw(this.octx);
 		
-		// set opacity back to 1
-		this.octx.globalAlpha = 1;
-
 		// draw the bridges layer onto off-screen canvas
 		this.world_bridges.draw(this.octx)
 
 		// draw off-screen canvas to on-screen canvas
 		this.ctx.drawImage(this.ocvs, 0, 0);
 
+		// and do it again.
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
 
-		var tx = `translateX( ${(Math.floor(this.world.x / this.world.width * 100) * 3.1 * -1)}px)`;
-		var ty = `translateY( ${(Math.floor(this.world.y / this.world.height * 100) * 3.1 * -1)}px)`;
+		// var tx = `translateX( ${(Math.floor(this.world.x / this.world.width * 100) * 3.1 * -1)}px)`;
+		// var ty = `translateY( ${(Math.floor(this.world.y / this.world.height * 100) * 3.1 * -1)}px)`;
 		// this.blip.style.transform = `${tx} ${ty}`;
 	},
 
+	// Basically the game engine: sample 1x1 pixel in the center of the screen 
+	// (ie location of the car on top of the game world)
+	// and make decisions based on that
 	checkGroundType: function () {
 		var ontrackStatus = undefined;
-		// sample 1x1 pixel in center of world (ie the location of the car)
+		
 		var image = this.octx.getImageData(canvas.width/2, canvas.height/2, 1,1);
 		var pixel1 = image.data[0];
 		var pixel2 = image.data[1];
 		var pixel3 = image.data[2];
 		
+		console.log(`${pixel1}, ${pixel2}, ${pixel3}`)
 		// on track
+		// in the track svgs, asfalt color is #262626
+		
 		if (pixel1 === 26 && pixel2 === 26 && pixel3 === 26) { 
 			this.car.maxspeed = 50; 
 			this.car.opacity = 1;
@@ -212,6 +225,7 @@ Game.prototype = {
 		}	
 
 		// in pits
+		// asfalt color is two tones lighter: #282828
 		if (pixel1 === 28 && pixel2 === 28 && pixel3 === 28 ) { 
 			this.car.maxspeed = 15; 
 			this.car.opacity = 1;
@@ -219,10 +233,12 @@ Game.prototype = {
 		}
 
 		// off track
+		// not even sure what prompted this particular check
 		if (pixel1 === 0 || pixel1 > 80) {
 			
 			this.car.maxspeed = 5;
-			
+			// test code: add a red svg path around the outline of the track to test and handle collision 
+			// for example with guard rails etc (no luck so far)
 			if(pixel1 === 128) {
 				console.log('collision!')
 				this.car.mod = -1;
@@ -246,7 +262,11 @@ Game.prototype = {
 	},
 
 	setLapTime: function () {
-
+		if (!this.lapstarttime) {
+			this.lapstarttime = new Date().getTime();
+			return;
+		}
+	
 		//record current time to compare against last recorded lapstarttime.
 		var lapfinish = new Date().getTime();
 		// ms to s.
@@ -269,7 +289,7 @@ Game.prototype = {
 		var best = laptimes.slice(0);
 		best.sort();
 
-		document.querySelector('.laps').innerHTML = laptimes.length;
+		document.querySelector('.laps').innerHTML = laptimes.length ? laptimes.length : 1;
 		document.querySelector('.best').innerHTML = best[0] ? best[0] : '--.---';
 		document.querySelector('.last').innerHTML = last ? last : '--.---';
 
@@ -308,10 +328,15 @@ Game.prototype = {
 		this.world.y -= y;
 		this.world_bridges.x -= x;
 		this.world_bridges.y -= y;
+		
+		
+		document.body.style.backgroundPosition = `${this.world.x}px ${this.world.y}px`;
+
+		return [this.world.x, this.world.y];
 	},
 
 	checkGamepad : function () {
-		// this.gamepad = navigator.getGamepads()[0];
+		this.gamepad = navigator.getGamepads()[0];
 	},
 
 	checkUserInput : function() {
@@ -324,7 +349,7 @@ Game.prototype = {
 				this.car.state = 0;
 
 				if (this.car.speed < this.car.maxspeed) {
-					var acc = 2 * Number(this.gamepad.buttons[7].value.toFixed(3));
+					var acc = 1.2 * Number(this.gamepad.buttons[7].value.toFixed(3));
 					this.car.speed += acc;
 				}
 			}
@@ -513,16 +538,17 @@ Game.prototype = {
 	},
 
 	initGame : function (event) {
-		// resetting lap times
+		// hide menu screen, show game canvas
 		var teaser = document.querySelector('.world').style.display = "none";
-		// var menu = document.forms[0].style.display = "none";
 		var canvas = document.querySelector('canvas').style.opacity = "1";
-
+		
 		document.body.setAttribute("race-start", "");
-
+		
+		// resetting lap times
 		this.laptimes = [];
-		// starting the racing..
-		this.init();
+
+		// starting the racing
+		this.startRace();
 	}
 
 }

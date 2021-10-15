@@ -216,7 +216,7 @@ Game.prototype = {
 		
 		console.log(`${pixel1}, ${pixel2}, ${pixel3}`)
 		// on track
-		// in the track svgs, asfalt color is #262626
+		// in the track svgs, asfalt color is #1a1a1a (rgb 26 26 26)
 		
 		if (pixel1 === 26 && pixel2 === 26 && pixel3 === 26) { 
 			this.car.maxspeed = 50; 
@@ -225,7 +225,7 @@ Game.prototype = {
 		}	
 
 		// in pits
-		// asfalt color is two tones lighter: #282828
+		// asfalt color is two tones lighter: #1c1c1c (rgb 28 28 28)
 		if (pixel1 === 28 && pixel2 === 28 && pixel3 === 28 ) { 
 			this.car.maxspeed = 15; 
 			this.car.opacity = 1;
@@ -233,7 +233,7 @@ Game.prototype = {
 		}
 
 		// off track
-		// not even sure what prompted this particular check
+		// not even sure what prompted this particular check tbh
 		if (pixel1 === 0 || pixel1 > 80) {
 			
 			this.car.maxspeed = 5;
@@ -336,7 +336,7 @@ Game.prototype = {
 	},
 
 	checkGamepad : function () {
-		this.gamepad = navigator.getGamepads()[0];
+		// this.gamepad = navigator.getGamepads()[0];
 	},
 
 	checkUserInput : function() {

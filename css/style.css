@@ -128,6 +128,14 @@ dd {
 	transition: opacity 2s .5s, transform 2.5s .5s, box-shadow 2s 4s;
 }
 
+#debugsnapshot {
+	position: absolute;
+    right: 10px;
+    top: 6em;
+    background: #0004;
+    width: 10em;
+}
+
 #minimap {
 	width: 311px;
 	height: 162px;

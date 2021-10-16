@@ -325,7 +325,7 @@ Game.prototype = {
 		this.floor.x -= x;
 		this.floor.y -= y;
 		
-		// document.body.style.backgroundPosition = `${this.floor.x}px ${this.floor.y}px`;
+		document.body.style.backgroundPosition = `${this.floor.x}px ${this.floor.y}px`;
 	},
 
 	checkGamepad : function () {

@@ -55,7 +55,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -230,7 +230,7 @@
          id="tspan1565"
          x="135.80554"
          y="84.205276"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.2412px;font-family:Rubik;-inkscape-font-specification:'Rubik, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583">artwork air/sky</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.2412px;font-family:Rubik;-inkscape-font-specification:'Rubik, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583">artwork bridges</tspan></text>
     <g
        id="g1593"
        transform="matrix(0.68421049,0,0,0.68421049,0.97310668,-31.060077)"

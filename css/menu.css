@@ -98,28 +98,23 @@ body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
 }
 
 .track-preview.interlagos {
-	background-image: url(../img/interlagos.svg);
 	transform: rotate(0deg) translateZ(-100px) translateY(130px);
 }
 
 .track-preview.barcelona {
-	background-image: url(../img/barcelona.svg);
 	background-position-y: 580px;
 }
 
 .track-preview.monza {
-	background-image: url(../img/monza.svg);
 	transform: rotate(-10deg) translateZ(-100px) translateY(-650px) translateX(100px);
 }
 
 .track-preview.sochi {
-	background-image: url(../img/sochi.svg);
 	transform-origin: 60% 60%;
 	transform: rotate(-80deg) translateZ(-200px) translateY(-650px) translateX(100px);
 }
 
 .track-preview.hockenheim {
-	background-image: url(../img/hockenheim.svg);
 	transform: rotate(90deg) translateZ(-100px) translateY(-650px);
 }
 

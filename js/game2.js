@@ -42,7 +42,7 @@ Game.prototype = {
 			console.log("change: ", e.target.name, e.target.value);
 		});
 
-		this.gamepad = navigator.getGamepads()[0];
+		// this.gamepad = navigator.getGamepads()[0];
 
 		if(this.gamepad === null) {
 			window.addEventListener("gamepadconnected", function(e) {
@@ -143,7 +143,7 @@ Game.prototype = {
 
 	draw : function() {
 
-		this.checkGamepad();
+		// this.checkGamepad();
 
 		// checking what keys were pressed
 		
@@ -330,7 +330,7 @@ Game.prototype = {
 
 	checkGamepad : function () {
 		try {
-			this.gamepad = navigator.getGamepads()[0];
+			// this.gamepad = navigator.getGamepads()[0];
 		} catch (e) {
 			console.log(e);
 		}

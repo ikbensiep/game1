@@ -40,7 +40,7 @@ Sprite.prototype = {
 	height: null,
 	opacity: 1,
 
-	draw: function (ctx) {
+	drawSprite: function (ctx) {
 
 		ctx.save();
 		ctx.translate(this.x, this.y);

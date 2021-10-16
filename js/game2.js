@@ -570,6 +570,7 @@ window.addEventListener("change", function (e) {
 
 	if(e.target.name === 'track') {
 		trackpreview.className = 'track-preview ' + e.target.value;
+		trackpreview.style.backgroundImage = `url('img/${e.target.value}.svg')`;
 		document.body.className = (e.target.value);
 	}
 });

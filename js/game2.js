@@ -10,6 +10,7 @@ Game.prototype = {
 	team: 'porsche',
 	player: 'Player1',
 
+	canvas: null,
 	ctx : null,
 	ocvs : null,
 	octx : null,
@@ -26,6 +27,8 @@ Game.prototype = {
 	racefinished: false,
 	req: null,
 	gamepad: null,
+
+	pathscale: 8,
 
 	setup: function () {
 
@@ -56,14 +59,14 @@ Game.prototype = {
 		this.quality = this.setScreenSize(quality);
 
 		hud = document.querySelector('output');
-		canvas = document.getElementById("game");
-		this.ctx = canvas.getContext("2d");
-		canvas.width = this.quality && this.quality.width ? this.quality.width : 800;
-		canvas.height = this.quality && this.quality.height ? this.quality.height : 600;
+		this.canvas = document.getElementById("game");
+		this.canvas.width = this.quality && this.quality.width ? this.quality.width : 800;
+		this.canvas.height = this.quality && this.quality.height ? this.quality.height : 600;
+		this.ctx = this.canvas.getContext("2d");
 
 		this.ocvs = document.createElement('canvas');
-		this.ocvs.width = canvas.width;
-		this.ocvs.height = canvas.height;
+		this.ocvs.width = this.canvas.width / this.pathscale;
+		this.ocvs.height = this.canvas.height / this.pathscale;
 		this.octx = this.ocvs.getContext('2d');
 
 		this.player = {
@@ -72,29 +75,36 @@ Game.prototype = {
 		};
 
 		this.keys = [];
-
-		this.world = new Sprite ({
+		
+		this.path = new Sprite({
 			name: [selectedtrack.value],
-			images: [`img/${selectedtrack.value}.svg`],
+			images: [`tracks/${selectedtrack.value}.svg#path`],
 			x: selectedtrack.dataset.x,
 			y: selectedtrack.dataset.y,
 			angle: 0,
-			height: 3200 * 7,
-			width: 3200 * 7
+			height: (3200 * 7) / this.pathscale,
+			width: (3200 * 7) / this.pathscale
 		});
 
-		this.world_bridges = new Sprite ({
-			name: 'bridges',
-			images: [`img/${selectedtrack.value}.svg`],
-			x: selectedtrack.dataset.x,
-			y: selectedtrack.dataset.y,
-			height: 3200 * 7,
-			width: 3200 * 7
-		})
+		const layers = ['world', 'track', 'elevated'];
 
-		floor = {
-			x:0,
-			y:0
+		this.worldlayers = [];
+		layers.map( layer => {
+			this.worldlayers[layer] = 
+				new Sprite({
+					name: [selectedtrack.value],
+					images: [`tracks/${selectedtrack.value}.svg#${layer}`],
+					x: selectedtrack.dataset.x,
+					y: selectedtrack.dataset.y,
+					angle: 0,
+					height: 3200 * 7,
+					width: 3200 * 7
+				});
+		});
+
+		this.floor = {
+			x: selectedtrack.dataset.x,
+			y: selectedtrack.dataset.y
 		}
 
 		this.car = new Sprite({
@@ -103,8 +113,8 @@ Game.prototype = {
 				'img/' + selectedcar.value + '-0.png',
 				'img/' + selectedcar.value + '-1.png'
 			],
-			x: canvas.width / 2,
-			y: canvas.height / 2,
+			x: this.canvas.width / 2,
+			y: this.canvas.height / 2,
 			angle: parseInt(selectedtrack.dataset.angle) || 0,
 			mod: 1,
 			speed: 1,
@@ -116,8 +126,8 @@ Game.prototype = {
 		this.dustclouds = new Sprite({
 			name: 'cloud',
 			images: ['img/dust-cloud-2.png'],
-			x: canvas.width / 2,
-			y: canvas.height / 2,
+			x: this.canvas.width / 2,
+			y: this.canvas.height / 2,
 			opacity: .9,
 			angle: 0
 		})
@@ -129,7 +139,6 @@ Game.prototype = {
 
 		//window.requestAnimationFrame(this.draw());
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
-
 	},
 
 	draw : function() {
@@ -152,48 +161,43 @@ Game.prototype = {
 		this.drawHUD();
 
 		// move the floor
-		var groundLocation = this.drawFloor();
+		this.calcFloorLocation();
 
-		this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-		this.octx.clearRect(0, 0, canvas.width, canvas.height);
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.octx.clearRect(0, 0, this.ocvs.width, this.ocvs.height);
 
-		// first draw the world on the off-screen canvas
-		this.world.draw(this.octx);
-		
-		// then check center pixel and return a string ('ontrack','offtrack')
-		// if offtrack, draw dust clouds
+		// draw path on offscreen canvas
+		this.path.drawSprite(this.octx);
+		this.path.x = this.floor.x / this.pathscale;
+		this.path.y = this.floor.y / this.pathscale;
+
 		var wheresthecar = this.checkGroundType();
+		// this.octx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+		this.worldlayers.world.drawSprite(this.ctx);
+		this.worldlayers.world.x = this.floor.x;
+		this.worldlayers.world.y = this.floor.y;
+
+		this.worldlayers.track.drawSprite(this.ctx);
+		this.worldlayers.track.x = this.floor.x;
+		this.worldlayers.track.y = this.floor.y;
+
 		if (wheresthecar === 'offtrack' && this.car.speed > 0) {
-			
 			this.car.opacity = 0.75;
-			
 			this.dustclouds.angle = this.car.angle + Math.random() * 180;		
 			this.dustclouds.opacity = this.car.speed / 30;
-			this.dustclouds.draw(this.octx);
-
-		// 	var secondDustcloud = new Sprite({
-		// 		name: 'secondDustcloud',
-		// 		images: ['img/dust-cloud.png'],
-		// 		x: groundLocation[0],
-		// 		y: groundLocation[1],
-		// 		opacity: .9,
-		// 		angle: Math.random() * 90
-		// 	});
-		// 	console.info(`CLOUD x:${secondDustcloud.x} y: ${secondDustcloud.y}`);
-			
-		// 	secondDustcloud.draw(this.octx);
+			this.dustclouds.drawSprite(this.ctx);
 		}
-		
-		// console.log(`world x:${this.world.x} (${this.world.width}) y: ${this.world.y}`);
-		
-		// draw the car onto the off-screen canvas
-		this.car.draw(this.octx);
-		
-		// draw the bridges layer onto off-screen canvas
-		this.world_bridges.draw(this.octx)
 
-		// draw off-screen canvas to on-screen canvas
-		this.ctx.drawImage(this.ocvs, 0, 0);
+		// draw the car onto the canvas
+		this.car.drawSprite(this.ctx);
+		
+		// draw the 'elevated' layer onto canvas
+		this.worldlayers.elevated.drawSprite(this.ctx);
+		this.worldlayers.elevated.x = this.floor.x;
+		this.worldlayers.elevated.y = this.floor.y;
+		
+		this.ctx.drawImage(this.canvas, 0, 0);
 
 		// and do it again.
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
@@ -209,56 +213,50 @@ Game.prototype = {
 	checkGroundType: function () {
 		var ontrackStatus = undefined;
 		
-		var image = this.octx.getImageData(canvas.width/2, canvas.height/2, 1,1);
+		var image = this.octx.getImageData(this.ocvs.width/2, this.ocvs.height/2, 1,1);
+	
+		let debugnode = document.querySelector('img#debugsnapshot');
+		if(! debugnode ) {
+			var el = document.createElement('img');
+			el.id = 'debugsnapshot';
+			el.src = this.ocvs.toDataURL("image/png");
+			document.body.appendChild(el);
+		} else {
+			debugnode.src = this.ocvs.toDataURL("image/png");
+		}
+
 		var pixel1 = image.data[0];
 		var pixel2 = image.data[1];
 		var pixel3 = image.data[2];
 		
-		console.log(`${pixel1}, ${pixel2}, ${pixel3}`)
 		// on track
-		// in the track svgs, asfalt color is #1a1a1a (rgb 26 26 26)
-		
-		if (pixel1 === 26 && pixel2 === 26 && pixel3 === 26) { 
+		if (pixel1 === 0 && pixel2 === 255 && pixel3 === 0) { 
 			this.car.maxspeed = 50; 
 			this.car.opacity = 1;
-			ontrackStatus = 'ontrack';
+			return 'ontrack';
 		}	
 
 		// in pits
-		// asfalt color is two tones lighter: #1c1c1c (rgb 28 28 28)
 		if (pixel1 === 28 && pixel2 === 28 && pixel3 === 28 ) { 
 			this.car.maxspeed = 15; 
 			this.car.opacity = 1;
-			ontrackStatus = 'pits';
+			return 'pits';
 		}
 
 		// off track
-		// not even sure what prompted this particular check tbh
-		if (pixel1 === 0 || pixel1 > 80) {
-			
+		if (pixel1 === 0 && pixel2 === 0 && pixel3 === 0) {
 			this.car.maxspeed = 5;
-			// test code: add a red svg path around the outline of the track to test and handle collision 
-			// for example with guard rails etc (no luck so far)
-			if(pixel1 === 128) {
-				console.log('collision!')
-				this.car.mod = -1;
-			} else {
-				this.car.mod = 1;
-			}
-			ontrackStatus = 'offtrack';
+			return 'offtrack';
 		}
 
 		if(this.racefinished) {
 			this.car.maxspeed = 0; 
 		}
 
-		// trigger lap timer by slightly lighter start/finish line area (see .svg#markings)
-		if(image.data[0] === 27 && image.data[1] === 27 && image.data[2] === 27 ) {
+		// trigger lap timer by hitting red start/finish line rect (see track.svg#path)
+		if(pixel1 === 255) {
 			this.setLapTime();
 		}
-
-		return ontrackStatus;
-
 	},
 
 	setLapTime: function () {
@@ -320,23 +318,22 @@ Game.prototype = {
 		hud.querySelector('.needle').style.transform = 'rotateZ(' + Math.ceil(this.car.speed * 2 * 1.8) + 'deg)';
 	},
 
-	drawFloor : function() {
+	calcFloorLocation : function() {
 		var x = Math.floor((this.car.speed*this.car.mod) * Math.cos(Math.PI/180 * this.car.angle));
 		var y = Math.floor((this.car.speed*this.car.mod) * Math.sin(Math.PI/180 * this.car.angle));
 
-		this.world.x -= x;
-		this.world.y -= y;
-		this.world_bridges.x -= x;
-		this.world_bridges.y -= y;
+		this.floor.x -= x;
+		this.floor.y -= y;
 		
-		
-		document.body.style.backgroundPosition = `${this.world.x}px ${this.world.y}px`;
-
-		return [this.world.x, this.world.y];
+		// document.body.style.backgroundPosition = `${this.floor.x}px ${this.floor.y}px`;
 	},
 
 	checkGamepad : function () {
-		// this.gamepad = navigator.getGamepads()[0];
+		try {
+			this.gamepad = navigator.getGamepads()[0];
+		} catch (e) {
+			console.log(e);
+		}
 	},
 
 	checkUserInput : function() {
@@ -344,14 +341,25 @@ Game.prototype = {
 		if(this.gamepad) {
 
 			if (this.gamepad.buttons[7].pressed) {
-
+				
 				this.car.mod = 1;
 				this.car.state = 0;
-
+/*
 				if (this.car.speed < this.car.maxspeed) {
-					var acc = 1.2 * Number(this.gamepad.buttons[7].value.toFixed(3));
+					var acc = 1.001 * (1 + Number(this.gamepad.axes[5].toFixed(3)) / 2);
+					// var acc = (this.car.maxspeed - this.car.speed) / 100;
+					this.car.speed += acc;	
+				}*/
+
+				if (this.car.speed < this.car.maxspeed ) {
+					var acc = (this.car.maxspeed - this.car.speed) / 80;
 					this.car.speed += acc;
 				}
+	
+				if (this.car.speed > this.car.maxspeed) {
+					this.car.speed -= Number(this.car.speed * 0.01).toFixed(2);
+				}
+				console.log(this.car.speed, this.car.maxspeed)
 			}
 
 			if(!this.gamepad.buttons[6].pressed) {

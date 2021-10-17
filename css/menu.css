@@ -31,10 +31,10 @@ body[race-start] .laptimes {
 }
 
 body[race-end] .laptimes {
-	width: 80vw;
-	right: 10vw;
-	margin: 3em auto;
-	line-height: 2.5;
+	width: 50vw;
+    right: 25vw;
+    margin: 3em auto;
+    line-height: 2.5;
 }
 
 body[race-end] .laptimes .ui-hint {

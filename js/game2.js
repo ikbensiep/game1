@@ -388,7 +388,7 @@ Game.prototype = {
 		this.floor.x -= x;
 		this.floor.y -= y;
 		
-		document.body.style.backgroundPosition = `${this.floor.x * 1.25}px ${this.floor.y * 1.25}px`;
+		this.canvas.style.backgroundPosition = `${this.floor.x}px ${this.floor.y}px`;
 	},
 
 	checkGamepad : function () {
@@ -531,7 +531,7 @@ Game.prototype = {
 				return {'height': 1024,'width': 1280};
 				break;
 			case 'fullscreen' :
-				return {'height': window.innerHeight * .8,'width': window.innerWidth * .8};
+				return {'height': window.innerHeight,'width': window.innerWidth};
 				break;
 		}
 	},
@@ -593,7 +593,7 @@ window.addEventListener("change", function (e) {
 	var trackpreview = document.querySelector('.track-preview');
 
 	if(e.target.name === 'car') {
-		document.querySelector('.car-preview').style.backgroundImage = "url(img/"+e.target.value+"-1.png)";
+		document.querySelector('.car-preview img').src = "img/"+e.target.value+"-1.png";
 	}
 
 	if(e.target.name === 'track') {
@@ -601,7 +601,7 @@ window.addEventListener("change", function (e) {
 		trackpreview.style.backgroundImage = `url('img/${e.target.value}.svg')`;
 		document.body.className = (e.target.value);
 		document.querySelector('#minimap img').src = `tracks/${e.target.value}.svg#path`;
-		document.querySelector('#minimap img').style.transform = `translate(${e.target.dataset.x}px, ${e.target.dataset.y}px)`;
+		document.querySelector('#minimap img').style.transform = `translate(${e.target.dataset.x}px, ${e.target.dataset.y}px)`;		
 	}
 });
 

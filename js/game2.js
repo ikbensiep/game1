@@ -28,7 +28,7 @@ Game.prototype = {
 	req: null,
 	gamepad: null,
 
-	pathscale: 8,
+	pathscale: 16,
 	blip: null,
 	minimap: null,
 
@@ -159,30 +159,28 @@ Game.prototype = {
 
 	draw : function() {
 
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.octx.clearRect(0, 0, this.ocvs.width, this.ocvs.height);
 		
 		// checking what keys were pressed
+		
 		this.checkUserInput();
-		// this.checkGamepad();
+		
+		
+		// move the floor
+		this.calcFloorLocation();
+
+		// draw path on offscreen canvas
+		this.path.x = this.floor.x / this.pathscale;
+		this.path.y = this.floor.y / this.pathscale;
+		this.path.drawSprite(this.octx);
+		var wheresthecar = this.checkGroundType();
 		
 		// update engine sound
 		this.engine.updateEngine(this.car.speed);
 
 		// draw speedometer
 		this.drawHUD();
-
-		// move the floor
-		this.calcFloorLocation();
-
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		this.octx.clearRect(0, 0, this.ocvs.width, this.ocvs.height);
-
-		// draw path on offscreen canvas
-		this.path.drawSprite(this.octx);
-		this.path.x = this.floor.x / this.pathscale;
-		this.path.y = this.floor.y / this.pathscale;
-
-		var wheresthecar = this.checkGroundType();
-		// this.octx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 		this.worldlayers.world.drawSprite(this.ctx);
 		this.worldlayers.world.x = this.floor.x;
@@ -192,11 +190,17 @@ Game.prototype = {
 		this.worldlayers.track.x = this.floor.x;
 		this.worldlayers.track.y = this.floor.y;
 
-		if (wheresthecar === 'offtrack' && this.car.speed > 0) {
-			this.car.opacity = 0.75;
-			this.dustclouds.angle = this.car.angle + Math.random() * 180;		
-			this.dustclouds.opacity = this.car.speed / 30;
-			this.dustclouds.drawSprite(this.ctx);
+		if (wheresthecar === 'offtrack') {
+			if( this.car.speed > 0) {
+				this.car.opacity = 0.75;
+				this.dustclouds.angle = this.car.angle + Math.random() * 180;		
+				this.dustclouds.opacity = this.car.speed / 30;
+				this.dustclouds.drawSprite(this.ctx);
+			}
+			this.worldlayers.track.x += 2 - (Math.random() * 4);
+			this.worldlayers.track.y += 2 - (Math.random() * 4);
+			this.worldlayers.world.x += 2 - (Math.random() * 4);
+			this.worldlayers.world.y += 2 - (Math.random() * 4);
 		}
 
 		// draw the car onto the canvas
@@ -210,8 +214,8 @@ Game.prototype = {
 
 		this.clouds.drawSprite(this.ctx);
 		this.clouds.x *= this.clouds.speed;
-		this.clouds.x = (this.floor.x * 1.2);
-		this.clouds.y = this.floor.y * 1.2;
+		this.clouds.x = (this.floor.x * 1.5);
+		this.clouds.y = this.floor.y * 1.4;
 		
 		this.ctx.drawImage(this.canvas, 0, 0);
 
@@ -267,13 +271,11 @@ Game.prototype = {
 
 		// off track
 		if (pixel1 === 0 && pixel2 === 0 && pixel3 === 0) {
-			this.car.maxspeed = 5;
+			if(this.car.speed > 0) {
+				this.car.maxspeed = 15 + (5 - (Math.random() * 10));
+				this.car.angle += 3 - (Math.random() * 6);
+			}
 			return 'offtrack';
-		}
-
-		if(this.racefinished) {
-			this.car.maxspeed = 0;
-			return 'ontrack'; 
 		}
 
 		// trigger lap timer by hitting red start/finish line rect (see track.svg#path)
@@ -283,6 +285,7 @@ Game.prototype = {
 
 		if (this.laptimes.length === this.racelaps && !this.racefinished) {
 			this.racefinished = true;
+			this.car.maxspeed = 0;
 			this.endRace();
 		}
 	},
@@ -460,7 +463,7 @@ Game.prototype = {
 
 		// keyboard
 		// accelerate
-		if (this.keys[65] == true && this.car.mod == 1) {
+		if (this.keys[65] == true && this.car.mod == 1 && !this.racefinished) {
 
 			if (this.car.speed < this.car.maxspeed && !this.keys[90]) {
 				this.car.acc = (this.car.maxspeed - this.car.speed) / 100;

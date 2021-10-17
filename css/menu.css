@@ -16,7 +16,8 @@ body[race-start] form {
 body[race-start] #game,
 body[race-end] #game {
 	opacity: 1;
-	transform: translateY(12.5%) scale(1.25);
+	transform: scale(1);
+	background-size: 100%;
 }
 
 body[race-start] .ui-hint {
@@ -102,24 +103,24 @@ body[race-start] #minimap {
 }
 
 .track-preview.interlagos {
-	transform: rotate(0deg) translateZ(-100px) translateY(130px);
+	transform: rotate(30deg) translateX(-530px) translateY(-690px) translateZ(-130px);
 }
 
 .track-preview.barcelona {
-	background-position-y: 580px;
+	transform: rotate(0deg) translateX(-290px) translateY(-1190px) translateZ(-120px) 
 }
 
 .track-preview.monza {
-	transform: rotate(-10deg) translateZ(-100px) translateY(-650px) translateX(100px);
+	transform: rotate(10deg) translateZ(-280px) translateY(-1730px) translateX(-130px);
 }
 
 .track-preview.sochi {
 	transform-origin: 60% 60%;
-	transform: rotate(-80deg) translateZ(-200px) translateY(-650px) translateX(100px);
+	transform: rotate(0deg) translateZ(-100px) translateX(-890px) translateY(-1930px);
 }
 
 .track-preview.hockenheim {
-	transform: rotate(90deg) translateZ(-100px) translateY(-650px);
+	transform: rotate(-20deg) translateX(1570px) translateY(-1520px) translateZ(-90px);
 }
 
 .car-preview {
@@ -147,8 +148,12 @@ body[race-start] #minimap {
 	box-shadow: 0 0 5px black;
 }
 
-.barcelona .garage {transform: translateY(-29px) scale(0.8);}
-.barcelona .car-preview { transform: translateY(-40px); }
+.barcelona .garage {transform: rotate(32deg) translateX(540px) translateY(461px);}
+.barcelona .car-preview { transform:rotate(32deg)  translateY(-40px); }
+
+.interlagos .garage {
+	transform: rotate(1deg) translate(50px, 109px);
+}
 
 .abu-dhabi .garage { transform: translateX(-604px) translateZ(0px) translateY(-350px) rotateZ(48deg);}
 .abu-dhabi .car-preview { transform: translateX(-850%) rotate(50deg);}
@@ -156,16 +161,16 @@ body[race-start] #minimap {
 .hockenheim .garage {
     left: 17%;
     top: 75%;
-    transform: rotate(36deg);
+    transform: rotate(45deg) translateX(-150px) translateY(-10px);
 }
 
 .sochi .garage {
-	transform: rotate(22deg) translateY(760px) translateX(1000px);
+	transform: rotate(18deg) translateY(1220px) translateX(1410px);
 	transform-origin: bottom;
 }
 .monza .garage {
 	top: 78%;
-	transform: rotate(30deg);
+	transform: rotate(30deg) translate(0,30px);
 }
 
 .front,

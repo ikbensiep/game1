@@ -16,7 +16,7 @@ body[race-start] form {
 body[race-start] #game,
 body[race-end] #game {
 	opacity: 1;
-	transform: scale(1);
+	transform: translateY(12.5%) scale(1.25);
 }
 
 body[race-start] .ui-hint {

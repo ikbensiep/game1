@@ -128,8 +128,19 @@ Game.prototype = {
 			height: 220
 		});
 
+		this.clouds = new Sprite({
+			name: 'clouds',
+			images: ['img/fair_clouds.png'],
+			width: 44800,
+			height: 44800,
+			opacity: .5,
+			speed: 2,
+			x: 0,
+			y: 0
+		})
+
 		this.dustclouds = new Sprite({
-			name: 'cloud',
+			name: 'dustcloud',
 			images: ['img/dust-cloud-2.png'],
 			x: this.canvas.width / 2,
 			y: this.canvas.height / 2,
@@ -195,6 +206,12 @@ Game.prototype = {
 		this.worldlayers.elevated.drawSprite(this.ctx);
 		this.worldlayers.elevated.x = this.floor.x;
 		this.worldlayers.elevated.y = this.floor.y;
+		
+
+		this.clouds.drawSprite(this.ctx);
+		this.clouds.x *= this.clouds.speed;
+		this.clouds.x = (this.floor.x * 1.2);
+		this.clouds.y = this.floor.y * 1.2;
 		
 		this.ctx.drawImage(this.canvas, 0, 0);
 
@@ -371,7 +388,7 @@ Game.prototype = {
 		this.floor.x -= x;
 		this.floor.y -= y;
 		
-		document.body.style.backgroundPosition = `${this.floor.x}px ${this.floor.y}px`;
+		document.body.style.backgroundPosition = `${this.floor.x * 1.25}px ${this.floor.y * 1.25}px`;
 	},
 
 	checkGamepad : function () {
@@ -514,7 +531,7 @@ Game.prototype = {
 				return {'height': 1024,'width': 1280};
 				break;
 			case 'fullscreen' :
-				return {'height': window.innerHeight,'width': window.innerWidth};
+				return {'height': window.innerHeight * .8,'width': window.innerWidth * .8};
 				break;
 		}
 	},

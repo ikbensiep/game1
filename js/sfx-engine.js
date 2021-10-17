@@ -64,6 +64,8 @@ Engine.prototype = {
 			speed < 40 ? 0.20 + speed / 45 : 
 			0.20 + speed / 50;
 
+		this.gainNode.gain.value = 0.1 + speed / 50 //(maxspeed = 50)
+		this.sourceBuffer.connect(this.gainNode);
 		this.sourceBuffer.playbackRate.value = f
 		
 		// var C = 15;

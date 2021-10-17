@@ -128,7 +128,8 @@ dd {
 	transition: opacity 2s .5s, transform 2.5s .5s, box-shadow 2s 4s;
 }
 
-#debugsnapshot {
+#debugsnapshot, 
+.trackmap {
     position: absolute;
     right: 1em;
     bottom: 1em;
@@ -137,15 +138,20 @@ dd {
 	filter: grayscale(1);
 }
 
+#debugsnapshot {
+	display: none;
+}
+
 #minimap {
-	width: 311px;
-	height: 162px;
-	background-image: url(../img/track.svg);
-	background-repeat: no-repeat;
-	background-size: cover;
+	/* width: 10vw;
+	height: 10vh; */
+	width: 320px;
+	height: 320px;
 	position: absolute;
 	bottom: 0;
-	transition: all .5s 2s;
+	overflow: hidden;
+	border-radius: 50%;
+	opacity: 0;
 }
 
 .blip {
@@ -156,8 +162,21 @@ dd {
 	position: absolute;
 	border-radius: 50%;
 	left: 50%;
-	top: 95%;
-	transition: transform .5s;
+	top: 50%;
+}
+
+#minimap .track {
+	height: 100%;
+	width: 100%;
+	mask: radial-gradient(white 15%, black 65%) luminance center 100% no-repeat;
+}
+
+#minimap img {
+	width: 1120px;
+	height: 1120px;
+	left: calc(-560px + 130px);
+	top: calc(-560px + 130px);
+	position: absolute;
 }
 
 .laptimes {

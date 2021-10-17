@@ -10,9 +10,13 @@ Engine.prototype = {
 	AudioContext : window.AudioContext || window.webkitAudioContext,
 	audioCtx: null,
 	sourceBuffer: null,
+	gainNode: null,
 
 	init: function () {
 		this.audioCtx = new this.AudioContext();
+		this.gainNode = this.audioCtx.createGain();
+		this.gainNode.gain.value = 0.25;
+		this.gainNode.connect(this.audioCtx.destination);
 		this.sourceBuffer = this.audioCtx.createBufferSource();
 		this.getSound();
 
@@ -40,7 +44,8 @@ Engine.prototype = {
 
 			// Tell the AudioBufferSourceNode to use this AudioBuffer.
 			this.sourceBuffer.buffer = buffer;
-			this.sourceBuffer.connect(this.audioCtx.destination);
+			// this.sourceBuffer.connect(this.audioCtx.destination);
+			this.sourceBuffer.connect(this.gainNode);
 			this.sourceBuffer.loop = true;
 			this.sourceBuffer.playbackRate.value = 0.25;
 			this.sourceBuffer.start(this.audioCtx.currentTime);
@@ -59,11 +64,11 @@ Engine.prototype = {
 			speed < 40 ? 0.20 + speed / 45 : 
 			0.20 + speed / 50;
 
+		this.gainNode.gain.value = 0.1 + speed / 50 //(maxspeed = 50)
+		this.sourceBuffer.connect(this.gainNode);
 		this.sourceBuffer.playbackRate.value = f
-
 		// var C = 15;
 		// this.sourceBuffer.playbackRate.value = 0.35 + (speed/C - Math.floor(speed / C));
-
 	},
 
 	stopEngine: function () {

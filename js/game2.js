@@ -143,17 +143,11 @@ Game.prototype = {
 
 	draw : function() {
 
-		// this.checkGamepad();
-
+		
 		// checking what keys were pressed
-		
 		this.checkUserInput();
+		// this.checkGamepad();
 		
-		if (this.laptimes.length === this.racelaps && !this.racefinished) {
-			this.racefinished = true;
-			this.endRace();
-		}
-
 		// update engine sound
 		this.engine.updateEngine(this.car.speed);
 
@@ -211,7 +205,6 @@ Game.prototype = {
 	// (ie location of the car on top of the game world)
 	// and make decisions based on that
 	checkGroundType: function () {
-		var ontrackStatus = undefined;
 		
 		var image = this.octx.getImageData(this.ocvs.width/2, this.ocvs.height/2, 1,1);
 	
@@ -237,10 +230,10 @@ Game.prototype = {
 		}	
 
 		// in pits
-		if (pixel1 === 28 && pixel2 === 28 && pixel3 === 28 ) { 
+		if (pixel1 === 0 && pixel2 === 0 && pixel3 === 255 ) { 
 			this.car.maxspeed = 15; 
 			this.car.opacity = 1;
-			return 'pits';
+			return 'inpits';
 		}
 
 		// off track
@@ -250,25 +243,32 @@ Game.prototype = {
 		}
 
 		if(this.racefinished) {
-			this.car.maxspeed = 0; 
+			this.car.maxspeed = 0;
+			return 'ontrack'; 
 		}
 
 		// trigger lap timer by hitting red start/finish line rect (see track.svg#path)
 		if(pixel1 === 255) {
 			this.setLapTime();
 		}
+
+		if (this.laptimes.length === this.racelaps && !this.racefinished) {
+			this.racefinished = true;
+			this.endRace();
+		}
 	},
 
 	setLapTime: function () {
 		if (!this.lapstarttime) {
 			this.lapstarttime = new Date().getTime();
+			this.racestarttime = new Date().getTime();
 			return;
 		}
 	
 		//record current time to compare against last recorded lapstarttime.
 		var lapfinish = new Date().getTime();
 		// ms to s.
-		laptime = (lapfinish - this.lapstarttime ) / 1000;
+		var laptime = (lapfinish - this.lapstarttime ) / 1000;
 
 		// 0:00.000
 		var mins = Math.floor(laptime / 60);
@@ -311,6 +311,40 @@ Game.prototype = {
 		var p = this.player.name;
 		localStorage.setItem('Racer_best', p + ' ' + best[0]);
 
+	},
+
+	endRace : function () {
+		window.cancelAnimationFrame(this.req);
+
+		document.body.setAttribute("race-end", "");
+
+		var best = this.laptimes.slice(0);
+		best.sort();
+
+		this.laptimes.forEach(function(time, index) {
+			var el = document.createElement('li');
+			var text = document.createTextNode(time);
+			el.appendChild(text);
+			document.querySelector('.laptimes').appendChild(el);
+			if( time == best[0]) {
+				el.className = "laptime pb";
+			} else {
+				el.className = "laptime";
+			}
+		});
+
+		this.raceendtime = new Date().getTime();
+		var racetime = (this.raceendtime - this.racestarttime ) / 1000;
+		
+		// 0:00.000
+		var mins = Math.floor(racetime / 60);
+		var secs = (racetime - mins * 60).toFixed(3);
+
+		var el = document.createElement('li');
+		var text = document.createTextNode(`RACE TIME: ${mins}:${secs < 10 ? '0' + secs : secs}`);
+		el.appendChild(text);
+
+		document.querySelector('.laptimes').appendChild(el);
 	},
 
 	drawHUD : function() {
@@ -504,41 +538,6 @@ Game.prototype = {
 
 	keydown_handler : function(event) {
 		this.keys[event.keyCode] = true;
-	},
-
-	endRace : function () {
-		window.cancelAnimationFrame(this.req);
-
-		document.body.setAttribute("race-end", "");
-
-		var best = this.laptimes.slice(0);
-		best.sort();
-
-		this.laptimes.forEach(function(time, index) {
-			var el = document.createElement('li');
-			var text = document.createTextNode(time);
-			el.appendChild(text);
-			document.querySelector('.laptimes').appendChild(el);
-			if( time == best[0]) {
-				el.className = "laptime pb";
-			} else {
-				el.className = "laptime";
-			}
-		});
-
-		this.raceendtime = new Date().getTime();
-		racetime = (this.raceendtime - this.racestarttime ) / 1000;
-
-		// 0:00.000
-		var mins = Math.floor(laptime / 60);
-		var secs = (laptime - mins * 60).toFixed(3);
-		if (secs < 10) secs = '0' + secs;
-
-		var el = document.createElement('li');
-		var text = document.createTextNode("RACE TIME: " + secs);
-		el.appendChild(text);
-
-		document.querySelector('.laptimes').appendChild(el);
 	},
 
 	endGame : () => {

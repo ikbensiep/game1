@@ -129,11 +129,12 @@ dd {
 }
 
 #debugsnapshot {
-	position: absolute;
-    right: 10px;
-    top: 6em;
+    position: absolute;
+    right: 1em;
+    bottom: 1em;
     background: #0004;
-    width: 10em;
+    width: 20em;
+	filter: grayscale(1);
 }
 
 #minimap {
@@ -171,6 +172,7 @@ dd {
 	opacity: 0;
 	box-sizing: border-box;
 	background: rgba(0,0,0,.3);
+	font-size: 2em;
 }
 
 .laptimes li {

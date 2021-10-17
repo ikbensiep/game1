@@ -100,14 +100,26 @@ body[race-start] #minimap {
 	transform-style: preserve-3d;
 	transform-origin: center;
 	/* animation: rotate 30s 1s infinite ease-in-out; */
+	transition: transform 5s cubic-bezier(.08,.82,.17,1);
+}
+
+
+.track-preview.abu-dhabi {
+	/* transform: rotate(0deg) translateX(-290px) translateY(-1190px) translateZ(-120px); */
+	transform: rotateZ(103deg) rotateX(2deg) translateX(-2370px) translateY(1320px) translateZ(-690px);
+}
+
+.track-preview.barcelona {
+	/* transform: rotate(0deg) translateX(-290px) translateY(-1190px) translateZ(-120px); */
+	transform: rotateZ(3deg) rotateX(20deg) translateX(-420px) translateY(-1230px) translateZ(30px)
+}
+
+.track-preview.hockenheim {
+	transform: rotate(-20deg) translateX(1570px) translateY(-1520px) translateZ(-90px);
 }
 
 .track-preview.interlagos {
 	transform: rotate(30deg) translateX(-530px) translateY(-690px) translateZ(-130px);
-}
-
-.track-preview.barcelona {
-	transform: rotate(0deg) translateX(-290px) translateY(-1190px) translateZ(-120px) 
 }
 
 .track-preview.monza {
@@ -117,10 +129,6 @@ body[race-start] #minimap {
 .track-preview.sochi {
 	transform-origin: 60% 60%;
 	transform: rotate(0deg) translateZ(-100px) translateX(-890px) translateY(-1930px);
-}
-
-.track-preview.hockenheim {
-	transform: rotate(-20deg) translateX(1570px) translateY(-1520px) translateZ(-90px);
 }
 
 .car-preview {

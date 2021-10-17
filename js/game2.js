@@ -29,6 +29,8 @@ Game.prototype = {
 	gamepad: null,
 
 	pathscale: 8,
+	blip: null,
+	minimap: null,
 
 	setup: function () {
 
@@ -59,6 +61,9 @@ Game.prototype = {
 		this.quality = this.setScreenSize(quality);
 
 		hud = document.querySelector('output');
+		this.blip = document.querySelector('.blip');
+		this.minimap = document.querySelector('#minimap');
+		
 		this.canvas = document.getElementById("game");
 		this.canvas.width = this.quality && this.quality.width ? this.quality.width : 800;
 		this.canvas.height = this.quality && this.quality.height ? this.quality.height : 600;
@@ -193,12 +198,17 @@ Game.prototype = {
 		
 		this.ctx.drawImage(this.canvas, 0, 0);
 
+		var tx = this.floor.x ;
+		var ty = this.floor.y ;
+
+		// this.minimap.dataset.worldW = this.worldlayers.world.width;
+		// this.minimap.dataset.worldH = this.worldlayers.world.height;
+		this.minimap.dataset.floorX = tx;
+		this.minimap.dataset.floorY = ty;
+		this.minimap.querySelector('img').style.transform = `translate(${(tx/10)/2}px, ${(ty/10)/2}px)`;
+
 		// and do it again.
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
-
-		// var tx = `translateX( ${(Math.floor(this.world.x / this.world.width * 100) * 3.1 * -1)}px)`;
-		// var ty = `translateY( ${(Math.floor(this.world.y / this.world.height * 100) * 3.1 * -1)}px)`;
-		// this.blip.style.transform = `${tx} ${ty}`;
 	},
 
 	// Basically the game engine: sample 1x1 pixel in the center of the screen 
@@ -207,7 +217,9 @@ Game.prototype = {
 	checkGroundType: function () {
 		
 		var image = this.octx.getImageData(this.ocvs.width/2, this.ocvs.height/2, 1,1);
-	
+	/*
+		creates a snapshot of the path canvas and adds it to the DOM
+
 		let debugnode = document.querySelector('img#debugsnapshot');
 		if(! debugnode ) {
 			var el = document.createElement('img');
@@ -217,7 +229,7 @@ Game.prototype = {
 		} else {
 			debugnode.src = this.ocvs.toDataURL("image/png");
 		}
-
+	*/
 		var pixel1 = image.data[0];
 		var pixel2 = image.data[1];
 		var pixel3 = image.data[2];
@@ -571,6 +583,8 @@ window.addEventListener("change", function (e) {
 		trackpreview.className = 'track-preview ' + e.target.value;
 		trackpreview.style.backgroundImage = `url('img/${e.target.value}.svg')`;
 		document.body.className = (e.target.value);
+		document.querySelector('#minimap img').src = `tracks/${e.target.value}.svg#path`;
+		document.querySelector('#minimap img').style.transform = `translate(${e.target.dataset.x}px, ${e.target.dataset.y}px)`;
 	}
 });
 

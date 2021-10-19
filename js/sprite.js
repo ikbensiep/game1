@@ -45,11 +45,9 @@ Sprite.prototype = {
 		ctx.save();
 		// ctx.translate(this.x, this.y);
 		ctx.setTransform(1,0,0,1,this.x,this.y)
-
 		ctx.rotate(Math.PI/180 * this.angle);
-
-
 		ctx.globalAlpha = this.opacity;
+
 		if (this.width && this.height) {
 			ctx.drawImage(
 				this.images[this.state],

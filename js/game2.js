@@ -248,7 +248,7 @@ Game.prototype = {
 		this.car.drawSprite(this.ctx);
 		
 		// draw the 'elevated' layer onto canvas
-		// this.worldlayers.elevated.drawSprite(this.ctx);
+		this.worldlayers.elevated.drawSprite(this.ctx);
 		this.worldlayers.elevated.x = this.floor.x;
 		this.worldlayers.elevated.y = this.floor.y;
 		

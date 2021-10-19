@@ -43,8 +43,12 @@ Sprite.prototype = {
 	drawSprite: function (ctx) {
 
 		ctx.save();
-		ctx.translate(this.x, this.y);
+		// ctx.translate(this.x, this.y);
+		ctx.setTransform(1,0,0,1,this.x,this.y)
+
 		ctx.rotate(Math.PI/180 * this.angle);
+
+
 		ctx.globalAlpha = this.opacity;
 		if (this.width && this.height) {
 			ctx.drawImage(
@@ -61,6 +65,7 @@ Sprite.prototype = {
 				-(Math.floor(this.images[this.state].height/2))
 			);
 		}
-		ctx.restore();
+		//ctx.restore();
+		ctx.setTransform(1,0,0,1,0,0);
 	}
 }

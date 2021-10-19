@@ -16,10 +16,6 @@ body {
 	transition: transform 5s, background-color 1s;
 }
 
-body[race-start] {
-	background-color: transparent;
-}
-
 body::after {
 	display: block;
 	position: absolute;
@@ -116,12 +112,17 @@ dd {
 	margin-right: 20px;
 }
 
+.game-container {
+	height: 100vh;
+}
+
+
 #game {
 	min-width: 800px;
 	min-height: 600px;
 	display: block;
 	margin: 0 auto;
-	transform: scale(0.5);
+	transform: scale(.95);
 	opacity: 0;
 	transition: opacity 2s .5s, transform 2.5s .5s, box-shadow 2s 4s;
 	background-image: url('../img/TexturesCom_Grass0197_1_seamless_S.jpg');

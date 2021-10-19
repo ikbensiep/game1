@@ -174,33 +174,70 @@ Game.prototype = {
 		this.path.x = this.floor.x / this.pathscale;
 		this.path.y = this.floor.y / this.pathscale;
 		this.path.drawSprite(this.octx);
-		var wheresthecar = this.checkGroundType();
+
 		
 		// update engine sound
 		this.engine.updateEngine(this.car.speed);
-
+		
 		// draw speedometer
 		this.drawHUD();
-
+		
 		this.worldlayers.world.drawSprite(this.ctx);
 		this.worldlayers.world.x = this.floor.x;
 		this.worldlayers.world.y = this.floor.y;
-
+		
 		this.worldlayers.track.drawSprite(this.ctx);
 		this.worldlayers.track.x = this.floor.x;
 		this.worldlayers.track.y = this.floor.y;
+		
+		var wheresthecar = this.checkGroundType();
+		
+		let container = document.querySelector('.game-container');
+		
+		if(!container.classList.contains(wheresthecar)) {
+			document.body.className = `game-container ${wheresthecar}`;
+		} 
+
+		if (wheresthecar === 'ontrack') {
+			this.car.maxspeed = 50; 
+			this.car.opacity = 1;
+		}
 
 		if (wheresthecar === 'offtrack') {
-			if( this.car.speed > 0) {
-				this.car.opacity = 0.75;
-				this.dustclouds.angle = this.car.angle + Math.random() * 180;		
-				this.dustclouds.opacity = this.car.speed / 30;
+			
+			// slow until halted
+			if(this.car.speed > 0) {
+				this.car.maxspeed = 3;
+				this.car.angle += 3 - (Math.random() * 6);
+			}  
+			
+			if (this.car.speed === 3) {
+				this.car.maxspeed = 20;
+			}
+
+			if( this.car.speed > 1) {
+				
+				// handle rumble
+				let randx = 1 - (Math.random() * 2);
+				let randy = 1 - (Math.random() * 2);
+				
+				this.worldlayers.track.x += randx;
+				this.worldlayers.world.x += randx;
+				this.canvas.style.backgroundPositionX += randx;
+				this.worldlayers.track.y += randy;
+				this.worldlayers.world.y += randy;
+				this.canvas.style.backgroundPositionY += randy;
+
+				// draw dust clouds
+				this.dustclouds.angle += this.car.angle + Math.random() * 2;		
+				this.dustclouds.opacity = this.car.speed / 40 + Math.random() / 5;
 				this.dustclouds.drawSprite(this.ctx);
 			}
-			this.worldlayers.track.x += 2 - (Math.random() * 4);
-			this.worldlayers.track.y += 2 - (Math.random() * 4);
-			this.worldlayers.world.x += 2 - (Math.random() * 4);
-			this.worldlayers.world.y += 2 - (Math.random() * 4);
+		}
+
+		if (wheresthecar === 'inpits') {
+			this.car.maxspeed = 15; 
+			this.car.opacity = 1;
 		}
 
 		// draw the car onto the canvas
@@ -222,13 +259,10 @@ Game.prototype = {
 		var tx = this.floor.x ;
 		var ty = this.floor.y ;
 
-		// this.minimap.dataset.worldW = this.worldlayers.world.width;
-		// this.minimap.dataset.worldH = this.worldlayers.world.height;
-		this.minimap.dataset.floorX = tx;
-		this.minimap.dataset.floorY = ty;
+		//move minimap
 		this.minimap.querySelector('img').style.transform = `translate(${(tx/10)/2}px, ${(ty/10)/2}px)`;
 
-		// and do it again.
+		// ..and do it all again.
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
 	},
 
@@ -255,29 +289,6 @@ Game.prototype = {
 		var pixel2 = image.data[1];
 		var pixel3 = image.data[2];
 		
-		// on track
-		if (pixel1 === 0 && pixel2 === 255 && pixel3 === 0) { 
-			this.car.maxspeed = 50; 
-			this.car.opacity = 1;
-			return 'ontrack';
-		}	
-
-		// in pits
-		if (pixel1 === 0 && pixel2 === 0 && pixel3 === 255 ) { 
-			this.car.maxspeed = 15; 
-			this.car.opacity = 1;
-			return 'inpits';
-		}
-
-		// off track
-		if (pixel1 === 0 && pixel2 === 0 && pixel3 === 0) {
-			if(this.car.speed > 0) {
-				this.car.maxspeed = 15 + (5 - (Math.random() * 10));
-				this.car.angle += 3 - (Math.random() * 6);
-			}
-			return 'offtrack';
-		}
-
 		// trigger lap timer by hitting red start/finish line rect (see track.svg#path)
 		if(pixel1 === 255) {
 			this.setLapTime();
@@ -286,7 +297,23 @@ Game.prototype = {
 		if (this.laptimes.length === this.racelaps && !this.racefinished) {
 			this.racefinished = true;
 			this.car.maxspeed = 0;
+			this.car.state = 1; // turns on the brake lights after finish. maybe change to celebratory blinking lights?
 			this.endRace();
+		}
+
+		// on track
+		if (pixel1 === 0 && pixel2 === 255 && pixel3 === 0) { 
+			return 'ontrack';
+		}	
+
+		// in pits
+		if (pixel1 === 0 && pixel2 === 0 && pixel3 === 255 ) { 
+			return 'inpits';
+		}
+
+		// off track
+		if (pixel1 === 0 && pixel2 === 0 && pixel3 === 0) {
+			return 'offtrack';
 		}
 	},
 
@@ -543,14 +570,15 @@ Game.prototype = {
 		this.keys[event.keyCode] = false;
 
 		if (event.keyCode == 65 || event.keyCode == 90) {
-			this.car.speed -= 0.5;
-			this.car.state = 0;
+			
+			if(this.car.speed > 0) this.car.speed -= 0.5;
+			if(this.car.speed < 3) this.car.speed = 0;
+			if(!this.racefinished) this.car.state = 0;
 		}
 
 		// M for mute/unmute
 		if(event.keyCode == 77) {
 			let sourceBuffer = this.engine.sourceBuffer;
-			console.log(sourceBuffer);
 			if(sourceBuffer.context.state === 'running') {
 				sourceBuffer.context.suspend();
 			} else {
@@ -579,7 +607,6 @@ Game.prototype = {
 	initGame : function (event) {
 		// hide menu screen, show game canvas
 		var teaser = document.querySelector('.world').style.display = "none";
-		var canvas = document.querySelector('canvas').style.opacity = "1";
 		
 		document.body.setAttribute("race-start", "");
 		

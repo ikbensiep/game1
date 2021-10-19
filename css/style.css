@@ -195,11 +195,19 @@ dd {
 	font-size: 2em;
 }
 
+.laptimes .laps:after {
+	content: '' attr(fps) 'fps';
+	position: absolute;
+	left: 1ex;
+	opacity: .25;
+}
+
 .laptimes li {
 	clear: left;
 	padding: 0 1ex;
 	text-transform: uppercase;
 	transition: color .5s;
+	position: relative;
 }
 
 .laps:before {content: "lap ";}

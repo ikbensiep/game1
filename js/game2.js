@@ -9,6 +9,7 @@ Game.prototype = {
 	quality: {width: 800, height: 600},
 	team: 'porsche',
 	player: 'Player1',
+	gamepad: null,
 
 	canvas: null,
 	ctx : null,
@@ -25,12 +26,13 @@ Game.prototype = {
 	lapstarttime: null,
 	laptime: null,
 	racefinished: false,
+	lastTime: 0,
 	req: null,
-	gamepad: null,
 
 	pathscale: 16,
 	blip: null,
 	minimap: null,
+
 
 	setup: function () {
 
@@ -153,12 +155,14 @@ Game.prototype = {
 		window.addEventListener("keydown", this.keydown_handler.bind(this), false);
 		window.addEventListener("keyup", this.keyup_handler.bind(this), false);
 
-		//window.requestAnimationFrame(this.draw());
+		
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
 	},
 
-	draw : function() {
-
+	draw : function(timeStamp) {
+		let deltaTime = timeStamp - this.lastTime;
+		this.lastTime = timeStamp;
+		document.querySelector('.laps').setAttribute('fps', Math.floor(1000/deltaTime));
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		this.octx.clearRect(0, 0, this.ocvs.width, this.ocvs.height);
 		
@@ -244,7 +248,7 @@ Game.prototype = {
 		this.car.drawSprite(this.ctx);
 		
 		// draw the 'elevated' layer onto canvas
-		this.worldlayers.elevated.drawSprite(this.ctx);
+		// this.worldlayers.elevated.drawSprite(this.ctx);
 		this.worldlayers.elevated.x = this.floor.x;
 		this.worldlayers.elevated.y = this.floor.y;
 		
@@ -272,19 +276,18 @@ Game.prototype = {
 	checkGroundType: function () {
 		
 		var image = this.octx.getImageData(this.ocvs.width/2, this.ocvs.height/2, 1,1);
-	/*
-		creates a snapshot of the path canvas and adds it to the DOM
-
-		let debugnode = document.querySelector('img#debugsnapshot');
-		if(! debugnode ) {
-			var el = document.createElement('img');
-			el.id = 'debugsnapshot';
-			el.src = this.ocvs.toDataURL("image/png");
-			document.body.appendChild(el);
-		} else {
-			debugnode.src = this.ocvs.toDataURL("image/png");
-		}
-	*/
+	
+	//	creates a snapshot of the path canvas and adds it to the DOM
+	// 	let debugnode = document.querySelector('img#debugsnapshot');
+	// 	if(! debugnode ) {
+	// 		var el = document.createElement('img');
+	// 		el.id = 'debugsnapshot';
+	// 		el.src = this.ocvs.toDataURL("image/png");
+	// 		document.body.appendChild(el);
+	// 	} else {
+	// 		debugnode.src = this.ocvs.toDataURL("image/png");
+	// 	}
+	
 		var pixel1 = image.data[0];
 		var pixel2 = image.data[1];
 		var pixel3 = image.data[2];

@@ -1,4 +1,6 @@
-var Engine = function (options) {
+var Sound = function (options) {
+	this.looping = true;
+
 	for(item in options) {
 		this[item] = options[item];
 	}
@@ -6,7 +8,7 @@ var Engine = function (options) {
 	this.init();
 }
 
-Engine.prototype = {
+Sound.prototype = {
 	AudioContext : window.AudioContext || window.webkitAudioContext,
 	audioCtx: null,
 	sourceBuffer: null,
@@ -23,7 +25,7 @@ Engine.prototype = {
 		var checkbox = document.querySelector('input[type=checkbox]');
 		checkbox.onclick = function (event) {
 			if(event.target.checked) {
-				this.stopEngine();
+				this.stopSound();
 			} else {
 				this.init();
 			}
@@ -32,7 +34,7 @@ Engine.prototype = {
 
 	getSound: function () {
 
-		var url = 'sfx/engine2.ogg';
+		var url = this.sound;
 		var request = new XMLHttpRequest();
 		request.open("GET", url, true);
 		request.responseType = 'arraybuffer';
@@ -46,13 +48,21 @@ Engine.prototype = {
 			this.sourceBuffer.buffer = buffer;
 			// this.sourceBuffer.connect(this.audioCtx.destination);
 			this.sourceBuffer.connect(this.gainNode);
-			this.sourceBuffer.loop = true;
-			this.sourceBuffer.playbackRate.value = 0.25;
+			this.sourceBuffer.loop = this.looping;
+			this.sourceBuffer.playbackRate.value = 1;
 			this.sourceBuffer.start(this.audioCtx.currentTime);
 			}.bind(this));
 		}.bind(this);
 
 		request.send();
+	},
+
+	updateGain: function (level) {
+		this.gainNode.gain.value = level;
+	},
+
+	toggleLoop: function(looping) {
+		this.sourceBuffer.loop = looping;
 	},
 
 	updateEngine: function (speed) {
@@ -71,7 +81,7 @@ Engine.prototype = {
 		// this.sourceBuffer.playbackRate.value = 0.35 + (speed/C - Math.floor(speed / C));
 	},
 
-	stopEngine: function () {
+	stopSound: function () {
 		this.sourceBuffer.stop();
 	}
 

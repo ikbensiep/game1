@@ -28,12 +28,27 @@
      id="namedview15658"
      showgrid="false"
      inkscape:zoom="4.265774"
-     inkscape:cx="1222.8511"
-     inkscape:cy="1495.5858"
+     inkscape:cx="1666.7019"
+     inkscape:cy="1551.8485"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" />
+     inkscape:current-layer="layer10"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       position="1600,1600"
+       orientation="1,0"
+       id="guide1670"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="1600,1600"
+       orientation="0,1"
+       id="guide1672"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
   <defs
      id="defs4">
     <style
@@ -4334,6 +4349,12 @@
            style="fill:none;stroke:#ffffff;stroke-width:0.94;stroke-dasharray:0.939514, 0.939514"
            inkscape:connector-curvature="0" />
       </g>
+      <circle
+         style="fill:#ff00ff;fill-opacity:1;stroke:#0000ff;stroke-width:3.77952766;stroke-linejoin:round;stroke-opacity:1;paint-order:markers fill stroke"
+         id="path1674"
+         cx="1600"
+         cy="1600"
+         r="15.181677" />
     </g>
     <g
        id="layer6"

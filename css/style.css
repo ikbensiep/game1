@@ -59,11 +59,17 @@ output {
 	overflow: hidden;
 	opacity: 0;
 	transition: opacity 1s 1s;
-	
 }
 
 body[race-start] output {
 	opacity: 1;
+}
+
+output#speedometer:before {
+	content: attr(data-speed);
+	position: absolute;
+	top: 106px;
+	left: 46%;
 }
 
 output .needle {
@@ -77,26 +83,46 @@ output .needle {
 	background-color: white;
 	width: 80px;
 	transform-origin: right;
-	transition: transform .15s;
+	transition: transform .15s, background-color 1s;
 }
 
 .needle:after {
-	content: "";
+	content: attr(data-gauge-type);
+	color: #888;
 	display: block;
-	background-color: red;
-	height: 1em;
-	width: 1em;
+	background-color: #212223;
+	height: 15px;
+	width: 15px;
+	text-align: center;
+	font-size: x-small;
 	border-radius: 50%;
 	margin-top: -.5em;
-	margin-left: 70px;
+	margin-left: 90%;
+	position: relative;
 }
 
-output#speedometer:before {
-	content: attr(data-speed);
-	position: absolute;
-	top: 106px;
-	left: 46%;
+.needle.fuel {
+	width: 40px;
+	left: 55%;
+	top: 6em;
 }
+
+output[data-fuel^="0"] .needle.fuel,
+output[data-fuel^="1"] .needle.fuel,
+output[data-speed^="19"] .needle.speed {
+	background-color: red;
+}
+
+output[data-speed^="18"] .needle.speed {
+	background-color: rgb(255, 115, 0);
+}
+
+output[data-speed^="17"] .needle.speed,
+output[data-fuel^="2"] .needle.fuel,
+output[data-fuel^="3"] .needle.fuel {
+	background-color: rgb(241, 186, 166);
+}
+
 
 .help {
 	position: relative;

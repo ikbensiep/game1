@@ -287,6 +287,7 @@ Game.prototype = {
 			this.clouds.x *= this.clouds.speed;
 			this.clouds.x = (this.floor.x * 1.5);
 			this.clouds.y = this.floor.y * 1.4;
+			this.clouds.angle += Math.random() * .1;
 		}
 
 		this.ctx.drawImage(this.canvas, 0, 0);

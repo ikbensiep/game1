@@ -126,8 +126,10 @@ Game.prototype = {
 			mod: 1,
 			speed: 1,
 			maxspeed: 50,
+			fuel: 8000, //milliliters :P
+			maxfuel: 10000,
 			width: 320,
-			height: 220
+			height: 220,
 		});
 
 		this.clouds = new Sprite({
@@ -166,10 +168,10 @@ Game.prototype = {
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		this.octx.clearRect(0, 0, this.ocvs.width, this.ocvs.height);
 		
+		if(this.car.fuel <= 0) this.car.maxspeed = 0;
+
 		// checking what keys were pressed
-		
 		this.checkUserInput();
-		
 		
 		// move the floor
 		this.calcFloorLocation();
@@ -183,8 +185,6 @@ Game.prototype = {
 		// update engine sound
 		this.engine.updateEngine(this.car.speed);
 		
-		// draw speedometer
-		this.drawHUD();
 		
 		this.worldlayers.world.drawSprite(this.ctx);
 		this.worldlayers.world.x = this.floor.x;
@@ -244,6 +244,14 @@ Game.prototype = {
 			this.car.opacity = 1;
 		}
 
+		if (wheresthecar === 'inpits pitbox') {
+			this.car.state = 1;
+			if(this.car.fuel < this.car.maxfuel && this.car.speed < 2) this.car.fuel += 10;
+		}
+
+		// draw speedometer
+		this.drawHUD();
+
 		// draw the car onto the canvas
 		this.car.drawSprite(this.ctx);
 		
@@ -293,7 +301,7 @@ Game.prototype = {
 		var pixel3 = image.data[2];
 		
 		// trigger lap timer by hitting red start/finish line rect (see track.svg#path)
-		if(pixel1 === 255) {
+		if(pixel1 === 255 && pixel2 === 0 && pixel3 === 0) {
 			this.setLapTime();
 		}
 
@@ -312,6 +320,11 @@ Game.prototype = {
 		// in pits
 		if (pixel1 === 0 && pixel2 === 0 && pixel3 === 255 ) { 
 			return 'inpits';
+		}
+		
+		// in pits
+		if (pixel1 === 255 && pixel2 === 0 && pixel3 === 255 ) { 
+			return 'inpits pitbox';
 		}
 
 		// off track
@@ -410,8 +423,12 @@ Game.prototype = {
 	},
 
 	drawHUD : function() {
-		hud.setAttribute('data-speed', Number(this.car.speed * 4).toFixed(0));
-		hud.querySelector('.needle').style.transform = 'rotateZ(' + Math.ceil(this.car.speed * 2 * 1.8) + 'deg)';
+		let currentFuel = Math.floor(this.car.fuel / 100);
+		hud.dataset.speed = Number(this.car.speed * 4).toFixed(0);
+		hud.querySelector('.needle.speed').style.transform = 'rotateZ(' + Math.ceil(this.car.speed * 2 * 1.8) + 'deg)';
+
+		hud.dataset.fuel = currentFuel < 10 ? '0' + currentFuel : currentFuel;
+		hud.querySelector('.needle.fuel').style.transform = 'rotateZ(' + (currentFuel * 1.75) + 'deg)';
 	},
 
 	calcFloorLocation : function() {
@@ -493,16 +510,20 @@ Game.prototype = {
 
 		// keyboard
 		// accelerate
+		
 		if (this.keys[65] == true && this.car.mod == 1 && !this.racefinished) {
 
-			if (this.car.speed < this.car.maxspeed && !this.keys[90]) {
+			if (this.car.speed < this.car.maxspeed && !this.keys[90] ) {
 				this.car.acc = (this.car.maxspeed - this.car.speed) / 100;
 				this.car.speed += this.car.acc;
-			}
-
+			} 
+			
 			if (this.car.speed > this.car.maxspeed) {
+				// todo check for offtrack status and dramatically increase deceleration
 				this.car.speed -= Number(this.car.speed * 0.01).toFixed(2);
 			}
+
+			if(this.car.fuel > 0) this.car.fuel -= 2;
 
 		} else {
 			// release accelerator
@@ -510,6 +531,7 @@ Game.prototype = {
 
 			// if (this.car.speed < 0.05) this.car.speed = 0;
 			this.car.mod = 1;
+			if(this.car.fuel > 0) this.car.fuel -= 0.1;
 		}
 
 		// brake

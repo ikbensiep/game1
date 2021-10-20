@@ -58,12 +58,20 @@ output {
 	left: calc(50% - 100px);
 	overflow: hidden;
 	opacity: 0;
-	transition: opacity 1s 1s;
+	transition: all 1s 1s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 body[race-start] output {
 	opacity: 1;
 }
+
+.inpits output {
+	transform: scale(1.5) translateY(-5%);
+} 
+
+.inpits.pitbox output {
+	transform: scale(2) translateY(-10%);
+} 
 
 output#speedometer:before {
 	content: attr(data-speed);
@@ -183,13 +191,16 @@ dd {
 
 .blip {
 	display: block;
-	width: 5px;
-	height: 5px;
-	background: white;
+	width: 30px;
+	height: 15px;
+	background: url("../img/porsche-1.png") no-repeat;
+	background-size: cover;
+	background-position: center;
 	position: absolute;
-	border-radius: 50%;
+	border-radius: 10%;
 	left: 50%;
 	top: 50%;
+	transition: transform .1s;
 }
 
 #minimap .track {
@@ -201,8 +212,8 @@ dd {
 #minimap img {
 	width: 1120px;
 	height: 1120px;
-	left: calc(-560px + 130px);
-	top: calc(-560px + 130px);
+	left: calc(-560px + 160px);
+	top: calc(-560px + 160px);
 	position: absolute;
 }
 

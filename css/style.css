@@ -10,7 +10,7 @@ body {
 	background-color: #1B8433;
 	background-size: 200%;
 	position: relative;
-	perspective: 750px;
+	perspective: 60vh;
 	overflow: hidden;
 	transform: scale(1);
 	transition: transform 5s, background-color 1s;

@@ -88,72 +88,92 @@ body[race-start] #minimap {
 
 .world {
 	position: absolute;
-	width: 200%;
-	height: 200%;
+	width: 100%;
+	height: 100%;
 	opacity: 1;
-	transform: translateX(-35%) translateY(-45%) rotateX(55deg) scale(1);
 	transform-style: preserve-3d;
-	transition: opacity 3s 1s, transform 20s 1s;
+	transition: opacity 3s 1s, transform 2s 1s;
+	transform: rotateX(20deg) rotateZ(0deg) translateY(-70%);
+}
+
+.world:after {
+	content: '';
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background: white;
+	z-index: 2;
 }
 
 .track-preview {
-	background-position: center 0;
-	background-size: cover;
+	background-position: 50% 0;
+	background-size: 113%;
 	background-repeat: no-repeat;
-	height: 200vw;
-	transform: rotate(0deg) translateZ(-100px) translateY(-650px);
+	height: 400vh;
+	transform: rotateX(40deg) translateZ(220px) translateY(-30%) rotateZ(-70deg);
 	transform-style: preserve-3d;
 	transform-origin: center;
-	/* animation: rotate 30s 1s infinite ease-in-out; */
-	transition: transform 5s cubic-bezier(.08,.82,.17,1);
+	animation: rotate 20s infinite cubic-bezier(.45,.05,.55,.95) alternate;
+	width: 400vh;
 }
 
 
 .track-preview.abu-dhabi {
-	/* transform: rotate(0deg) translateX(-290px) translateY(-1190px) translateZ(-120px); */
-	transform: rotateZ(103deg) rotateX(2deg) translateX(-2370px) translateY(1320px) translateZ(-690px);
+ background-position: 200px 0px;
+}
+
+.track-preview.assen-ink {
+ background-position: 100% -20%;
+	/*! background-size: 55%; */
+ left: -90%;
+ position: relative;
 }
 
 .track-preview.barcelona {
-	/* transform: rotate(0deg) translateX(-290px) translateY(-1190px) translateZ(-120px); */
-	transform: rotateZ(3deg) rotateX(20deg) translateX(-420px) translateY(-1230px) translateZ(30px)
+	background-position: 170px 160px;
+}
+
+.track-preview.barcelona {
+	background-position: 20% 90%;
 }
 
 .track-preview.hockenheim {
-	transform: rotate(-20deg) translateX(1570px) translateY(-1520px) translateZ(-90px);
+	background-position: 50% 87%;
 }
 
 .track-preview.interlagos {
-	transform: rotate(30deg) translateX(-530px) translateY(-690px) translateZ(-130px);
+	background-position: 50% 0%;
 }
 
 .track-preview.monza {
-	transform: rotate(10deg) translateZ(-280px) translateY(-1730px) translateX(-130px);
+	background-position: 30% 40%;
+	background-size: 50%;
 }
 
 .track-preview.sochi {
-	transform-origin: 60% 60%;
-	transform: rotate(0deg) translateZ(-100px) translateX(-890px) translateY(-1930px);
+	/*! transform-origin: 60% 60%; */
+	/*! background-position: 380px 0px; */
+	background-size: 50%;
 }
 
 .car-preview {
-	background-image: url(../img/porsche-1.png);
-	height: 60px;
-	width: 90px;
-	background-size: cover;
-	left: 35%;
-	top: 54%;
 	position: absolute;
-	animation: grid 20s 10s 1 forwards;
+	animation: grid 20s linear infinite;
+	transform: rotate(var(--rotation));
+	--rotation: 0deg;		
+}
+
+.car-preview img {
+	width: 620px;
 }
 
 .garage {
 	background: #333;
 	visibility: visible;
-	width: 324px;
-	height: 100px;
+	width: 304px;
+	height: 50px;
 	position: absolute;
-	left: 55%;
+	left: 38%;
 	top: 48.5%;
 	transform-origin: left;
 	transform: rotate(1.3deg);
@@ -161,8 +181,8 @@ body[race-start] #minimap {
 	box-shadow: 0 0 5px black;
 }
 
-.barcelona .garage {transform: rotate(32deg) translateX(540px) translateY(461px);}
-.barcelona .car-preview { transform:rotate(32deg)  translateY(-40px); }
+.barcelona .garage {transform: rotate(32deg) translateX(200px) translateY(33px) scale(0.8);}
+.barcelona .car-preview { transform:rotate(var(--rotation)); --rotation: 32deg;}
 
 .interlagos .garage {
 	transform: rotate(1deg) translate(50px, 109px);
@@ -190,7 +210,7 @@ body[race-start] #minimap {
 .back {
 	position: absolute;
 	width: 100%;
-	height: 50px;
+	height: 29px;
 	transform: rotateX(-90deg);
 	transform-origin: left bottom;
 }
@@ -198,31 +218,32 @@ body[race-start] #minimap {
 .left,
 .right {
 	position: absolute;
-	height: 101px;
+	height: 44px;
 	width: 27px;
-	transform: rotateX(0deg) rotateY(-270deg) translateY(0px) translateZ(-50px);
+	transform: rotateX(0deg) rotateY(-270deg) translateY(7px) translateZ(-30px);
 	background: rgb(100, 100, 100);
-	left: 23px;
+	left: 3px;
 	top: 0;
 	transform-origin: right;
 }
 
 .front {
-	top: 50%;
+	top: 42%;
 	background-image: url(../img/pit-texture.png);
-	background-position: left bottom, left top;
+	background-position: left bottom;
 	background-repeat: repeat-x;
 	background-size: 34%, 100%;
+	background-color: red;
 }
 .back {
-	top: -50%;
+	top: 16%;
 	background-image: url(../img/pit-texture.png);
 	background-position: left bottom, left top;
 	background-repeat: repeat-x;
 	background-size: 34%, 100%;
 }
 .right {
-	transform: rotateX(0deg) rotateY(-270deg) translateY(0) translateZ(274px) translateX(0);
+	transform: rotateX(0deg) rotateY(-270deg) translateY(6px) translateZ(274px) translateX(0);
 }
 
 .roof {
@@ -231,6 +252,7 @@ body[race-start] #minimap {
 	height: 100%;
 	background: #555;
 	transform: translateZ(27px);
+	/*! opacity: .5; */
 }
 
 
@@ -281,9 +303,28 @@ fieldset > fieldset {
 fieldset > input:checked + label +  fieldset {
 	display: block;
 }
-input {
+input[type=radio] {
 	opacity: 0.01;
 }
+
+input[type=number] {
+	color: white;
+	background: transparent;
+	font-weight: bold;
+	width: 2.2em;
+	border: 2px solid #ffffff7d;
+	padding: .5ex;
+	font-size: x-large;
+	margin: 0 1em;
+	border-radius: .3ex;
+	text-align: center;
+}
+
+input#fuel {
+	width: 86%;
+	margin: 0;
+}
+
 label {
 	cursor: pointer;
 	display: inline-block;
@@ -297,18 +338,24 @@ label {
 	transition: all .2s;
 	padding: 1em;
 	overflow: hidden;
+	/*! display: flex; */
 }
 
 input:focus + label {
 	border: 1px dashed white!important;
 }
 
+label:focus-within,
 input:checked + label {
 	background: black;
 	border: 1px solid white;
 }
 
-input:checked + label i.fa {
+label img {
+	max-width: 100%;
+}
+
+input:checked + label i.fa, input:checked + label img {
 	transform: scale(4) rotate(23deg);
 }
 
@@ -390,13 +437,13 @@ button[data-comingsoon]:after {
 
 @keyframes rotate {
 	from {
-		transform: rotate(0deg) translateZ(-100px) translateY(-150px) scale(1);
+		transform: rotateX(50deg) rotateZ(0deg) translateZ(-90px) translateY(-20%);
 	}
 	50% {
-		transform: rotate(180deg) translateZ(-100px) translateY(650px) scale(1);
+		/*! transform: rotateX(10deg) rotateZ(40deg) translateZ(-90px) translateY(-20%); */
 	}
 	to {
-		transform: rotate(360deg) translateZ(-100px) translateY(-150px) scale(1);
+		/*! transform: rotateX(60deg) rotateZ(360deg) translateZ(50px) translateY(20%); */
 	}
 }
 
@@ -406,12 +453,12 @@ button[data-comingsoon]:after {
 
 @keyframes grid {
 	from {
-		left: 35%;
+		/*! left: 35%; */
+		transform: rotate(var(--rotation)) translateX(0) translateY(0);
 	}
 
 	to {
-		left: 58%;
-		top: 55%
+		transform: rotate(var(--rotation)) translateX(200%) translateY(0);
 	}
 }
 

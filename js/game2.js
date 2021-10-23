@@ -18,7 +18,7 @@ Game.prototype = {
 
 	car : null,
 	track : null,
-
+	startPosition: null,
 	racelaps : 3,
 	racestarttime: null,
 	raceendtime: null,
@@ -66,6 +66,7 @@ Game.prototype = {
 		this.quality = this.setScreenSize(quality);
 
 		hud = document.querySelector('output');
+		this.fpsCounter = document.querySelector('.laps');
 		this.blip = document.querySelector('.blip');
 		this.minimap = document.querySelector('#minimap');
 		
@@ -73,31 +74,38 @@ Game.prototype = {
 		this.canvas.width = this.quality && this.quality.width ? this.quality.width : 800;
 		this.canvas.height = this.quality && this.quality.height ? this.quality.height : 600;
 		this.ctx = this.canvas.getContext("2d");
+		// WebGL2D.enable(this.canvas); // adds "webgl-2d" context to cvs
 
 		this.ocvs = document.createElement('canvas');
 		this.ocvs.width = this.canvas.width / this.pathscale;
 		this.ocvs.height = this.canvas.height / this.pathscale;
 		this.octx = this.ocvs.getContext('2d');
-		
-		this.keys = [];
+		// WebGL2D.enable(this.ocvs); // adds "webgl-2d" context to cvs
 
+		this.racelaps = document.querySelector('#laps').value;
+		this.keys = [];
+		this.floorMovement = {x:0, y:0};
 		this.player = {
 			name: "Player 1",
 			laptimes: this.laptimes
 		};
-
+		
+		let factor = 3200 / this.mapsize;
+		let [startx,starty] = JSON.parse(selectedtrack.dataset.start);
+		
+		console.log('selected: ',startx,starty);
 		// set initial position in world (change values in index.html)
 		this.floor = {
 			//original svg is 3200x3200, this is a useful reference when inspecting the inkscape file 
-			x: ((selectedtrack.dataset.x / 3200) / this.mapsize) - this.canvas.width / 2,
-			y: ((selectedtrack.dataset.y / 3200) / this.mapsize) - this.canvas.height / 2
+			// x: ((selectedtrack.dataset.x / 3200) / this.mapsize) - this.canvas.width / 2,
+			// y: ((selectedtrack.dataset.y / 3200) / this.mapsize) - this.canvas.height / 2
+			x: startx,
+			y: starty
 		}
-		
-		console.log(this.floor, selectedtrack.dataset)
-		
+		console.log('canvas:', this.canvas);
 		this.path = new Sprite({
-			name: [selectedtrack.value],
-			images: [`tracks/${selectedtrack.value}.svg#path`],
+			name: selectedtrack.value,
+			images: [`track/${selectedtrack.value}.svg#path`],
 			x: this.floor.x,
 			y: this.floor.y,
 			angle: 0,
@@ -111,16 +119,17 @@ Game.prototype = {
 		layers.map( layer => {
 			this.worldlayers[layer] = 
 				new Sprite({
-					name: [selectedtrack.value],
-					images: [`tracks/${selectedtrack.value}.svg#${layer}`],
-					x: this.floor.x,
-					y: this.floor.x,
+					name: layer,
+					images: [`track/${selectedtrack.value}.svg#${layer}`],
 					angle: 0,
+					x: this.floor.x - this.canvas.width / 2,
+					y: this.floor.y - this.canvas.height / 2,
 					height: this.mapsize,
-					width: this.mapsize
+					width: this.mapsize,
 				});
 		});
 
+		console.log('world:', this.worldlayers.world);
 
 		this.car = new Sprite({
 			name: 'user1',
@@ -132,17 +141,16 @@ Game.prototype = {
 			y: this.canvas.height / 2,
 			angle: parseInt(selectedtrack.dataset.angle) || 0,
 			mod: 1,
-			speed: 1,
+			speed: 0,
 			maxspeed: 50,
-			fuel: 8000, //milliliters :P
-			maxfuel: 10000,
+			fuel: Number(document.querySelector('#fuel').value * 1000), //milliliters :P
+			maxfuel: Number(document.querySelector('#fuel').getAttribute('max') * 1000),
 			width: 320,
 			height: 220,
 			sound: 'sfx/engine2.ogg'
 		});
-
+		console.log(this.car);
 		this.chanceofrain = this.cloudiness > 0.2 ? true : false;
-		console.log(this.chanceofrain, this.cloudiness);
 		if(this.chanceofrain) {
 			this.clouds = new Sprite({
 				name: 'clouds',
@@ -171,7 +179,6 @@ Game.prototype = {
 
 		window.addEventListener("keydown", this.keydown_handler.bind(this), false);
 		window.addEventListener("keyup", this.keyup_handler.bind(this), false);
-
 		
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
 	},
@@ -179,7 +186,7 @@ Game.prototype = {
 	draw : function(timeStamp) {
 		let deltaTime = timeStamp - this.lastTime;
 		this.lastTime = timeStamp;
-		document.querySelector('.laps').setAttribute('fps', Math.floor(1000/deltaTime));
+		this.fpsCounter.setAttribute('fps', Math.floor(1000/deltaTime));
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		this.octx.clearRect(0, 0, this.ocvs.width, this.ocvs.height);
 		
@@ -189,16 +196,15 @@ Game.prototype = {
 		this.checkUserInput();
 		
 		// move the floor
-		this.calcFloorLocation();
+		this.calcFloorMovement();
 
 		// draw path on offscreen canvas
-		this.path.x = this.floor.x / this.pathscale;
-		this.path.y = this.floor.y / this.pathscale;
+		this.path.x = (this.floor.x + this.canvas.width / 2) / this.pathscale;
+		this.path.y = (this.floor.y + this.canvas.height / 2) / this.pathscale;
 		this.path.drawSprite(this.octx);
 
 		
 		// update engine sound
-
 		this.engine.updateEngine(this.car.speed)
 		if(this.car.speed < 1 && this.car.fuel <= 0) {
 			let sourceBuffer = this.engine.sourceBuffer;
@@ -209,12 +215,12 @@ Game.prototype = {
 		}
 
 		this.worldlayers.world.drawSprite(this.ctx);
-		this.worldlayers.world.x = this.floor.x;
-		this.worldlayers.world.y = this.floor.y;
+		this.worldlayers.world.x = this.floor.x + this.canvas.width / 2;
+		this.worldlayers.world.y = this.floor.y + this.canvas.height / 2;
 		
 		this.worldlayers.track.drawSprite(this.ctx);
-		this.worldlayers.track.x = this.floor.x;
-		this.worldlayers.track.y = this.floor.y;
+		this.worldlayers.track.x = this.floor.x + this.canvas.width / 2;
+		this.worldlayers.track.y = this.floor.y + this.canvas.height / 2;
 		
 		var wheresthecar = this.checkGroundType();
 		
@@ -277,10 +283,10 @@ Game.prototype = {
 		// draw the car onto the canvas
 		this.car.drawSprite(this.ctx);
 		
-		// draw the 'elevated' layer onto canvas
+		// draw the 'elevated' layer onto canvas with a lil parallax
 		this.worldlayers.elevated.drawSprite(this.ctx);
-		this.worldlayers.elevated.x = this.floor.x;
-		this.worldlayers.elevated.y = this.floor.y;
+		this.worldlayers.elevated.x = this.floor.x + this.canvas.width / 2;
+		this.worldlayers.elevated.y = this.floor.y + this.canvas.height / 2;
 		
 		if (this.chanceofrain) {
 			this.clouds.drawSprite(this.ctx);
@@ -380,7 +386,7 @@ Game.prototype = {
 		var best = laptimes.slice(0);
 		best.sort();
 
-		document.querySelector('.laps').innerHTML = laptimes.length ? laptimes.length : 1;
+		document.querySelector('.laps').innerHTML = `${laptimes.length ? laptimes.length : 1} / ${this.racelaps}`;
 		document.querySelector('.best').innerHTML = best[0] ? best[0] : '--.---';
 		document.querySelector('.last').innerHTML = last ? last : '--.---';
 
@@ -442,29 +448,35 @@ Game.prototype = {
 
 	drawHUD : function() {
 		let currentFuel = Math.floor(this.car.fuel / 100);
-	
+		let maxFuel = Math.floor(this.car.maxfuel / 100);
 		// calculate floor transformation in %
-		let tx = (((this.floor.x - this.canvas.width / 2) / this.worldlayers.world.width) * 100).toFixed(2) ;
-		let ty = (((this.floor.y - this.canvas.height / 2) / this.worldlayers.world.height) * 100).toFixed(2);
+		let tx = (((this.floor.x + this.canvas.width / 2) / this.worldlayers.world.width) * 100).toFixed(2) ;
+		let ty = (((this.floor.y + this.canvas.height / 2) / this.worldlayers.world.height) * 100).toFixed(2);
 
 		hud.dataset.speed = Number(this.car.speed * 4).toFixed(0);
 		hud.querySelector('.needle.speed').style.transform = 'rotateZ(' + Math.ceil(this.car.speed * 2 * 1.8) + 'deg)';
 
 		hud.dataset.fuel = currentFuel < 10 ? '0' + currentFuel : currentFuel;
-		hud.querySelector('.needle.fuel').style.transform = 'rotateZ(' + (currentFuel * 1.75) + 'deg)';
+		console.log(currentFuel, maxFuel);
+		hud.querySelector('.needle.fuel').style.transform = 'rotateZ(' + (currentFuel / maxFuel) * 180 + 'deg)';
 	
 		//move minimap
 		this.minimap.querySelector('img').style.transform = `translate(${tx}%, ${ty}%)`;
 		this.blip.style.transform = `rotate(${this.car.angle}deg)`;
 	},
 
-	calcFloorLocation : function() {
+	calcFloorMovement : function() {
 		var x = Math.floor((this.car.speed*this.car.mod) * Math.cos(Math.PI/180 * this.car.angle));
 		var y = Math.floor((this.car.speed*this.car.mod) * Math.sin(Math.PI/180 * this.car.angle));
 
 		this.floor.x -= x;
 		this.floor.y -= y;
 		
+		this.floorMovement = {x: x * -1, y:y * -1};
+		
+		// console.log({x,y})
+		// console.log(this.floorMovement);
+
 		this.canvas.style.backgroundPosition = `${this.floor.x}px ${this.floor.y}px`;
 	},
 
@@ -499,7 +511,7 @@ Game.prototype = {
 				if (this.car.speed > this.car.maxspeed) {
 					this.car.speed -= Number(this.car.speed * 0.01).toFixed(2);
 				}
-				console.log(this.car.speed, this.car.maxspeed)
+				
 			}
 
 			if(!this.gamepad.buttons[6].pressed) {
@@ -674,15 +686,21 @@ Game.prototype = {
 window.addEventListener("change", function (e) {
 	var trackpreview = document.querySelector('.track-preview');
 
+	if(e.target.name === 'option' && e.target.value == 1) {
+		trackpreview.classList.add('garage-preview');
+	}
+
 	if(e.target.name === 'car') {
-		document.querySelector('.car-preview img').src = "img/"+e.target.value+"-1.png";
+		document.querySelector('.car-preview').className = 'car-preview ' + e.target.value;
 	}
 
 	if(e.target.name === 'track') {
 		trackpreview.className = 'track-preview ' + e.target.value;
-		trackpreview.style.backgroundImage = `url('img/${e.target.value}.svg')`;
+		trackpreview.style.backgroundImage = 
+			`url('track/${e.target.value}.svg#track'), url('track/${e.target.value}.svg#world')`
+			;
 		document.body.className = (e.target.value);
-		document.querySelector('#minimap img').src = `tracks/${e.target.value}.svg#path`;
+		document.querySelector('#minimap img').src = `track/${e.target.value}.svg#path`;
 		document.querySelector('#minimap img').style.transform = `translate(${e.target.dataset.x}px, ${e.target.dataset.y}px)`;		
 	}
 });
@@ -690,5 +708,6 @@ window.addEventListener("change", function (e) {
 window.onload = function() {
 	document.body.removeAttribute('unresolved');
 	racegame.setup();
+
 };
 var racegame = new Game();

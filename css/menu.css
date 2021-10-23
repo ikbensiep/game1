@@ -13,16 +13,11 @@ body[race-start] form {
 	transform: translateY(-100vh);
 }
 
-body[race-start] .game-container {
-	background-color: #222123;
-}
-
 body[race-start] #game,
 body[race-end] #game {
 	opacity: 1;
 	transform: scale(1);
-	background-size: 100%;
-	mask: radial-gradient(white 89%, black 105%) luminance center 100% no-repeat!important;
+	mask: radial-gradient(white 89%, black 155%) luminance center 100% no-repeat!important;
 }
 
 body[race-start] .ui-hint {

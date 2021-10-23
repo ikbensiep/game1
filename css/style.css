@@ -150,6 +150,33 @@ dd {
 	height: 100vh;
 }
 
+body[race-start] .game-container {}
+
+.game-container::after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: url('../img/noise.png');
+	z-index: 2;
+	mask: radial-gradient(black 50%, grey 75%, white 120%) luminance;
+	opacity: .05;
+	transition: opacity 10s 10s;
+    background-size: 100%;
+    background-position: center;
+}
+
+.offtrack .game-container::after {
+	/* mask: radial-gradient(black 20%, white 100%) luminance; */
+	opacity: .95;
+	transition: opacity 2s;
+	background-image: url('../img/noise.png'), url('../noise.png');
+    background-size: 400%, 100%;
+}
+
 
 #game {
 	min-width: 800px;
@@ -159,8 +186,7 @@ dd {
 	transform: scale(.95);
 	opacity: 0;
 	transition: opacity 2s .5s, transform 2.5s .5s, box-shadow 2s 4s;
-	background-image: url('../img/TexturesCom_Grass0197_1_seamless_S.jpg');
-	background-size: 200%;
+	background-image: url('../img/noise-33.png');
 }
 
 #debugsnapshot, 

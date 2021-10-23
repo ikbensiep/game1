@@ -15,7 +15,7 @@ Game.prototype = {
 	ctx : null,
 	ocvs : null,
 	octx : null,
-
+	selectedtrack: null,
 	car : null,
 	track : null,
 	startPosition: null,
@@ -60,7 +60,12 @@ Game.prototype = {
 
 	startRace : function() {
 		var selectedtrack = document.querySelector('input[name=track]:checked');
-		var selectedcar = document.querySelector('input[name=car]:checked');
+		this.selectedtrack = selectedtrack.value;
+		var randomCar = Math.floor(Math.random() * 3);
+		var selectedcar = document.querySelector('input[name=car]:checked') 
+			? document.querySelector('input[name=car]:checked') 
+			: document.querySelectorAll('input[name=car]')[randomCar];
+		
 		var quality = document.querySelector('input[name=screen]:checked').value;
 
 		this.quality = this.setScreenSize(quality);
@@ -82,7 +87,7 @@ Game.prototype = {
 		this.octx = this.ocvs.getContext('2d');
 		// WebGL2D.enable(this.ocvs); // adds "webgl-2d" context to cvs
 
-		this.racelaps = document.querySelector('#laps').value;
+		this.racelaps = parseInt(document.querySelector('#laps').value);
 		this.keys = [];
 		this.floorMovement = {x:0, y:0};
 		this.player = {
@@ -175,7 +180,7 @@ Game.prototype = {
 		this.ambient = new Sound({sound: 'sfx/FX Engine On-0ff Fiat Panda External 001.mp3', looping: false});
 		this.ambient.updateGain(2);
 
-		this.engine = new Sound(this.car);
+		this.engine = new Sound({sound:this.car.sound, looping: true ,});
 
 		window.addEventListener("keydown", this.keydown_handler.bind(this), false);
 		window.addEventListener("keyup", this.keyup_handler.bind(this), false);
@@ -227,7 +232,7 @@ Game.prototype = {
 		let container = document.querySelector('.game-container');
 		
 		if(!container.classList.contains(wheresthecar)) {
-			document.body.className = `game-container ${wheresthecar}`;
+			document.body.className = `${this.selectedtrack} game-container ${wheresthecar}`;
 		} 
 
 		if (wheresthecar === 'ontrack') {
@@ -274,7 +279,7 @@ Game.prototype = {
 
 		if (wheresthecar === 'inpits pitbox') {
 			this.car.state = 1;
-			if(this.car.fuel < this.car.maxfuel && this.car.speed < 2) this.car.fuel += 10;
+			if(this.car.fuel < this.car.maxfuel && this.car.speed < 2) this.car.fuel += 100;
 		}
 
 		// draw speedometer
@@ -457,7 +462,7 @@ Game.prototype = {
 		hud.querySelector('.needle.speed').style.transform = 'rotateZ(' + Math.ceil(this.car.speed * 2 * 1.8) + 'deg)';
 
 		hud.dataset.fuel = currentFuel < 10 ? '0' + currentFuel : currentFuel;
-		console.log(currentFuel, maxFuel);
+
 		hud.querySelector('.needle.fuel').style.transform = 'rotateZ(' + (currentFuel / maxFuel) * 180 + 'deg)';
 	
 		//move minimap

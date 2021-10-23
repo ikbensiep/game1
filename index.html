@@ -6,8 +6,8 @@
 
 <meta property="og:title" content="Race Game" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="http://www.ikbensiep.com/demo/game1/" />
-<meta property="og:image" content="http://www.ikbensiep.com/demo/game1/img/screenshot.png" />
+<meta property="og:url" content="/" />
+<meta property="og:image" content="img/screenshot.png" />
 <meta property="og:image:width" content="1278" />
 <meta property="og:image:height" content="704" />
 
@@ -15,7 +15,7 @@
 	<link rel="stylesheet" href="css/menu.css">
 	<link href="//fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-
+	<script type="text/javascript" src="js/webgl-2d.js"></script>
 	<script type="text/javascript" src="js/sprite.js"></script>
 	<script type="text/javascript" src="js/sfx-engine.js"></script>
 	<script type="text/javascript" src="js/game2.js"></script>
@@ -23,9 +23,8 @@
 </head>
 <body unresolved>
 	<div class="world">
-		<div class="track-preview barcelona" style="background-image: url('img/barcelona.svg');">
+		<div class="track-preview barcelona" style="background-image: url('track/barcelona.svg#track'), url('track/barcelona.svg#world');">
 			<div class="car-preview">
-				<img src="" />
 			</div>
 			<div class="garage">
 				<section class="front"></section>
@@ -41,20 +40,21 @@
 			<h1>RACE GAME</h1>
 			<input type="radio" name="option" value="1" id="car-select"><label for="car-select"><i class="fa fa-car"></i> Car</label>
 			<fieldset>
-				<input type="radio" name="car" id="car1" value="porsche" autofocus checked><label for="car1">Porsche</label>
-				<input type="radio" name="car" id="car2" value="lamborghini"><label for="car2">Lamborghini</label>
-				<input type="radio" name="car" id="car3" value="ferrari"><label for="car3">Ferrari</label>
+				<input type="radio" name="car" id="car1" value="porsche" required><label for="car1">Porsche</label>
+				<input type="radio" name="car" id="car2" value="lamborghini" required><label for="car2">Lamborghini</label>
+				<input type="radio" name="car" id="car3" value="ferrari" required><label for="car3">Ferrari</label>
 			</fieldset>
 
-			<input type="radio" name="option" value="2" id="track-select"><label for="track-select"><i class="fa fa-flag-checkered"></i> Track</label>
+			<input type="radio" name="option" value="2" id="track-select" checked><label for="track-select"><i class="fa fa-flag-checkered"></i> Track</label>
 			<fieldset>
 				<!-- <legend>Track</legend> -->
-				<input type="radio" name="track" id="track1" value="barcelona" data-x="-2500" data-y="-5000" data-angle="210" checked><label for="track1">Barcelona</label>
-				<input type="radio" name="track" id="track2" value="interlagos" data-x="1815" data-y="1400" data-angle="2" ><label for="track2">Interlagos</label>
-				<input type="radio" name="track" id="track3" value="monza" data-x="-2210" data-y="-5000" data-angle="45"><label for="track3">Monza</label>
-				<input type="radio" name="track" id="track4" value="sochi" data-x="-9200" data-y="-10200" data-angle="200"><label for="track4">Sochi</label>
-				<input type="radio" name="track" id="track5" value="hockenheim" data-x="5500" data-y="-9033" data-angle="230"><label for="track5">Hockenheim</label>
-				<input type="radio" name="track" id="track6" value="abu-dhabi" data-x="5500" data-y="-9033" data-angle="230"><label for="track6">Yas Marina</label>
+				<input type="radio" name="track" id="track1" value="barcelona" data-start="[0,0]" data-angle="210" autofocus checked><label for="track1"><img src="track/barcelona.svg#track">Barcelona</label>
+				<input type="radio" name="track" id="track2" value="interlagos" data-start="[1800,-300]" data-angle="2" ><label for="track2"><img src="track/interlagos.svg#track">Interlagos</label>
+				<input type="radio" name="track" id="track3" value="monza" data-start="[-2210,-5000]" data-angle="45"><label for="track3"><img src="track/monza.svg#track">Monza</label>
+				<input type="radio" name="track" id="track4" value="sochi" data-start="[-900,-1020]"" data-angle="200"><label for="track4"><img src="track/sochi.svg#track">Sochi</label>
+				<input type="radio" name="track" id="track5" value="hockenheim" data-start="[-2200,-1100]" data-angle="230"><label for="track5"><img src="track/hockenheim.svg#track">Hockenheim</label>
+				<input type="radio" name="track" id="track6" value="abu-dhabi" data-start="[5500,-9033]" data-angle="230"><label for="track6"><img src="track/abu-dhabi.svg#track">Yas Marina</label>
+				<input type="radio" name="track" id="track7" value="assen-ink" data-start="[0,0]" data-angle="270"><label for="track7"><img src="track/assen-ink.svg#track">Assen</label>
 			</fieldset>
 
 			<input type="radio" name="option" value="3" id="screen-select"><label for="screen-select"><i class="fa fa-desktop"></i> Screen</label>
@@ -64,6 +64,12 @@
 				<input type="radio" name="screen" value="tablet" id="screen2"><label for="screen2"><i class="fa fa-laptop"></i> 1024&times;768</label>
 				<input type="radio" name="screen" value="desktop" id="screen3"><label for="screen3"><i class="fa fa-desktop"></i> 1280&times;1024</label>
 				<input type="radio" name="screen" value="fullscreen" id="screen4" checked><label for="screen4"><i class="fa fa-tv"></i> Fullscreen</label>
+			</fieldset>
+
+			<input type="radio" name="option" value="4" id="race-settings"><label for="race-settings"><i class="fa fa-car"></i> Race settings</label>
+			<fieldset>
+				<label for="laps"><input type="number" value="3" min="2" max="999" id="laps">Laps</label>
+				<label for="fuel"><input type="number" value="12.5" min="5" max="100" step="0.1" id="fuel">Fuel</label>
 			</fieldset>
 		</fieldset>
 	</form>
@@ -109,18 +115,18 @@
 	</article>
 
 	<div class="preload" style="display:none">
-		<img src="img/barcelona.svg" class="barcelona">
-		<img src="img/interlagos.svg" class="interlagos">
-		<img src="img/abu-dhabi.svg" class="abu-dhabi">
-		<img src="img/monza.svg" class="monza">
-		<img src="img/sochi.svg" class="sochi">
-		<img src="img/hockenheim.svg" class="hockenheim">
+		<img src="track/barcelona.svg" class="barcelona">
+		<img src="track/interlagos.svg" class="interlagos">
+		<img src="track/abu-dhabi.svg" class="abu-dhabi">
+		<img src="track/monza.svg" class="monza">
+		<img src="track/sochi.svg" class="sochi">
+		<img src="track/hockenheim.svg" class="hockenheim">
 		<img src="img/screenshot.png" />
 	</div>
 
 	<div class="trackmap" id="minimap">
 		<div class="track">
-			<img src="tracks/barcelona.svg#track" alt="track map">
+			<img src="track/barcelona.svg#path" alt="track map">
 		</div>
 		<div class="blip"></div>
 	</div>

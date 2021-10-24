@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="logo"
+   width="196"
+   height="43.2533"
+   viewBox="0 0 196 43.2533"
+   version="1.1"
+   sodipodi:docname="LOL.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata1770">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>DHL_rgb</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs1768" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1029"
+     id="namedview1766"
+     showgrid="false"
+     inkscape:zoom="2.5398121"
+     inkscape:cx="172.00296"
+     inkscape:cy="29.685433"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="logo" />
+  <title
+     id="title1723">DHL_rgb</title>
+  <rect
+     width="196"
+     height="43.2533"
+     fill="#fc0"
+     id="rect1725" />
+  <g
+     id="g1763"
+     style="fill:#d40511;fill-opacity:1">
+    <g
+       id="g1743"
+       style="fill:#d40511;fill-opacity:1">
+      <g
+         id="g1733"
+         style="fill:#d40511;fill-opacity:1">
+        <polygon
+           points="0,31.871 0,29.901 26.506,29.901 25.058,31.871 "
+           id="polygon1727"
+           style="fill:#d40511;fill-opacity:1" />
+        <polygon
+           points="0,28.213 0,26.245 29.199,26.245 27.748,28.213 "
+           id="polygon1729"
+           style="fill:#d40511;fill-opacity:1" />
+        <polygon
+           points="0,35.516 0,33.56 23.815,33.56 22.373,35.516 "
+           id="polygon1731"
+           style="fill:#d40511;fill-opacity:1" />
+      </g>
+      <g
+         id="g1741"
+         style="fill:#d40511;fill-opacity:1">
+        <polygon
+           points="196,29.902 196,31.871 169.598,31.871 171.045,29.902 "
+           id="polygon1735"
+           style="fill:#d40511;fill-opacity:1" />
+        <polygon
+           points="196,33.56 196,35.516 166.913,35.519 168.354,33.56 "
+           id="polygon1737"
+           style="fill:#d40511;fill-opacity:1" />
+        <polygon
+           points="172.287,28.216 173.735,26.245 196,26.245 196,28.214 "
+           id="polygon1739"
+           style="fill:#d40511;fill-opacity:1" />
+      </g>
+    </g>
+  </g>
+  <g
+     id="g2443"
+     transform="translate(3.803135,104.53529)">
+    <g
+       transform="translate(0,-104.53529)"
+       id="g2359">
+      <polygon
+         id="polygon2353"
+         points="25.058,31.871 0,31.871 0,29.901 26.506,29.901 "
+         style="fill:#d40511" />
+      <polygon
+         id="polygon2355"
+         points="27.748,28.213 0,28.213 0,26.245 29.199,26.245 "
+         style="fill:#d40511" />
+      <polygon
+         id="polygon2357"
+         points="22.373,35.516 0,35.516 0,33.56 23.815,33.56 "
+         style="fill:#d40511" />
+    </g>
+    <g
+       transform="translate(-7.6062701,-104.53529)"
+       id="g2367">
+      <polygon
+         id="polygon2361"
+         points="196,29.902 196,31.871 169.598,31.871 171.045,29.902 "
+         style="fill:#d40511" />
+      <polygon
+         id="polygon2363"
+         points="196,33.56 196,35.516 166.913,35.519 168.354,33.56 "
+         style="fill:#d40511" />
+      <polygon
+         id="polygon2365"
+         points="172.287,28.216 173.735,26.245 196,26.245 196,28.214 "
+         style="fill:#d40511" />
+    </g>
+    <path
+       sodipodi:nodetypes="ccsccscscc"
+       id="path2371"
+       d="m 77.181056,-80.579813 3.804419,-5.527977 h 12.443442 c 1.7252,0 1.7026,0.655 0.86,1.7975 -0.8562,1.16 -2.313315,3.1547 -3.185415,4.3323 -0.4426,0.5982 -1.2431,1.6881 1.408915,1.6881 h 24.074773 c -1.739,2.3822 -7.38,9.2709 -17.5082,9.2709 H 83.249644 c -5.334692,0 -10.968128,-3.074571 -6.068588,-11.560823 z"
+       inkscape:connector-curvature="0"
+       style="fill:#d40511;fill-opacity:1" />
+    <path
+       id="path2377"
+       d="m 121.96863,-78.28989 c 6e-4,0 -1.3141,1.7975 -1.9529,2.66 -2.2593,3.0534 -0.2626,6.6105 7.111,6.6105 h 28.8853 l 6.8226,-9.2709 z"
+       inkscape:connector-curvature="0"
+       style="fill:#d40511" />
+    <path
+       style="fill:#d40511;fill-opacity:1"
+       inkscape:connector-curvature="0"
+       d="m 32.323611,-78.28989 c 6e-4,0 -1.3141,1.7975 -1.9529,2.66 -2.2593,3.0534 -0.2626,6.6105 7.111,6.6105 h 28.8853 l 6.8226,-9.2709 z"
+       id="path2414" />
+    <path
+       id="path2385"
+       d="m 154.60213,-96.73459 -12.0314,16.346 h -19.0593 c 0,0 12.0355,-16.346 12.0415,-16.346 z"
+       inkscape:connector-curvature="0"
+       style="fill:#d40511;fill-opacity:1" />
+    <path
+       sodipodi:nodetypes="ccsccsccsc"
+       id="path2381"
+       d="m 83.203475,-96.73459 -6.2621,8.508 h 28.128915 c 1.7249,0 1.7023,0.655 0.8592,1.7974 -0.8562,1.1587 -2.2894,3.1763 -3.1614,4.3539 -0.4427,0.597 -1.2432,1.6867 1.4089,1.6867 h 13.9564 c 0,0 2.25,-3.0615 4.1352,-5.6206 2.5655,-3.4815 0.2225,-10.7254 -8.9486,-10.7254 z"
+       inkscape:connector-curvature="0"
+       style="fill:#d40511;fill-opacity:1" />
+    <path
+       style="fill:#d40511;fill-opacity:1"
+       inkscape:connector-curvature="0"
+       d="m 64.957111,-96.73459 -12.0314,16.346 h -19.0593 c 0,0 12.0355,-16.346 12.0415,-16.346 z"
+       id="path2412" />
+  </g>
+</svg>

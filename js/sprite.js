@@ -41,12 +41,16 @@ Sprite.prototype = {
 	opacity: 1,
 
 	drawSprite: function (ctx) {
-
+		// console.log(this.name, `x: ${this.x}, y:${this.y}  w:${this.height} h:${this.height}`)
 		ctx.save();
 		// ctx.translate(this.x, this.y);
 		ctx.setTransform(1,0,0,1,this.x,this.y)
 		ctx.rotate(Math.PI/180 * this.angle);
 		ctx.globalAlpha = this.opacity;
+
+		// not sure but.. 
+		// the game should probably be optimized to not draw the sprite 
+		// on full size but rather be clipped by the canvas size?
 
 		if (this.width && this.height) {
 			ctx.drawImage(

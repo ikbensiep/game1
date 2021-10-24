@@ -10,7 +10,7 @@ body {
 	background-color: #1B8433;
 	background-size: 200%;
 	position: relative;
-	perspective: 750px;
+	perspective: 60vh;
 	overflow: hidden;
 	transform: scale(1);
 	transition: transform 5s, background-color 1s;
@@ -34,17 +34,31 @@ body[race-start]::after {
 	opacity: 1;
 }
 
-body.interlagos {
+body.assen-ink,
+.assen-ink #game {
+	background-color: #2EAD4B;
+}
+
+body.barcelona,
+.barcelona #game {
+	background-color: #1B8433;
+}
+
+body.interlagos,
+.interlagos #game {
 	background-color: #2EAD4B; 
 }
 
-body.hockenheim {
+body.hockenheim,
+.hockenheim #game {
 	background-color: #009666;
 }
-body.sochi {
-	background-color: #e3f2fd;
+body.sochi,
+.sochi #game {
+	background-color: #85916a;
 }
-body.abu-dhabi {
+body.abu-dhabi,
+.abu-dhabi  #game {
 	background-color: #ffc107;
 }
 
@@ -133,21 +147,65 @@ output[data-fuel^="3"] .needle.fuel {
 
 
 .help {
-	position: relative;
+	position: absolute;
+	bottom: 1em;
+	display: flex;
+	width: 100%;
+	z-index: 10;
+	justify-content: space-between;
+}
+
+.help > label {
+	flex: 0 1 10vw;
+}
+
+dl {
+	flex: 0 1 50em;
+	display: inline-flex;
+	justify-content: center;
+	flex-direction: row;
 }
 
 dt {
-	display: inline;
+	flex: 0 1 3em;
+	align-self: center;
 }
 
 dd {
-	display: inline;
+	flex: 1 0 5em;
+	align-self: center;
 	margin-left: 10px;
 	margin-right: 20px;
 }
 
 .game-container {
 	height: 100vh;
+}
+
+body[race-start] .game-container {}
+
+.game-container::after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: url('../img/noise.png'), url('../img/noise-33.png');
+	z-index: 2;
+	mask: radial-gradient(black 50%, grey 75%, white 120%) luminance;
+	opacity: .05;
+	transition: opacity 10s 3s;
+    background-size: 400%, 100%;
+    background-position: center;
+}
+
+.offtrack .game-container::after {
+	/* mask: radial-gradient(black 20%, white 100%) luminance; */
+	opacity: .95;
+	transition: opacity 2s;
+    background-size: 400%, 100%;
 }
 
 
@@ -159,8 +217,8 @@ dd {
 	transform: scale(.95);
 	opacity: 0;
 	transition: opacity 2s .5s, transform 2.5s .5s, box-shadow 2s 4s;
-	background-image: url('../img/TexturesCom_Grass0197_1_seamless_S.jpg');
-	background-size: 200%;
+	background-image: url('../img/noise-33.png');
+	background-blend-mode: color;
 }
 
 #debugsnapshot, 
@@ -218,7 +276,7 @@ dd {
 }
 
 .laptimes {
-	padding: 1ex 0;
+	padding: 0 0 1ex;
 	position: fixed;
 	top: 0;
 	right: 1ex;
@@ -230,20 +288,24 @@ dd {
 	box-sizing: border-box;
 	background: rgba(0,0,0,.3);
 	font-size: 2em;
+	border-radius: .5ex;
+	overflow: hidden;
 }
 
-.laptimes .laps:after {
-	content: '' attr(fps) 'fps';
+[fps]:after {
+	content: '' attr(fps) ' fps';
 	position: absolute;
-	left: 1ex;
-	opacity: .25;
+	right: 1.5ex;
+	opacity: .5;
+	bottom: 1.5ex;
+	font-size: x-small;
 }
 
 .laptimes li {
 	clear: left;
-	padding: 0 1ex;
+	padding: .5ex 1ex;
 	text-transform: uppercase;
-	transition: color .5s;
+	transition: all .5s 1s;
 	position: relative;
 }
 
@@ -257,16 +319,58 @@ dd {
 .best:before {content: "best ";}
 .last:before {content: "last ";}
 
-.laps {
+.laptimes .laps {
 	text-align: right;
+	background: black;
 }
 
-.pb {
+.laptimes .pb {
 	color: #00ff00;
 	transition: color .25s;
 }
 
+.offtrack .laptimes .laps {
+	background: #ffd42aff;
+	color: black;
+	transition-delay: 0s;
+}
+
+.laptimes .laps::after {
+	content: '60';
+	position: absolute;
+	left: .5ex;
+	background: white;
+	color: black;
+	border: .4ex solid red;
+	width: 1.1em;
+	height: 1.1em;
+	border-radius: 50%; 
+	font-size: 60%;
+	padding: .5ex;
+	line-height: 1.1em;		
+	text-align: center;
+	font-weight: bold;
+	opacity: 0;
+	transform: translateX(-120%);
+	transition: all .5s;
+}
+
+.inpits .laptimes .laps::after {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.offtrack .laptimes .laps::after {
+	content: '\f024';
+	font-family: FontAwesome;
+	opacity: 1;
+	transform: translateY(0);
+	border-color: black;
+	background: transparent;
+}
+
 body[unresolved] #minimap {
+
 	transform: translateX(-311px);
 }
 

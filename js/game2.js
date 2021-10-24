@@ -42,9 +42,6 @@ Game.prototype = {
 		var startRaceButton = document.querySelector('button.toggle-start');
 		startRaceButton.addEventListener("click", this.initGame.bind(this), false);
 
-		var endRaceButton = document.querySelector('button.toggle-menu');
-		endRaceButton.addEventListener("click", this.endGame.bind(this), false);
-
 		window.addEventListener("change", function (e) {
 			console.log("change: ", e.target.name, e.target.value);
 		});
@@ -59,6 +56,10 @@ Game.prototype = {
 	},
 
 	startRace : function() {
+
+		this.ambientAudio = document.querySelector('audio');
+		this.ambientAudio.pause();
+
 		var selectedtrack = document.querySelector('input[name=track]:checked');
 		this.selectedtrack = selectedtrack.value;
 		var randomCar = Math.floor(Math.random() * 3);
@@ -71,7 +72,7 @@ Game.prototype = {
 		this.quality = this.setScreenSize(quality);
 
 		hud = document.querySelector('output');
-		this.fpsCounter = document.querySelector('.laps');
+		this.fpsCounter = document.querySelector('.laptimes');
 		this.blip = document.querySelector('.blip');
 		this.minimap = document.querySelector('#minimap');
 		
@@ -177,7 +178,7 @@ Game.prototype = {
 			angle: 0
 		})
 
-		this.ambient = new Sound({sound: 'sfx/FX Engine On-0ff Fiat Panda External 001.mp3', looping: false});
+		this.ambient = new Sound({sound: 'sfx/370276__biholao__acceleration-3.ogg', looping: false});
 		this.ambient.updateGain(2);
 
 		this.engine = new Sound({sound:this.car.sound, looping: true ,});
@@ -232,7 +233,7 @@ Game.prototype = {
 		let container = document.querySelector('.game-container');
 		
 		if(!container.classList.contains(wheresthecar)) {
-			document.body.className = `${this.selectedtrack} game-container ${wheresthecar}`;
+			document.body.className = `${this.selectedtrack} ${wheresthecar}`;
 		} 
 
 		if (wheresthecar === 'ontrack') {
@@ -418,6 +419,7 @@ Game.prototype = {
 	},
 
 	endRace : function () {
+		this.ambientAudio.play();
 		window.cancelAnimationFrame(this.req);
 
 		document.body.setAttribute("race-end", "");

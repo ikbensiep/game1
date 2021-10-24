@@ -40,7 +40,7 @@ body[race-end] .laptimes {
 
 body[race-end] .laptimes .ui-hint {
     opacity: 1 !important;
-    top: 35em;
+    bottom: 1em;
     left: calc(48% - 4em);
 	transition-delay: 3s;
 }
@@ -269,7 +269,7 @@ form {
 	padding: 3em;
 	box-sizing: border-box;
 	margin: 0 auto;
-	z-index: 1000;
+	z-index: 9;
 	transition: opacity 2s 1s;
 }
 
@@ -328,7 +328,6 @@ label {
 	width: 8em;
 	border: 1px solid transparent;
 	text-align: center;
-	background: rgba(0,0,0,0.5);
 	border-radius: 3px;
 	transition: all .2s;
 	padding: 1em;
@@ -336,14 +335,19 @@ label {
 	/*! display: flex; */
 }
 
+form label,
+.ui-hint label {
+	background: rgba(0,0,0,0.5);
+}
+
 input:focus + label {
-	border: 1px dashed white!important;
+	border: 1px solid rgba(255, 255, 255, 0.75)!important;
 }
 
 label:focus-within,
 input:checked + label {
 	background: black;
-	border: 1px solid white;
+	border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 label img {
@@ -367,7 +371,7 @@ i.fa {
 .ui-hint {
 	position: absolute;
 	z-index: 10000;
-	bottom: 1ex;
+	bottom: 20vh;
 	right: calc(50vw - 5em);
 	/* transform: translateY(12em);
 	animation: slidein 1.5s 5.5s 1 forwards cubic-bezier(0, 1.05, 0.58, 1);

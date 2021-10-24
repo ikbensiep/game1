@@ -89,9 +89,17 @@
 		<div class="needle fuel" data-gauge-type="F"></div>
 	</output>
 
-	<article class="help">
-		<input type="checkbox" name="controls-toggle">
+	<ol class="laptimes"fps=0>
+		<li class="laps">1</li>
+		<li class="best"></li>
+		<li class="last"></li>
+	</ol>
 
+	<article class="help">
+		<label for="mute-engine">
+			<input type="checkbox" name="controls-toggle">
+			<span>🔉 mute engine</span>
+		</label>
 		
 		<dl class="key info">
 			<dt data-letter="a">A</dt><dd>Accelerate</dd>
@@ -99,20 +107,14 @@
 			<dt>&larr;</dt><dd>Turn left</dd>
 			<dt>&rarr;</dt><dd>Turn right</dd>
 		</dl>
-
-		<ol class="laptimes">
-			<li class="laps" fps=0>1</li>
-			<li class="best"></li>
-			<li class="last"></li>
-			<section class="ui-hint">
-				<label>
-					<button class="ui-button toggle-menu"><span>&times;</span>
-					</button>continue
-				</label>
-			</section>
-		</ol>
-		
 	</article>
+
+	<div class="trackmap" id="minimap">
+		<div class="track">
+			<img src="track/barcelona.svg#path" alt="track map">
+		</div>
+		<div class="blip"></div>
+	</div>
 
 	<div class="preload" style="display:none">
 		<img src="track/barcelona.svg" class="barcelona">
@@ -122,13 +124,8 @@
 		<img src="track/sochi.svg" class="sochi">
 		<img src="track/hockenheim.svg" class="hockenheim">
 		<img src="img/screenshot.png" />
+		<audio src="sfx/444878__richwise__goodwood-trackday-starts-2.ogg" autoplay volume="0.5" loop></audio>
 	</div>
 
-	<div class="trackmap" id="minimap">
-		<div class="track">
-			<img src="track/barcelona.svg#path" alt="track map">
-		</div>
-		<div class="blip"></div>
-	</div>
 </body>
 </html>

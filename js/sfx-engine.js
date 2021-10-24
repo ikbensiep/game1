@@ -1,6 +1,6 @@
 var Sound = function (options) {
 	this.looping = true;
-
+	this.fadein = false;
 	for(item in options) {
 		this[item] = options[item];
 	}
@@ -13,11 +13,14 @@ Sound.prototype = {
 	audioCtx: null,
 	sourceBuffer: null,
 	gainNode: null,
+    gain: 0,
+	interval: null,
 
 	init: function () {
 		this.audioCtx = new this.AudioContext();
 		this.gainNode = this.audioCtx.createGain();
-		this.gainNode.gain.value = 0.25;
+		this.gainNode.gain.value = this.gain ? this.gain : this.fadein ? 0.0 : 0.25;
+		console.log(this.gainNode.gain.value)
 		this.gainNode.connect(this.audioCtx.destination);
 		this.sourceBuffer = this.audioCtx.createBufferSource();
 		this.getSound();
@@ -50,11 +53,28 @@ Sound.prototype = {
 			this.sourceBuffer.connect(this.gainNode);
 			this.sourceBuffer.loop = this.looping;
 			this.sourceBuffer.playbackRate.value = 1;
+			
+			if( this.fadein) {
+				this.interval = setInterval(this.fadeIn, 500);
+			}
+
 			this.sourceBuffer.start(this.audioCtx.currentTime);
+			
 			}.bind(this));
 		}.bind(this);
 
 		request.send();
+	},
+
+	fadeIn: function () {
+		
+		if(this.gain < 0.25) {
+			this.gain += 0.005;
+			this.updateGain(this.gain);
+		} else {
+			this.interval = clearInterval(this.interval);
+			// this.interval = null;
+		}
 	},
 
 	updateGain: function (level) {
@@ -74,7 +94,7 @@ Sound.prototype = {
 			speed < 40 ? 0.20 + speed / 45 : 
 			0.20 + speed / 50;
 
-		this.gainNode.gain.value = 0.1 + speed / 50 //(maxspeed = 50)
+		this.gainNode.gain.value = 0.05 + speed / 50 //(maxspeed = 50)
 		this.sourceBuffer.connect(this.gainNode);
 		this.sourceBuffer.playbackRate.value = f
 		// var C = 15;

@@ -61,12 +61,20 @@ Game.prototype = {
 		this.ambientAudio.pause();
 
 		var selectedtrack = document.querySelector('input[name=track]:checked');
+		var randomTrack = Math.floor(Math.random() * 3);
+		var selectedtrack = document.querySelector('input[name=track]:checked') 
+			? document.querySelector('input[name=track]:checked') 
+			: document.querySelectorAll('input[name=track]')[randomTrack];
+		document.querySelector('#minimap .track img').src = `track/${selectedtrack.value}.svg#path`;
+
 		this.selectedtrack = selectedtrack.value;
 		var randomCar = Math.floor(Math.random() * 3);
 		var selectedcar = document.querySelector('input[name=car]:checked') 
 			? document.querySelector('input[name=car]:checked') 
 			: document.querySelectorAll('input[name=car]')[randomCar];
 		
+		document.querySelector('.blip').style.backgroundImage = `url('img/car/${selectedcar.value}-1.png')`;
+
 		var quality = document.querySelector('input[name=screen]:checked').value;
 
 		this.quality = this.setScreenSize(quality);
@@ -140,8 +148,9 @@ Game.prototype = {
 		this.car = new Sprite({
 			name: 'user1',
 			images: [
-				'img/' + selectedcar.value + '-0.png',
-				'img/' + selectedcar.value + '-1.png'
+				'img/car/' + selectedcar.value + '-0.png',
+				'img/car/' + selectedcar.value + '-1.png',
+				'img/car/' + selectedcar.value + '-pit.png'
 			],
 			x: this.canvas.width / 2,
 			y: this.canvas.height / 2,
@@ -171,9 +180,23 @@ Game.prototype = {
 		}
 		this.dustclouds = new Sprite({
 			name: 'dustcloud',
-			images: ['img/dust-cloud-2.png'],
+			images: [
+				'img/smoke/smoke1.png', 
+				'img/smoke/smoke2.png', 
+				'img/smoke/smoke3.png', 
+				'img/smoke/smoke4.png', 
+				'img/smoke/smoke5.png', 
+				'img/smoke/smoke6.png', 
+				'img/smoke/smoke7.png', 
+				'img/smoke/smoke8.png', 
+				'img/smoke/smoke9.png', 
+				'img/smoke/smoke10.png', 
+				'img/smoke/smoke11.png', 
+			],
 			x: this.canvas.width / 2,
 			y: this.canvas.height / 2,
+			width: 256,
+			height: 256,
 			opacity: .9,
 			angle: 0
 		})
@@ -267,7 +290,9 @@ Game.prototype = {
 				this.canvas.style.backgroundPositionY += randy;
 
 				// draw dust clouds
-				this.dustclouds.angle += this.car.angle + Math.random() * 2;		
+				// this.dustclouds.angle += this.car.angle + Math.random() * 0.01;		
+				this.dustclouds.angle = this.car.angle;
+				this.dustclouds.state = this.dustclouds.state < this.dustclouds.images.length - 1 ? this.dustclouds.state + 1 : 0
 				this.dustclouds.opacity = this.car.speed / 40 + Math.random() / 5;
 				this.dustclouds.drawSprite(this.ctx);
 			}
@@ -276,11 +301,14 @@ Game.prototype = {
 		if (wheresthecar === 'inpits') {
 			this.car.maxspeed = 15; 
 			this.car.opacity = 1;
+			this.car.state = 1;
 		}
 
 		if (wheresthecar === 'inpits pitbox') {
-			this.car.state = 1;
-			if(this.car.fuel < this.car.maxfuel && this.car.speed < 2) this.car.fuel += 100;
+			if(this.car.fuel < this.car.maxfuel && this.car.speed < 2) {
+				this.car.fuel += 100;
+				this.car.state = 2;
+			}
 		}
 
 		// draw speedometer
@@ -680,10 +708,11 @@ Game.prototype = {
 		var teaser = document.querySelector('.world').style.display = "none";
 		
 		document.body.setAttribute("race-start", "");
+		document.body.removeAttribute("race-end");
 		
 		// resetting lap times
 		this.laptimes = [];
-
+		
 		// starting the racing
 		this.startRace();
 	}
@@ -714,6 +743,8 @@ window.addEventListener("change", function (e) {
 
 window.onload = function() {
 	document.body.removeAttribute('unresolved');
+	document.querySelector('figcaption').innerText = 'Loading complete';
+	document.body.setAttribute("loaded","");
 	racegame.setup();
 
 };

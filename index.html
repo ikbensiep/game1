@@ -22,6 +22,13 @@
 
 </head>
 <body unresolved>
+	<div class="loading">
+		<figure>
+			<img src="img/loading.svg" alt="">
+			<figcaption>Please Wait</figcaption>
+		</figure>
+
+	</div>
 	<div class="world">
 		<div class="track-preview barcelona" style="background-image: url('track/barcelona.svg#track'), url('track/barcelona.svg#world');">
 			<div class="car-preview">
@@ -48,7 +55,7 @@
 			<input type="radio" name="option" value="2" id="track-select" checked><label for="track-select"><i class="fa fa-flag-checkered"></i> Track</label>
 			<fieldset>
 				<!-- <legend>Track</legend> -->
-				<input type="radio" name="track" id="track1" value="barcelona" data-start="[0,0]" data-angle="210" autofocus checked>
+				<input type="radio" name="track" id="track1" value="barcelona" data-start="[0,0]" data-angle="210" autofocus>
 					<label for="track1"><i class="fa">🇪🇸</i> Barcelona</label>
 				<input type="radio" name="track" id="track2" value="interlagos" data-start="[1800,-300]" data-angle="2" >
 					<label for="track2"><i class="fa">🇧🇷</i> Interlagos</label>
@@ -60,7 +67,7 @@
 					<label for="track5"><i class="fa">🇩🇪</i> Hockenheim</label>
 				<input type="radio" name="track" id="track6" value="abu-dhabi" data-start="[5500,-9033]" data-angle="230">
 					<label for="track6"><i class="fa">🇦🇪</i> Yas Marina</label>
-				<input type="radio" name="track" id="track7" value="assen-ink" data-start="[0,0]" data-angle="270">
+				<input type="radio" name="track" id="track7" value="assen" data-start="[0,0]" data-angle="270">
 					<label for="track7"><i class="fa">🇳🇱</i> Assen</label>
 			</fieldset>
 
@@ -82,7 +89,11 @@
 	</form>
 
 	<div class="ui-hint">
-		<label>
+		<label class="toggle-menu">
+			<button class="ui-button toggle-game" onClick="document.body.removeAttribute('loaded'); document.body.setAttribute('menu',''); document.querySelector('audio').play();">
+			</button>continue
+		</label>
+		<label class="toggle-race">
 			<button class="ui-button toggle-start"><span>&times;</span>
 			</button> start race
 		</label>
@@ -102,19 +113,18 @@
 		<li class="last"></li>
 	</ol>
 
-	<article class="help">
-		<label for="mute-engine">
-			<input type="checkbox" name="controls-toggle">
-			<span>🔉 mute engine</span>
-		</label>
-		
+	<ol class="help">
+		<li>
 		<dl class="key info">
 			<dt data-letter="a">A</dt><dd>Accelerate</dd>
 			<dt>Z</dt><dd>Brake</dd>
 			<dt>&larr;</dt><dd>Turn left</dd>
 			<dt>&rarr;</dt><dd>Turn right</dd>
+			<dt>M</dt><dd><span>mute engine</span>
+			</dd>
 		</dl>
-	</article>
+		</li>
+	</ol>
 
 	<div class="trackmap" id="minimap">
 		<div class="track">
@@ -131,7 +141,7 @@
 		<img src="track/sochi.svg" class="sochi">
 		<img src="track/hockenheim.svg" class="hockenheim">
 		<img src="img/screenshot.png" />
-		<audio src="sfx/444878__richwise__goodwood-trackday-starts-2.ogg" autoplay volume="0.5" loop></audio>
+		<audio src="sfx/444878__richwise__goodwood-trackday-starts-2.ogg" volume="0.5" loop preload="true"></audio>
 	</div>
 
 </body>

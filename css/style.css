@@ -34,8 +34,8 @@ body[race-start]::after {
 	opacity: 1;
 }
 
-body.assen-ink,
-.assen-ink #game {
+body.assen,
+.assen #game {
 	background-color: #2EAD4B;
 }
 
@@ -148,34 +148,24 @@ output[data-fuel^="3"] .needle.fuel {
 
 .help {
 	position: absolute;
-	bottom: 1em;
-	display: flex;
 	width: 100%;
 	z-index: 10;
-	justify-content: space-between;
-}
-
-.help > label {
-	flex: 0 1 10vw;
+	flex-direction: column;
 }
 
 dl {
-	flex: 0 1 50em;
-	display: inline-flex;
-	justify-content: center;
-	flex-direction: row;
+	flex: 1 1 10em;
+	display: grid;
+	grid-template-columns: 1em auto;
+	flex-direction: column;
 }
 
 dt {
-	flex: 0 1 3em;
-	align-self: center;
+	display: inline;
 }
 
 dd {
-	flex: 1 0 5em;
-	align-self: center;
-	margin-left: 10px;
-	margin-right: 20px;
+	display: inline;
 }
 
 .game-container {
@@ -195,14 +185,14 @@ body[race-start] .game-container {}
 	background: url('../img/noise.png'), url('../img/noise-33.png');
 	z-index: 2;
 	mask: radial-gradient(black 50%, grey 75%, white 120%) luminance;
+	-webkit-mask: radial-gradient(transparent 50%, white 120%);
 	opacity: .05;
 	transition: opacity 10s 3s;
     background-size: 400%, 100%;
     background-position: center;
 }
 
-.offtrack .game-container::after {
-	/* mask: radial-gradient(black 20%, white 100%) luminance; */
+.offtrack .game-container::after {	
 	opacity: .95;
 	transition: opacity 2s;
     background-size: 400%, 100%;
@@ -217,8 +207,8 @@ body[race-start] .game-container {}
 	transform: scale(.95);
 	opacity: 0;
 	transition: opacity 2s .5s, transform 2.5s .5s, box-shadow 2s 4s;
-	background-image: url('../img/noise-33.png');
-	background-blend-mode: color;
+	background-image: url('../img/noise.png');
+	background-blend-mode: soft-light;
 }
 
 #debugsnapshot, 
@@ -228,7 +218,6 @@ body[race-start] .game-container {}
     bottom: 1em;
     background: #0004;
     width: 20em;
-	filter: grayscale(1);
 }
 
 #debugsnapshot {
@@ -236,8 +225,6 @@ body[race-start] .game-container {}
 }
 
 #minimap {
-	/* width: 10vw;
-	height: 10vh; */
 	width: 320px;
 	height: 320px;
 	position: absolute;
@@ -251,7 +238,7 @@ body[race-start] .game-container {}
 	display: block;
 	width: 30px;
 	height: 15px;
-	background: url("../img/porsche-1.png") no-repeat;
+	background: transparent url("../img/car/porsche-1.png") no-repeat;
 	background-size: cover;
 	background-position: center;
 	position: absolute;
@@ -265,19 +252,23 @@ body[race-start] .game-container {}
 	height: 100%;
 	width: 100%;
 	mask: radial-gradient(white 15%, black 65%) luminance center 100% no-repeat;
+	-webkit-mask: radial-gradient( white 15%, transparent 150%,);
+	filter: grayscale(1);
 }
 
 #minimap img {
 	width: 1120px;
 	height: 1120px;
-	left: calc(-560px + 160px);
-	top: calc(-560px + 160px);
+	left: calc(-560px + 124px);
+	top: calc(-560px + 136px);
 	position: absolute;
 }
 
+.help,
 .laptimes {
 	padding: 0 0 1ex;
 	position: fixed;
+	z-index: 2;
 	top: 0;
 	right: 1ex;
 	list-style: none;
@@ -292,6 +283,13 @@ body[race-start] .game-container {}
 	overflow: hidden;
 }
 
+.help {
+	right: unset;
+	left: 1ex;
+	padding: 0 1ex 1ex;
+	transform: translateX(-11em);
+}
+
 [fps]:after {
 	content: '' attr(fps) ' fps';
 	position: absolute;
@@ -301,6 +299,7 @@ body[race-start] .game-container {}
 	font-size: x-small;
 }
 
+.help li,
 .laptimes li {
 	clear: left;
 	padding: .5ex 1ex;
@@ -325,8 +324,8 @@ body[race-start] .game-container {}
 }
 
 .laptimes .pb {
-	color: #00ff00;
-	transition: color .25s;
+	background-color: #1adb1a;
+	transition: background-color .1s;
 }
 
 .offtrack .laptimes .laps {
@@ -336,12 +335,11 @@ body[race-start] .game-container {}
 }
 
 .laptimes .laps::after {
-	content: '60';
+	content: '';
 	position: absolute;
 	left: .5ex;
-	background: white;
+	border: .4ex solid;
 	color: black;
-	border: .4ex solid red;
 	width: 1.1em;
 	height: 1.1em;
 	border-radius: 50%; 
@@ -355,7 +353,11 @@ body[race-start] .game-container {}
 	transition: all .5s;
 }
 
+
 .inpits .laptimes .laps::after {
+	content: '60';
+	background: white;
+	border-color: red;
 	opacity: 1;
 	transform: translateY(0);
 }

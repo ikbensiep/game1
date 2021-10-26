@@ -24,15 +24,6 @@ Sound.prototype = {
 		this.gainNode.connect(this.audioCtx.destination);
 		this.sourceBuffer = this.audioCtx.createBufferSource();
 		this.getSound();
-
-		var checkbox = document.querySelector('input[type=checkbox]');
-		checkbox.onclick = function (event) {
-			if(event.target.checked) {
-				this.stopSound();
-			} else {
-				this.init();
-			}
-		}.bind(this)
 	},
 
 	getSound: function () {

@@ -1,7 +1,143 @@
+body[unresolved],
+body[loaded] {
+	background: #333;
+}
+
+
+body[unresolved] .loading {
+	opacity: 1;
+}
+
+body[unresolved] form,
+body[loaded] form {
+	opacity: 0;
+	transition: opacity 5s;
+}
+
+body[loaded] .world,
 body[unresolved] .world {
 	opacity: 0;
 	transform: translateY(-25%) scale(0.2);
 	animation: helicopter 30s 1s infinite alternate ease-in-out;
+}
+
+body[unresolved] .ui-hint label {
+	opacity: 0;
+	pointer-events: none;
+}
+
+body[loaded] .ui-hint label {
+	opacity: 1;
+}
+
+.loading {
+	text-align: center;
+	margin: 6em 0 0;
+	position: absolute;
+	width: 100%;
+	transition: all 2.5s;
+}
+
+.loading figure {
+	width: 256px;
+	height: 256px;
+	margin: 0 auto;
+	position: relative;
+}
+
+.loading figure::after {
+	content: '';
+	background-image: radial-gradient(#0006 10%, transparent 40%, transparent 70%);
+	height: 2em;
+	display: block;
+	top: 235px;
+	position: absolute;
+	width: 100%;
+	z-index: -1;
+}
+
+.loading img {
+	animation: wheelspin 5s cubic-bezier(.79,.14,.15,.86) reverse infinite;
+}
+
+.loading figcaption {
+	padding: 2em 0;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+
+body[loaded] .loading figcaption,
+body[menu] .loading figcaption,
+body[race-start] .loading figcaption,
+body[race-end] .loading figcaption
+ {
+	opacity: 0;
+}
+
+body[loaded] .loading figcaption {
+	transition: all 2s .5s;
+}
+
+body[loaded] .loading img {
+	animation-duration: 10s;
+	animation-iteration-count: 1;
+	animation-timing-function: cubic-bezier(.18,.89,.32,1.28);
+}
+
+body[menu] .loading figure::after {
+	opacity: 0;
+}
+
+body[menu] .loading img {
+	opacity: 0;
+	transform: translateX(53vw) rotate(1080deg);
+}
+
+body[menu] .loading,
+body[race-start] .loading {
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 1s 1s;
+}
+
+@keyframes wheelspin {
+	to { transform: rotate(3600deg)}
+}
+
+.ui-hint label {
+	display: none!important;
+	opacity: 0;
+}
+
+body[loaded] label.toggle-menu,
+body[menu] label.toggle-race {
+	opacity: 1;
+	display: initial!important;
+}
+
+.ui-hint button {
+	pointer-events: all;
+	border-radius: 50%;
+	height: 2em;
+	width: 2em;
+	border: 0;
+	padding: 0;
+	vertical-align: middle;
+	position:relative;
+	overflow: hidden;
+	color: #2EAD4B;
+	background: #151515;
+	outline: 0;
+}
+.ui-hint button span {
+	display: block;
+	width: 100%;
+	height: 1em;
+	font-size: 2em;
+	position: absolute;
+	top: 0;
+	line-height: 0.9;
+	left: 0;
 }
 
 body[race-start] .world {
@@ -24,11 +160,24 @@ body[race-start] .ui-hint {
 	opacity: 0;
 	animation: slidein 1.5s 1 reverse ease-in;
 }
+body[race-start] .help,
+body[race-start] .laptimes {
+	transform: translateX(0);
+	transition: all .5s 1s;
+}
 
 body[race-start] .laptimes {
 	opacity: 1;
-	transform: translateX(0);
-	transition: all .5s 1s;
+}
+
+body[race-start] .help {
+	animation: fade 5s linear reverse ;
+	opacity: .1;
+}
+
+body[race-start] .help:hover {
+	opacity: .5;
+	transition-delay: 0s;
 }
 
 body[race-end] .laptimes {
@@ -53,12 +202,13 @@ body[race-end] .laptimes li:nth-child(n+4) {
 	animation: laptimes 2s 1 forwards linear;
 }
 body[race-end] .laptimes li.pb {
-	color: #D70AD5;
+	background-color: #D70AD5;
 }
 
 body[race-end] .laptimes li:nth-child(2),
 body[race-end] .laptimes li:nth-child(3) {
 	height: 0;
+	padding: 0;
 	overflow: hidden;
 	transition: all .25s;
 }
@@ -108,20 +258,45 @@ body[race-start] #minimap {
 	transform: rotateX(40deg) translateZ(220px) translateY(-30%) rotateZ(-70deg);
 	transform-style: preserve-3d;
 	transform-origin: center;
-	animation: rotate 20s infinite cubic-bezier(.45,.05,.55,.95) alternate;
+	/* animation: rotate 20s infinite cubic-bezier(.45,.05,.55,.95) alternate; */
+	animation: helicopter 20s infinite linear;
 	width: 400vh;
+	--rotatex: 40deg;
+	--rotatey: 0deg;
+	--rotatez: 0deg;
+	--translatex: 0%;
+	--translatey: 0%;
+	--translatez: 20%;
+	--rotatexto: 0deg;
+	--rotateyto: 0deg;
+	--rotatezto: 0deg;
+	--translatexto: 0%;
+	--translateyto: 0%;
+	--translatezto: 0%;
 }
-
 
 .track-preview.abu-dhabi {
- background-position: 200px 0px;
+ 	background-position: 200px 0px;
 }
 
-.track-preview.assen-ink {
- background-position: 100% -20%;
-	/*! background-size: 55%; */
- left: -90%;
- position: relative;
+.track-preview.assen {
+	background-position: 100% -20%;
+	left: -90%;
+	position: relative;
+	--rotatex: 40deg;
+	--rotatey: 0deg;
+	--rotatez: 7deg;
+	--translatex: 7%;
+	--translatey: -32%;
+	--translatez: 220px;
+	--rotatexto: 40deg;
+	--rotateyto: 0deg;
+	--rotatezto: -30deg;
+	--translatexto: 27%;
+	--translateyto: -65%;
+	--translatezto: 220px;
+	transform: rotateX(var(--rotatex)) rotateY(var(--rotatey)) rotateZ(var(--rotatez)) translateX(var(--translatex)) translateY(var(--translatey)) translateZ(var(--translatez));
+	animation: none;
 }
 
 .track-preview.barcelona {
@@ -146,8 +321,6 @@ body[race-start] #minimap {
 }
 
 .track-preview.sochi {
-	/*! transform-origin: 60% 60%; */
-	/*! background-position: 380px 0px; */
 	background-size: 50%;
 }
 
@@ -249,15 +422,8 @@ body[race-start] #minimap {
 	transform: translateZ(27px);
 	/*! opacity: .5; */
 }
-
-
 body.pause .track-preview {
 	animation: none;
-}
-
-body[unresolved] form {
-	opacity: 0;
-	transition: opacity 5s;
 }
 
 form {
@@ -301,7 +467,6 @@ fieldset > input:checked + label +  fieldset {
 input[type=radio] {
 	opacity: 0.01;
 }
-
 input[type=number] {
 	color: white;
 	background: transparent;
@@ -314,29 +479,22 @@ input[type=number] {
 	border-radius: .3ex;
 	text-align: center;
 }
-
 input#fuel {
 	width: 86%;
 	margin: 0;
 }
 
-label {
+form label,
+.ui-hint label {
 	cursor: pointer;
 	display: inline-block;
 	min-height: 1em;
-	line-height: 2em;
-	width: 8em;
 	border: 1px solid transparent;
 	text-align: center;
 	border-radius: 3px;
 	transition: all .2s;
 	padding: 1em;
-	overflow: hidden;
-	/*! display: flex; */
-}
-
-form label,
-.ui-hint label {
+	overflow: hidden;	
 	background: rgba(0,0,0,0.5);
 }
 
@@ -373,36 +531,6 @@ i.fa {
 	z-index: 10000;
 	bottom: 20vh;
 	right: calc(50vw - 5em);
-	/* transform: translateY(12em);
-	animation: slidein 1.5s 5.5s 1 forwards cubic-bezier(0, 1.05, 0.58, 1);
-	opacity: 0; */
-
-}
-
-.ui-hint button {
-	border-radius: 50%;
-	height: 2em;
-	width: 2em;
-	border: 0;
-	padding: 0;
-	vertical-align: middle;
-	position:relative;
-	overflow: hidden;
-	color: #2EAD4B;
-	background: #151515;
-	outline: 0;
-}
-
-
-.ui-hint button span {
-	display: block;
-	width: 100%;
-	height: 1em;
-	font-size: 2em;
-	position: absolute;
-	top: 0;
-	line-height: 0.9;
-	left: 0;
 }
 
 .ui-hint button[data-comingsoon]:after {
@@ -421,6 +549,12 @@ button[data-comingsoon]:after {
 	padding: 0.5ex 1ex 0.97ex;
 	border-radius: 0.5ex;
 	animation: slidein .5s .25s 10 alternate cubic-bezier(0, 1.05, 0.58, 1);
+}
+
+@keyframes fade {
+	to {
+		opacity: 1;
+	}
 }
 
 @keyframes slidein {
@@ -446,10 +580,6 @@ button[data-comingsoon]:after {
 	}
 }
 
-@keyframes test2 {
-
-}
-
 @keyframes grid {
 	from {
 		/*! left: 35%; */
@@ -463,10 +593,10 @@ button[data-comingsoon]:after {
 
 @keyframes helicopter {
 	from {
-		transform: translateX(-35%) translateY(-45%) rotateX(65deg) scale(1);
+		transform: translateX(var(--translatex)) translateY(var(--translatey)) translateZ(var(--translatez)) rotateX(var(--rotatex)) rotateY(var(--rotatey)) rotateZ(var(--rotatez));
 	}
 
 	to {
-		transform: translateX(-35%) translateY(-45%) rotateX(35deg) scale(1);
+		transform: translateX(var(--translatexto)) translateY(var(--translateyto)) translateZ(var(--translatezto)) rotateX(var(--rotatexto)) rotateY(var(--rotateyto)) rotateZ(var(--rotatezto));
 	}
 }

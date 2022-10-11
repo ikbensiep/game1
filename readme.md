@@ -7,10 +7,23 @@
 - single player free practice (no ai either)
 - 4 car skins
 - 7 real-world racetracks
-- fuel consumption and refueling pit stops
+- fuel consumption 
+- refueling during pit stops
 - lap times including fastest lap
 - dust clouds, yellow flag when going off track
 - clouds in the sky rotating around the world center point (dat realism)
+- _almost_ real-world advertisers
+
+# Screenshots
+
+![image](https://user-images.githubusercontent.com/5741190/195207132-de52900f-3649-43a9-9239-cecdeca7a96d.png)
+
+![image](https://user-images.githubusercontent.com/5741190/195207409-0ab857cf-d4c0-49e6-8d2d-cfe00a264d3d.png)
+
+![image](https://user-images.githubusercontent.com/5741190/195207502-d768e218-1457-49d3-8523-fbd3b007dc31.png)
+
+![image](https://user-images.githubusercontent.com/5741190/195207638-99e673f1-75fb-4576-8fcd-ae6703c33c26.png)
+
 
 ## Installation
 - clone this repo
@@ -35,7 +48,4 @@ Want to contribute?
 - development: javascript 
 - design: decent knowledge of [Inkscape](https://www.inkscape.org) and a little bit of knowledge of its xml/css editor(s)
 - checkout [the current issues](https://github.com/ikbensiep/game1/issues) or [project board](https://github.com/ikbensiep/game1/projects/1)
-
-## race gaem 1
-this is my first game ever, so please excuse the duct-tape-y look on some of the code lol
 

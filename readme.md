@@ -6,7 +6,7 @@
 ## Features
 - single player free practice (no ai either)
 - 4 car skins
-- 7 real-world racetracks
+- 7 real-world racetracks **edit** todo: remove Russia
 - fuel consumption 
 - refueling during pit stops
 - lap times including fastest lap

@@ -38,10 +38,11 @@ This is based off of a simple tutorial about moving a character on a plane.
 I took that and inverted some logic to make the world move around the player. 
 Next step was to create a system that can determine wether a player is on track or off track. 
 I solved this by analyzing the pixel color the player('s centerpoint) is currently sitting on top of.
-The tracks are layers svg files all based off of Wikipedia svg files of the racetracks. 
+The tracks are layered svg files, starting point is the svg file on the racetrack's Wikipedia page. 
+Using css in the svg, all layers are hidden, and using the `:target` selector. a layer may become visible by loading the image like: `url("track.svg#world")` or `<img src="track.svg#world">.
 One layer, `#path`, will contain a bright-colored version of the track as well as other surfaces such as pit lane, pit box area, all in their own distinct color.
 Other layers, `#world`, `#track` and `#elevated` will all contain artwork that is layered on top or below the `#path` layer and do not affect the car behavior in any way.
-
+Somewhere in the game loop the environment layers wil lbe combined with the car sprite layer in the correct order and voil.
 
 ## Contribute 
 Want to contribute? 

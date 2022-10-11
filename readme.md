@@ -12,6 +12,10 @@
 - dust clouds, yellow flag when going off track
 - clouds in the sky rotating around the world center point (dat realism)
 
+## Installation
+- clone this repo
+- run it on a webserver (ie, run `python3 -m http.server` in the checkout folder and open [http://localhost:8000](http://localhost:8000) in a browser)
+
 ## Game engine
 This is based off of a simple tutorial about moving a character on a plane. 
 I took that and inverted some logic to make the world move around the player. 
@@ -26,7 +30,7 @@ Other layers, `#world`, `#track` and `#elevated` will all contain artwork that i
 Want to contribute? 
 - development: javascript 
 - design: decent knowledge of [Inkscape](https://www.inkscape.org) and a little bit of knowledge of its xml/css editor(s)
-- checkout [issues](https://github.com/ikbensiep/game1/issues)
+- checkout [the current issues](https://github.com/ikbensiep/game1/issues) or [project board](https://github.com/ikbensiep/game1/projects/1)
 
 ## race gaem 1
 this is my first game ever, so please excuse the duct-tape-y look on some of the code lol

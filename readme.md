@@ -16,6 +16,10 @@
 - clone this repo
 - run it on a webserver (ie, run `python3 -m http.server` in the checkout folder and open [http://localhost:8000](http://localhost:8000) in a browser)
 
+## play now
+
+[play the demo](http://ikbensiep.github.io/game1)
+
 ## Game engine
 This is based off of a simple tutorial about moving a character on a plane. 
 I took that and inverted some logic to make the world move around the player. 
@@ -35,4 +39,3 @@ Want to contribute?
 ## race gaem 1
 this is my first game ever, so please excuse the duct-tape-y look on some of the code lol
 
-[demo](http://ikbensiep.github.io/game1)

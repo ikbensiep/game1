@@ -34,32 +34,34 @@ body[race-start]::after {
 	opacity: 1;
 }
 
+body.abu-dhabi,
+.abu-dhabi  [layer="world"] {
+	background-color: #ffc107;
+}
+
 body.assen,
-.assen #game {
+.assen [layer="world"] {
 	background-color: #2EAD4B;
 }
 
 body.barcelona,
-.barcelona #game {
+.barcelona [layer="world"] {
 	background-color: #1B8433;
 }
 
 body.interlagos,
-.interlagos #game {
+.interlagos [layer="world"] {
 	background-color: #2EAD4B; 
 }
 
 body.hockenheim,
-.hockenheim #game {
+.hockenheim [layer="world"] {
 	background-color: #009666;
 }
-body.sochi,
-.sochi #game {
-	background-color: #85916a;
-}
-body.abu-dhabi,
-.abu-dhabi  #game {
-	background-color: #ffc107;
+
+body.monza,
+.monza [layer="world"] {
+	background-color: #4cad2e; 
 }
 
 output {
@@ -170,9 +172,56 @@ dd {
 
 .game-container {
 	height: 100vh;
+	opacity: 0;
 }
 
-body[race-start] .game-container {}
+body[race-start] .game-container {
+	opacity: 1;
+}
+
+.game-layer {
+	width: 100vw;
+	height: 100vh;
+	left: 0;
+	top: 0;
+	position: absolute;
+	background-size: 32768px 32768px;
+	background-repeat: no-repeat;
+}
+
+.game-layer[layer="world"] {
+	
+}
+.game-layer[layer="track"] {
+	
+}
+.game-layer[layer="car"] {
+	width: auto;
+	height: auto;
+}
+.game-layer[layer="elevated"] {
+	
+}
+.game-layer[layer="clouds"] {
+	background-size: 65536px 32768px;
+}
+
+.game-layer[layer="clouds"] {
+	background-repeat: repeat;
+}
+
+[layer="world"]::after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: url('../img/noise-33.png');
+	background-position: inherit;
+	background-blend-mode: soft-light;
+}
 
 .game-container::after {
 	content: '';
@@ -182,22 +231,20 @@ body[race-start] .game-container {}
 	right: 0;
 	top: 0;
 	bottom: 0;
-	background: url('../img/noise.png'), url('../img/noise-33.png');
+	background: url('../img/noise-33.png');
 	z-index: 2;
-	mask: radial-gradient(black 50%, grey 75%, white 120%) luminance;
-	-webkit-mask: radial-gradient(transparent 50%, white 120%);
+	mask: radial-gradient(black 50%, grey 75%, white 80%) luminance;
+	-webkit-mask: radial-gradient(transparent 50%, white 80%);
 	opacity: .05;
-	transition: opacity 10s 3s;
-    background-size: 400%, 100%;
-    background-position: center;
+	transition: opacity 10s;
+	background-size: 400%;
+	background-position: center;
 }
 
 .offtrack .game-container::after {	
 	opacity: .95;
 	transition: opacity 2s;
-    background-size: 400%, 100%;
 }
-
 
 #game {
 	min-width: 800px;
@@ -206,22 +253,31 @@ body[race-start] .game-container {}
 	margin: 0 auto;
 	transform: scale(.95);
 	opacity: 0;
-	transition: opacity 2s .5s, transform 2.5s .5s, box-shadow 2s 4s;
-	background-image: url('../img/noise.png');
+	transition: transform 2.5s .5s;
+	/* background-image: url('../img/noise.png'); */
 	background-blend-mode: soft-light;
+	filter: drop-shadow(3px 10px 1px #0003);
 }
 
 #debugsnapshot, 
-.trackmap {
+#minimap,
+.laptimes,
+.help {
+	backdrop-filter: blur(3px);
+}
+
+#debugsnapshot, 
+#minimap {
     position: absolute;
     right: 1em;
     bottom: 1em;
     background: #0004;
-    width: 20em;
 }
 
 #debugsnapshot {
-	display: none;
+	opacity: .5;
+	left: 1em;
+	image-rendering: pixelated;
 }
 
 #minimap {
@@ -243,8 +299,8 @@ body[race-start] .game-container {}
 	background-position: center;
 	position: absolute;
 	border-radius: 10%;
-	left: 50%;
-	top: 50%;
+	left: calc(50% - 15px);
+	top: calc(50% - 8px);
 	transition: transform .1s;
 }
 
@@ -256,17 +312,45 @@ body[race-start] .game-container {}
 	filter: grayscale(1);
 }
 
+#minimap .track::after,
+#minimap .track::before {
+	background: white;
+	content:"";
+	position: absolute;
+	z-index: 10;
+	display: none;
+}
+
+#minimap .track::after {
+	width: 100%;
+	height: 1px;
+	left: 0;
+	top: 50%;
+	right: 0;
+	bottom: 0;
+}
+
+#minimap .track::before {
+	width: 1px;
+	height: 100%;
+	left: 50%;
+	top: 0;
+	bottom: 0;
+}
+
 #minimap img {
 	width: 1120px;
 	height: 1120px;
-	left: calc(-560px + 124px);
-	top: calc(-560px + 136px);
 	position: absolute;
+	left: calc(-560px + 35%); 
+	top: calc(-560px + 38%);
 }
+
+
 
 .help,
 .laptimes {
-	padding: 0 0 1ex;
+	padding: 0;
 	position: fixed;
 	z-index: 2;
 	top: 0;
@@ -290,14 +374,34 @@ body[race-start] .game-container {}
 	transform: translateX(-11em);
 }
 
-[fps]:after {
+.laptimes {width: 233px}
+
+li[fps]:after {
 	content: '' attr(fps) ' fps';
 	position: absolute;
-	right: 1.5ex;
-	opacity: .5;
-	bottom: 1.5ex;
+	right: 1.75em;
+	bottom: 7.5ex;
 	font-size: x-small;
+	opacity: .85;
 }
+
+li[fps] {
+	display: flex;
+	height: 1em;
+	align-items: end;
+	justify-content: space-between;
+}
+
+.bar {
+	width: 1px;
+}
+
+.bar[fps^="1"] {background-color: red; }
+.bar[fps^="2"] {background-color: orange; }
+.bar[fps^="3"] {background-color: yellow; }
+.bar[fps^="4"] {background-color: limegreen; }
+.bar[fps^="5"] {background-color: lightblue; }
+.bar[fps^="6"] {background-color: white; }
 
 .help li,
 .laptimes li {
@@ -306,21 +410,56 @@ body[race-start] .game-container {}
 	text-transform: uppercase;
 	transition: all .5s 1s;
 	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 }
 
-.laps:before {content: "lap ";}
+.laps:before {content: "lap "; margin-left: 1.5em;}
 .best, .last {
 	text-align: right;
 	transition: color 2.5s 5s;
 }
 .best:before,
 .last:before {float: left; }
-.best:before {content: "best ";}
-.last:before {content: "last ";}
+
+.laptimes li[label]:before {
+	content: attr(label);
+}
+
+.laps.current::before { content: ' ' !important}
+.laps::before {content: 'lap' !important}
+.laps:empty::before {content: 'OUT LAP ' !important}
 
 .laptimes .laps {
 	text-align: right;
 	background: black;
+	justify-content: end;
+	gap: 1em;
+}
+
+[race-end] .laps {
+	background-image: 
+		linear-gradient(45deg, #000 20%, #0000 180%), 
+		linear-gradient(45deg, #666 25%, transparent 25%),
+		linear-gradient(-45deg, #666 25%, transparent 25%),
+		linear-gradient(45deg, transparent 75%, #666 75%),
+		linear-gradient(-45deg, transparent 75%, #666 75%);
+		background-size: 100%, 100px 100px, 100px 100px, 100px 100px, 100px 100px;
+		background-position: 0 0, 0 0, 0 50px, 50px -49px, -50px 0px;
+}
+
+[race-end].offtrack .laps {
+	background-image: 
+		linear-gradient(45deg, #ffd42a 20%, #0000 180%), 
+		linear-gradient(45deg, #222 25%, transparent 25%),
+		linear-gradient(-45deg, #222 25%, transparent 25%),
+		linear-gradient(45deg, transparent 75%, #222 75%),
+		linear-gradient(-45deg, transparent 75%, #222 75%);
+}
+
+.laptimes .current {
+	text-align: right;
 }
 
 .laptimes .pb {
@@ -329,7 +468,7 @@ body[race-start] .game-container {}
 }
 
 .offtrack .laptimes .laps {
-	background: #ffd42aff;
+	background-color: #ffd42aff;
 	color: black;
 	transition-delay: 0s;
 }
@@ -337,19 +476,20 @@ body[race-start] .game-container {}
 .laptimes .laps::after {
 	content: '';
 	position: absolute;
-	left: .5ex;
+	top: 50%;
+	left: .5em;
 	border: .4ex solid;
 	color: black;
-	width: 1.1em;
-	height: 1.1em;
+	width: 1em;
+	height: 1em;
 	border-radius: 50%; 
-	font-size: 60%;
+	font-size: 20px;
 	padding: .5ex;
 	line-height: 1.1em;		
 	text-align: center;
 	font-weight: bold;
 	opacity: 0;
-	transform: translateX(-120%);
+	transform: translateX(-120%) translateY(-50%);
 	transition: all .5s;
 }
 
@@ -359,14 +499,14 @@ body[race-start] .game-container {}
 	background: white;
 	border-color: red;
 	opacity: 1;
-	transform: translateY(0);
+	transform: translateY(-50%);
 }
 
 .offtrack .laptimes .laps::after {
 	content: '\f024';
 	font-family: FontAwesome;
 	opacity: 1;
-	transform: translateY(0);
+	transform: translateY(-50%);
 	border-color: black;
 	background: transparent;
 }

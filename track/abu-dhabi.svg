@@ -7,7 +7,7 @@
    viewBox="0 0 3200 3200"
    id="svg1372"
    sodipodi:docname="abu-dhabi.svg"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -25,21 +25,22 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="1"
      showgrid="false"
-     inkscape:zoom="1.98"
-     inkscape:cx="1730.5556"
-     inkscape:cy="1729.798"
-     inkscape:window-width="1920"
-     inkscape:window-height="1029"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="track" />
+     inkscape:zoom="0.70003571"
+     inkscape:cx="189.99031"
+     inkscape:cy="1219.9378"
+     inkscape:window-width="1386"
+     inkscape:window-height="754"
+     inkscape:window-x="2014"
+     inkscape:window-y="94"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="elevated"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#505050" />
   <defs
      id="defs1128">
     <style
-       id="style1108">
-		svg &gt; g { opacity: 0}
-		svg &gt; g:target { opacity: 1}
+       id="style1108">svg &gt; g { opacity: 0}
+svg &gt; g:target { opacity: 1}
     </style>
     <linearGradient
        id="linearGradient39808">
@@ -189,7 +190,7 @@
     <g
        display="none"
        id="g1151">
-       <g
+      <g
          fill-rule="evenodd"
          shape-rendering="auto"
          id="g1149">
@@ -478,7 +479,7 @@
          stroke-width="20"
          style="isolation:auto;mix-blend-mode:normal"
          id="path1203" />
-      </g>
+    </g>
     <path
        d="m 792.37,1611.8 178.22,-156.67 111.09,111.09 -33.385,33.385 196.46,224.83 34.004,-23.318 96.189,111.56 -212.5,196.64 125.38,132.15 -83.429,86.284 199.6,223.55 c 0,0 11.955,18.106 40.515,0.9825 28.56,-17.124 447.57,-370.91 447.57,-370.91 0,0 15.58,-30.22 4.8093,-43.908 -10.771,-13.688 -16.965,-19.132 -16.965,-19.132 587.19,-505.51 903.4,-801.8 1359.2,-740.11 673.51,224.41 1326.9,765.78 1326.9,765.78 0,0 -43.789,54.472 -288.77,187.1 -780.5,-499.7 -1149.1,-605.49 -1367.7,-566.31 -230.19,127.14 -661.95,479.94 -667.53,741.89 -5.5796,261.95 -247.68,710.4 -916.12,813.73 -668.43,103.34 -1063.7,616.5 -1063.7,616.5 l -311.45,-375.89 c 0,0 512,-201.12 556.89,-236.83 44.891,-35.706 542.48,-467.37 568.23,-486.11 25.759,-18.741 202.48,-198.69 202.48,-198.69 0,0 30.379,25.009 -14.365,-62.448 -44.744,-87.457 -100.17,-117.59 -100.17,-117.59 l -327.45,289 -143.37,-146.27 -89.19,73.622 -202.24,-215.73 -45.452,-63.59 10.272,-279.78 137.59,-131.58 211.23,222.8 90.575,-24.27 230.45,-218.02 13.328,-65.133 z"
        color="#000000"
@@ -938,22 +939,6 @@
        fill-rule="evenodd"
        shape-rendering="auto"
        id="g1341">
-      <rect
-         transform="rotate(-132.24)"
-         x="-1959.3"
-         y="-8.0015001"
-         width="17.926001"
-         height="120.06"
-         color="#000000"
-         color-rendering="auto"
-         enable-background="accumulate"
-         fill="#000000"
-         filter="url(#filter1070)"
-         image-rendering="auto"
-         opacity="0.42607"
-         solid-color="#000000"
-         style="isolation:auto;mix-blend-mode:normal"
-         id="rect1337" />
       <rect
          transform="rotate(-132.24)"
          x="-1959.3"
@@ -1503,59 +1488,6 @@
        fill="#8e9185"
        stop-color="#000000"
        id="rect1349" />
-    <rect
-       transform="rotate(94.604)"
-       x="1255.8"
-       y="-361.85001"
-       width="29.316999"
-       height="102.22"
-       fill="url(#radialGradient39820)"
-       opacity="0.54555"
-       stop-color="#000000"
-       id="rect1351" />
-    <rect
-       transform="rotate(-72.882)"
-       x="-1138.5"
-       y="552.41998"
-       width="20.643"
-       height="60.782001"
-       ry="8.4258003"
-       fill="url(#radialGradient39822)"
-       opacity="0.42009"
-       stop-color="#000000"
-       id="rect1353" />
-    <rect
-       transform="rotate(-72.882)"
-       x="-1150.4"
-       y="552.64001"
-       width="20.643"
-       height="60.782001"
-       ry="8.4258003"
-       fill="url(#radialGradient39826)"
-       opacity="0.42009"
-       stop-color="#000000"
-       id="rect1355" />
-    <rect
-       transform="rotate(-84.15)"
-       x="-1252.9"
-       y="313.69"
-       width="20.643"
-       height="60.782001"
-       ry="8.4258003"
-       fill="url(#radialGradient39830)"
-       opacity="0.42009"
-       stop-color="#000000"
-       id="rect1357" />
-    <rect
-       transform="rotate(97.979)"
-       x="1215.1"
-       y="-445.57001"
-       width="29.316999"
-       height="102.22"
-       fill="url(#radialGradient39834)"
-       opacity="0.54555"
-       stop-color="#000000"
-       id="rect1359" />
     <path
        d="m 103.07,1096.3 c 0,0 -6.9649,19.998 -9.5937,44.98 -2.6288,24.983 -1.23,55.58 17.189,76.654 18.199,20.821 40.074,26.438 40.074,26.438 0.0226,0.01 43.997,9.9152 84.569,20.074 12.369,3.0972 24.884,6.1866 36.738,9.0566 -9.4992,-0.3242 -19.332,-0.6454 -29.1,-0.9531 -37.394,-1.1782 -78.178,-2.115 -78.255,-2.1172 -0.96974,-0.067 -16.461,-1.0396 -33.805,4.1621 -17.909,5.3713 -38.393,17.956 -45.539,44.625 -13.461,50.239 -87.644,121.44 -87.644,121.44 l 9.9141,1.2989 c 0,0 74.288,-71.256 87.388,-120.15 6.135,-22.896 22.817,-32.853 38.754,-37.633 15.937,-4.7797 30.383,-3.7598 30.383,-3.7598 l 0.11523,0.01 h 0.11524 c 0,0 40.85,0.9387 78.257,2.1172 37.407,1.1786 163.81,2.6479 173.39,3.541 l 0.15234,0.016 h 0.15039 c 2.0594,0.066 11.733,2.4956 22.984,6.2656 11.251,3.77 24.869,8.7837 37.996,13.783 26.167,9.9661 50.286,19.837 50.445,19.902 17.694,7.9017 33.237,18.028 56.027,42.527 l 0.0605,0.066 c 29.666,31.152 103.89,21.989 103.89,21.989 l 1.2547,-6.3696 c 0,0 -73.715,4.4245 -97.879,-22.498 -23.435,-25.193 -40.648,-36.536 -59.316,-44.867 l -0.0703,-0.033 -0.0723,-0.029 c 0,0 -24.38,-9.9796 -50.777,-20.033 -13.199,-5.0268 -26.9,-10.072 -38.377,-13.918 -2.8609,-0.9586 -5.5339,-1.8473 -8.0273,-2.6464 -0.008,0 -0.0153,-0.01 -0.0234,-0.01 -7.3508,-2.3554 -13.127,-3.9143 -17.52,-4.1093 -4.1724,-0.3956 -17.901,-3.2286 -34.959,-7.1973 -17.093,-3.977 -123.96,-9.1102 -144.22,-14.184 -40.523,-10.147 -84.497,-20.055 -84.497,-20.055 h -0.0234 c 0,0 -18.822,-4.7955 -35.023,-23.332 -15.35,-17.562 -17.27,-45.316 -14.775,-69.025 2.4948,-23.709 9.0957,-42.744 9.0957,-42.744 z"
        color="#000000"
@@ -1571,26 +1503,10 @@
        style="font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-variant-east-asian:normal;font-feature-settings:normal;font-variation-settings:normal;text-indent:0;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;text-transform:none;text-orientation:mixed;white-space:normal;shape-padding:0;shape-margin:0;inline-size:0;isolation:auto;mix-blend-mode:normal"
        id="path1361" />
     <g
-       transform="matrix(0.0105,-0.65187,0.65187,0.0105,1377.1,1621.7)"
+       transform="matrix(0.2493831,-0.60237266,0.60237266,0.2493831,1114.3735,1223.6813)"
        fill-rule="evenodd"
        shape-rendering="auto"
        id="g1367">
-      <rect
-         transform="rotate(-132.24)"
-         x="-1959.3"
-         y="-8.0015001"
-         width="17.926001"
-         height="120.06"
-         color="#000000"
-         color-rendering="auto"
-         enable-background="accumulate"
-         fill="#000000"
-         filter="url(#filter1070)"
-         image-rendering="auto"
-         opacity="0.42607"
-         solid-color="#000000"
-         style="isolation:auto;mix-blend-mode:normal"
-         id="rect1363" />
       <rect
          transform="rotate(-132.24)"
          x="-1959.3"

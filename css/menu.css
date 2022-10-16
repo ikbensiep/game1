@@ -205,17 +205,19 @@ body[race-end] .laptimes li.pb {
 	background-color: #D70AD5;
 }
 
-body[race-end] .laptimes li:nth-child(2),
-body[race-end] .laptimes li:nth-child(3) {
+body[race-end] .laptimes .best,
+body[race-end] .laptimes .last, 
+body[race-end] .laptimes .current,
+body[race-end] .laptimes .fps {
 	height: 0;
 	padding: 0;
 	overflow: hidden;
 	transition: all .25s;
 }
 
-body[race-end] .laptimes li:nth-child(n+5) { animation-delay: .7s}
-body[race-end] .laptimes li:nth-child(n+6) {  animation-delay: .8s}
-body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .9s}
+body[race-end] .laptimes li:nth-child(n+6) { animation-delay: .7s}
+body[race-end] .laptimes li:nth-child(n+7) {  animation-delay: .8s}
+body[race-end] .laptimes li:nth-child(n+8) {  animation-delay: .9s}
 
 body[race-start] #minimap {
 	opacity: 1;

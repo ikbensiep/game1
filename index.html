@@ -47,28 +47,28 @@
 			<h1>RACE GAME</h1>
 			<input type="radio" name="option" value="1" id="car-select"><label for="car-select"><i class="fa fa-car"></i> Car</label>
 			<fieldset>
-				<input type="radio" name="car" id="car3" value="ferrari" required><label for="car3">Ferrari</label>
-				<input type="radio" name="car" id="car4" value="mercedes" required><label for="car4">Mercedes DTM</label>
-				<input type="radio" name="car" id="car1" value="porsche" required><label for="car1">Porsche</label>
-				<input type="radio" name="car" id="car2" value="lamborghini" required><label for="car2">Lamborghini</label>
+				<input type="radio" required name="car" id="car1" value="porsche" data-maxspeed="200"><label for="car1">Porsche</label>
+				<input type="radio" required name="car" id="car2" value="lamborghini" data-maxspeed="220"><label for="car2">Lamborghini</label>
+				<input type="radio" required name="car" id="car3" value="ferrari" data-maxspeed="210"><label for="car3">Ferrari</label>
+				<input type="radio" required name="car" id="car4" value="mercedes" data-maxspeed="240"><label for="car4">Mercedes DTM</label>
 			</fieldset>
 
 			<input type="radio" name="option" value="2" id="track-select" checked><label for="track-select"><i class="fa fa-flag-checkered"></i> Track</label>
 			<fieldset>
 				<!-- <legend>Track</legend> -->
+				<input type="radio" name="track" id="track0" value="test-track" data-start="[0,0]" data-angle="0" autofocus>
+					<label for="track0"><i class="fa">🇪🇸</i> Test track</label>
 				<input type="radio" name="track" id="track1" value="barcelona" data-start="[0,0]" data-angle="210" autofocus>
 					<label for="track1"><i class="fa">🇪🇸</i> Barcelona</label>
-				<input type="radio" name="track" id="track2" value="interlagos" data-start="[1800,-300]" data-angle="2" >
+				<input type="radio" name="track" id="track2" value="interlagos" data-start="[0,-1700]" data-angle="2" >
 					<label for="track2"><i class="fa">🇧🇷</i> Interlagos</label>
-				<input type="radio" name="track" id="track3" value="monza" data-start="[-2210,-5000]" data-angle="45">
+				<input type="radio" name="track" id="track3" value="monza" data-start="[-2000,-9000]" data-angle="125">
 					<label for="track3"><i class="fa">🇮🇹</i> Monza </label>
-				<input type="radio" name="track" id="track4" value="sochi" data-start="[-900,-1020]" data-angle="200">
-					<label for="track4"><i class="fa">🇷🇺</i> Sochi</label>
-				<input type="radio" name="track" id="track5" value="hockenheim" data-start="[-2200,-1100]" data-angle="230">
+				<input type="radio" name="track" id="track5" value="hockenheim" data-start="[10000,-10000]" data-angle="220">
 					<label for="track5"><i class="fa">🇩🇪</i> Hockenheim</label>
-				<input type="radio" name="track" id="track6" value="abu-dhabi" data-start="[5500,-9033]" data-angle="230">
+				<input type="radio" name="track" id="track6" value="abu-dhabi" data-start="[3759,2830]" data-angle="50">
 					<label for="track6"><i class="fa">🇦🇪</i> Yas Marina</label>
-				<input type="radio" name="track" id="track7" value="assen" data-start="[0,0]" data-angle="270">
+				<input type="radio" name="track" id="track7" value="assen" data-start="[-1200, 6000]" data-angle="330">
 					<label for="track7"><i class="fa">🇳🇱</i> Assen</label>
 			</fieldset>
 
@@ -77,13 +77,13 @@
 				<!-- <legend>Screen</legend> -->
 				<input type="radio" name="screen" value="mobile" id="screen1"><label for="screen1"><i class="fa fa-tablet fa-rotate-90"></i> 800&times;600</label>
 				<input type="radio" name="screen" value="tablet" id="screen2"><label for="screen2"><i class="fa fa-laptop"></i> 1024&times;768</label>
-				<input type="radio" name="screen" value="desktop" id="screen3"><label for="screen3"><i class="fa fa-desktop"></i> 1280&times;1024</label>
+				<input type="radio" name="screen" value="desktop" id="screen3"><label for="screen3"><i class="fa fa-desktop"></i> 1920&times;1080</label>
 				<input type="radio" name="screen" value="fullscreen" id="screen4" checked><label for="screen4"><i class="fa fa-tv"></i> Fullscreen</label>
 			</fieldset>
 
 			<input type="radio" name="option" value="4" id="race-settings"><label for="race-settings"><i class="fa fa-car"></i> Race settings</label>
 			<fieldset>
-				<label for="laps"><input type="number" value="3" min="2" max="999" id="laps">Laps</label>
+				<label for="laps"><input type="number" value="3" min="1" max="999" id="laps">Laps</label>
 				<label for="fuel"><input type="number" value="12.5" min="5" max="100" step="0.1" id="fuel">Fuel</label>
 			</fieldset>
 		</fieldset>
@@ -100,7 +100,13 @@
 		</label>
 	</div>
 
-	<div class="game-container"><canvas id="game" width="1024" height="768"></canvas></div>
+	<div class="game-container">
+		<div class='game-layer' layer='world'></div>
+		<div class='game-layer' layer='track'></div>
+		<canvas class='game-layer' layer='car' id="game" width="1024" height="768"></canvas>
+		<div class='game-layer' layer='elevated'></div>
+		<div class='game-layer' layer='clouds'></div>
+	</div>
 
 	<output id="speedometer">
 		<div class="needle speed"></div>
@@ -108,10 +114,12 @@
 		<div class="needle fuel" data-gauge-type="F"></div>
 	</output>
 
-	<ol class="laptimes"fps=0>
-		<li class="laps">1</li>
-		<li class="best"></li>
-		<li class="last"></li>
+	<ol class="laptimes">
+		<li class="laps"></li>
+		<li class="current" label=" ">00.000</li>
+		<li class="best" label="best"></li>
+		<li class="last" label="last"></li>
+		<li class="fps" fps="0"></li>
 	</ol>
 
 	<ol class="help">
@@ -121,8 +129,8 @@
 			<dt>Z</dt><dd>Brake</dd>
 			<dt>&larr;</dt><dd>Turn left</dd>
 			<dt>&rarr;</dt><dd>Turn right</dd>
-			<dt>M</dt><dd><span>mute engine</span>
-			</dd>
+			<dt>M</dt><dd><span>mute engine</span></dd>
+			<dt>D</dt><dd><span>drop poo</span></dd>
 		</dl>
 		</li>
 	</ol>
@@ -139,11 +147,9 @@
 		<img src="track/interlagos.svg" class="interlagos">
 		<img src="track/abu-dhabi.svg" class="abu-dhabi">
 		<img src="track/monza.svg" class="monza">
-		<img src="track/sochi.svg" class="sochi">
 		<img src="track/hockenheim.svg" class="hockenheim">
 		<img src="img/screenshot.png" />
 		<audio src="sfx/444878__richwise__goodwood-trackday-starts-2.ogg" volume="0.5" loop preload="true"></audio>
 	</div>
-
 </body>
 </html>

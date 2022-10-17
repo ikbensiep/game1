@@ -200,7 +200,7 @@ body[race-start] .game-container {
 	height: auto;
 }
 .game-layer[layer="elevated"] {
-	
+	filter: drop-shadow(25px 25px 10px #0006);
 }
 .game-layer[layer="clouds"] {
 	background-size: 65536px 32768px;

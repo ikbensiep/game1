@@ -40,10 +40,10 @@ Sprite.prototype = {
 	height: null,
 	opacity: 1,
 
+
 	drawSprite: function (ctx) {
-		// console.log(this.name, `x: ${this.x}, y:${this.y}  w:${this.height} h:${this.height}`)
+		
 		ctx.save();
-		// ctx.translate(this.x, this.y);
 		ctx.setTransform(1,0,0,1,this.x,this.y)
 		ctx.rotate(Math.PI/180 * this.angle);
 		ctx.globalAlpha = this.opacity;
@@ -55,7 +55,7 @@ Sprite.prototype = {
 		if (this.width && this.height) {
 			ctx.drawImage(
 				this.images[this.state],
-				-(this.images[this.state].width/2),
+				-(this.images[this.state].width/2),  // pparently we support different size images, not sure why
 				-(this.images[this.state].height/2),
 				this.width,
 				this.height

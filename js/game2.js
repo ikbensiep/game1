@@ -35,6 +35,7 @@ Game.prototype = {
 	
 	// turns the 3200px svg into a 32k image
 	// TODO: add car size
+
 	mapsize: Math.pow(2,15),
 
 	// turns the path into a small image so
@@ -208,7 +209,10 @@ Game.prototype = {
 
 		window.addEventListener("keydown", this.keydown_handler.bind(this), false);
 		window.addEventListener("keyup", this.keyup_handler.bind(this), false);
-		
+		window.addEventListener("resize", function () {
+			this.canvas.width = window.innerWidth;
+			this.canvas.height = window.innerHeight;
+		}.bind(this), false);
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
 	},
 
@@ -268,8 +272,9 @@ Game.prototype = {
 			
 			// slow down until halted
 			if(this.car.speed > 0) {
-				this.car.maxspeed = 3;
-				this.car.angle += 2 - (Math.random() * 4);
+				this.car.maxspeed = 10;
+				this.car.angle += Math.sin(this.floor.x * this.floor.y) * (this.car.speed * .2);
+				// this.car.angle += 180;
 			}  
 			
 			// draw dust clouds

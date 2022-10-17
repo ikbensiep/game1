@@ -294,6 +294,8 @@ Game.prototype = {
 				
 				// state decides which of the images[] to display
 				// image[2] is a car graphic with pit mechanics included
+				// TODO: delete, pit crew graphics aren't used in sprite
+				// TODO: make pit crew system, spawn at own coordinates
 				if(this.car.speed < 5) {
 					this.car.state = 2;
 				} else {

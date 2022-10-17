@@ -91,16 +91,7 @@ Game.prototype = {
 
 		document.querySelector('.blip').style.backgroundImage = `url('img/car/${selectedcar.value}-1.png')`;
 
-		var quality = document.querySelector('input[name=screen]:checked').value;
-		if(quality === 'fullscreen') {
-			try{
-				document.body.requestFullscreen();
-			} catch (e) {
-				console.error(e);
-			}
-		}
-
-		this.quality = this.setScreenSize(quality);
+		this.quality = this.setScreenSize();
 		hud = document.querySelector('output');
 		this.fpsCounter = document.querySelector('[fps]');
 		this.blip = document.querySelector('.blip');
@@ -170,19 +161,28 @@ Game.prototype = {
 				layer.style.backgroundImage = "url('img/clouds_2k.png')";
 				layer.style.opacity = 0.05 + (Math.random() * .5);
 			} else {
-				layer.style.backgroundImage = `url("track/${selectedtrack.value}.svg#${layer.getAttribute('layer')}")`;
-				layer.style.backgroundPosition = `${this.floor.x}px ${this.floor.y}px`;
+				if(layer.getAttribute('layer')) {
+					layer.style.backgroundImage = `url("track/${selectedtrack.value}.svg#${layer.getAttribute('layer')}")`;
+				}
 			}		
+			layer.style.backgroundPosition = `${this.floor.x}px ${this.floor.y}px`;
 		});
 
 		// Playter car sprite
 		this.car = new Sprite({
 			name: 'user1',
+			// moving to html layers instead of canvas sprites
+			layers:  {
+				container: document.querySelector('#car'),
+				car: document.querySelector('#car-sprite img'),
+				lights: document.querySelector('#car-lights img'),
+				brakelights: document.querySelector('#car-brake-lights img') 
+			},
 			images: [
-				'img/car/' + selectedcar.value + '-0.png',
-				'img/car/' + selectedcar.value + '-1.png',
-				'img/car/' + selectedcar.value + '-pit.png'
+				'img/car/' + selectedcar.value + '.png'
 			],
+			width: 640,
+			height: 440,
 			x: this.canvas.width / 2,
 			y: this.canvas.height / 2,
 			angle: parseInt(selectedtrack.dataset.angle) || 0,
@@ -192,11 +192,11 @@ Game.prototype = {
 			maxspeed: this.maxspeed,
 			fuel: Number(document.querySelector('#fuel').value * 1000), //milliliters :P
 			maxfuel: Number(document.querySelector('#fuel').getAttribute('max') * 1000),
-			width: parseInt(320 * 1.5),
-			height: parseInt(220 * 1.5),
 			sound: 'sfx/engine2.ogg'
 		});
 		
+		this.car.layers.car.src = 'img/car/' + selectedcar.value + '.png';
+
 		// Particles
 		this.poops = [];
 
@@ -234,7 +234,7 @@ Game.prototype = {
 		this.checkUserInput();
 		
 		// move the floor
-		this.calcWorldMovement(timeStamp);
+		this.calcWorldMovement(timeStamp);	
 
 		// draw path on offscreen canvas
 		this.path.drawSprite(this.octx);
@@ -273,8 +273,7 @@ Game.prototype = {
 			// slow down until halted
 			if(this.car.speed > 0) {
 				this.car.maxspeed = 10;
-				this.car.angle += Math.sin(this.floor.x * this.floor.y) * (this.car.speed * .2);
-				// this.car.angle += 180;
+				this.car.angle += Math.sin(this.floor.x * this.floor.y);
 			}  
 			
 			// draw dust clouds
@@ -295,14 +294,16 @@ Game.prototype = {
 				
 				// state decides which of the images[] to display
 				// image[2] is a car graphic with pit mechanics included
-				this.car.state = 2;
+				if(this.car.speed < 5) {
+					this.car.state = 2;
+				} else {
+					this.car.state = 0;
+				}
 			}
 		}
 
 		if (wheresthecar === 'inpits') {
 			this.car.maxspeed = 15; 
-			this.car.opacity = 1;
-			this.car.state = 1;
 		}
 
 		// draw current laptime
@@ -344,8 +345,21 @@ Game.prototype = {
 			});
 		}
 
-		// draw the car onto the drawing context
-		this.car.drawSprite(this.ctx);
+		// update car sprites
+		this.car.layers.car.style.setProperty('--rotation', `${parseInt(this.car.angle)}deg`);
+		this.car.layers.lights.style.setProperty('--rotation', `${parseInt(this.car.angle)}deg`);
+		this.car.layers.brakelights.style.setProperty('--rotation', `${parseInt(this.car.angle)}deg`);
+
+		switch(this.car.state) {
+			default:
+			case 0:
+				this.car.layers.container.classList.remove('braking')
+				this.car.layers.container.classList.remove('pitbox');
+				break;
+			case 1:
+				this.car.layers.container.classList.add('braking');
+				break;
+		}
 
 		//draw the context to the canvas
 		this.ctx.drawImage(this.canvas, 0, 0);
@@ -367,7 +381,7 @@ Game.prototype = {
 				images: [`img/smoke/smoke${Math.ceil(Math.random() * 11)}.png`],
 				x: this.car.x,
 				y: this.car.y,
-				angle: this.car.angle,
+				angle: this.car.angle + 90,
 				state: 0,
 				width: 128,
 				height: 128,
@@ -598,7 +612,7 @@ Game.prototype = {
 			// update world layers
 			layer.style.backgroundPosition = layerBGPos;
 			
-		})
+		});
 	},
 
 	checkGamepad : function () {
@@ -697,7 +711,7 @@ Game.prototype = {
 
 		// brake
 		if (this.keys[90]) {
-			this.car.state = 1;
+			this.car.state = 1; 
 			
 			// smoke effect for brake lock up
 			if(this.car.speed > this.maxspeed * .25) {
@@ -739,21 +753,12 @@ Game.prototype = {
 		}
 	},
 
-	setScreenSize : function (size) {
-		switch(size) {
-			default:
-			case 'mobile' :
-				return {'height': 600, 'width': 800};
-				break;
-			case 'tablet' :
-				return {'height': 768,'width': 1024};
-				break;
-			case 'desktop' :
-				return {'height': 1080,'width': 1920};
-				break;
-			case 'fullscreen' :
-				return {'height': window.innerHeight,'width': window.innerWidth};
-				break;
+	setScreenSize : function () {
+		try{
+			document.body.requestFullscreen();
+			return {'height': window.screen.height,'width': window.screen.width};
+		} catch (e) {
+			console.error(e);
 		}
 	},
 
@@ -801,10 +806,11 @@ Game.prototype = {
 		window.location.reload(false); 
 	},
 
-	initGame : function (event) {
-		// hide menu screen, show game canvas
-		var teaser = document.querySelector('.world').style.display = "none";
+	initGame : function () {
+
 		
+		// hide menu screen, show game canvas
+		document.querySelector('.world').style.display = "none";
 		document.body.setAttribute("race-start", "");
 		document.body.removeAttribute("race-end");
 		

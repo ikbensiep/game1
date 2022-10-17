@@ -195,10 +195,60 @@ body[race-start] .game-container {
 .game-layer[layer="track"] {
 	
 }
-.game-layer[layer="car"] {
-	width: auto;
-	height: auto;
+
+#car {
+	--rotation: 0deg;
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
 }
+
+#car div {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+#car img {
+	--rotation: inherit;
+	width: calc(640px * .75);
+	height: calc(440px *.75);
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%) rotate(var(--rotation));
+}
+
+#car-brake-lights {
+	opacity: 0;
+	mix-blend-mode: color;
+	transition: opacity 1.5s;
+}
+
+.braking #car-brake-lights {
+	opacity: 1;
+	transition-duration: .05s;
+}
+
+#car-lights {
+	/* opacity: .5;
+	mix-blend-mode: color-dodge;
+	filter: blur(0px) brightness(1) saturate(1.2) contrast(1); */
+}
+
+#car-lights img {
+	mix-blend-mode: soft-light;
+	filter: grayscale(.75) blur(5px);
+}
+
+#car-sprite {
+	filter: drop-shadow(3px 10px 1px #0003);
+}
+
 .game-layer[layer="elevated"] {
 	filter: drop-shadow(25px 25px 10px #0006);
 }
@@ -247,17 +297,32 @@ body[race-start] .game-container {
 }
 
 #game {
+	width: auto;
+	height: auto;
 	min-width: 800px;
 	min-height: 600px;
 	display: block;
 	margin: 0 auto;
-	transform: scale(.95);
+	
 	opacity: 0;
-	transition: transform 2.5s .5s;
-	/* background-image: url('../img/noise.png'); */
-	background-blend-mode: soft-light;
-	filter: drop-shadow(3px 10px 1px #0003);
+	position: relative;
 }
+/*
+#game::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	opacity: .2;
+	background-position: inherit;
+	background-image: url('../img/noise.png');
+	background-blend-mode: soft-light;
+	background-repeat: repeat;
+	background-size: 1024px 1024px;
+}
+*/
 
 #debugsnapshot, 
 #minimap,

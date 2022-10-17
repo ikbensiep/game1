@@ -1,0 +1,2 @@
+:root > g {display: none !important;}
+:root > g:target {display: inline!important;}

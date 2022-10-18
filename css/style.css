@@ -42,6 +42,7 @@ body.abu-dhabi,
 body.assen,
 .assen [layer="world"] {
 	background-color: #2EAD4B;
+	/*! opacity: .5; */
 }
 
 body.barcelona,
@@ -51,7 +52,9 @@ body.barcelona,
 
 body.interlagos,
 .interlagos [layer="world"] {
-	background-color: #2EAD4B; 
+	background-color: #937A65; 
+	/*! background-image: none !important; */
+	background-blend-mode: multiply;
 }
 
 body.hockenheim,
@@ -203,6 +206,7 @@ body[race-start] .game-container {
 	top: 0;
 	right: 0;
 	bottom: 0;
+	/*! z-index: 9; */
 }
 
 #car div {
@@ -227,6 +231,7 @@ body[race-start] .game-container {
 	opacity: 0;
 	mix-blend-mode: color;
 	transition: opacity 1.5s;
+	z-index: 11;
 }
 
 .braking #car-brake-lights {
@@ -235,9 +240,9 @@ body[race-start] .game-container {
 }
 
 #car-lights {
-	/* opacity: .5;
-	mix-blend-mode: color-dodge;
+	opacity: .25; mix-blend-mode: screen; /*
 	filter: blur(0px) brightness(1) saturate(1.2) contrast(1); */
+	z-index: 1;
 }
 
 #car-lights img {
@@ -247,18 +252,19 @@ body[race-start] .game-container {
 
 #car-sprite {
 	filter: drop-shadow(3px 10px 1px #0003);
+	z-index: 10;
 }
 
 .game-layer[layer="elevated"] {
 	filter: drop-shadow(25px 25px 10px #0006);
+	z-index: 12;
 }
 .game-layer[layer="clouds"] {
 	background-size: 65536px 32768px;
+	background-repeat: repeat;
+	z-index: 20;
 }
 
-.game-layer[layer="clouds"] {
-	background-repeat: repeat;
-}
 
 [layer="world"]::after {
 	content: '';
@@ -327,8 +333,10 @@ body[race-start] .game-container {
 #debugsnapshot, 
 #minimap,
 .laptimes,
-.help {
+.help,
+output {
 	backdrop-filter: blur(3px);
+	z-index: 20;
 }
 
 #debugsnapshot, 
@@ -417,7 +425,6 @@ body[race-start] .game-container {
 .laptimes {
 	padding: 0;
 	position: fixed;
-	z-index: 2;
 	top: 0;
 	right: 1ex;
 	list-style: none;

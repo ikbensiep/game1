@@ -157,15 +157,21 @@ Game.prototype = {
 		this.gameLayers = document.querySelectorAll('.game-layer');
 		Array.from(this.gameLayers).map( layer => {
 			
-			if(layer.getAttribute('layer') === 'clouds') {
-				layer.style.backgroundImage = "url('img/clouds_2k.png')";
-				layer.style.opacity = 0.05 + (Math.random() * .5);
-			} else {
-				if(layer.getAttribute('layer')) {
-					layer.style.backgroundImage = `url("track/${selectedtrack.value}.svg#${layer.getAttribute('layer')}")`;
-				}
-			}		
-			layer.style.backgroundPosition = `${this.floor.x}px ${this.floor.y}px`;
+			switch (layer.getAttribute('layer')) {
+				case 'world':
+					layer.style.backgroundImage = 
+						`url("track/${selectedtrack.value}.svg#track"), url("track/${selectedtrack.value}.svg#world")`;
+					break;
+				case 'track':
+						break;
+				case 'elevated':
+					layer.style.backgroundImage = `url("track/${selectedtrack.value}.svg#elevated")`;
+					break;
+				case 'clouds':
+					layer.style.backgroundImage = "url('img/clouds_2k.png')";
+					layer.style.opacity = 0.05 + (Math.random() * .25);
+					break;
+			}
 		});
 
 		// Playter car sprite

@@ -1,0 +1,35 @@
+/* simulate LIGHT FX */ 
+.game-layer[layer="world"]::before {
+  background-image: inherit;
+  content: '';
+  position: absolute;
+  left: 0px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-size: inherit;
+  background-position: inherit;
+  mask: radial-gradient(circle, transparent 100px, #fff 200px, white 240px) luminance;
+  mix-blend-mode: hard-light;
+  opacity: .5;
+  z-index: 11;
+  filter: saturate(1.1) brightness(0.3);
+}
+
+/* simulate night? */ 
+.game-layer[layer="world"]::after {
+  content: '';
+  background-image: url('../img/noise-33.png');
+  /*! mix-blend-mode: exclusion; */
+  left: 10px;
+  /*! background-color: #00000082; */
+  /*! background-size: 100%; */
+  background-position: inherit;
+  top: 10px;
+  z-index: 10;
+  /*! mask: radial-gradient(circle, black 100px, white 500px); */
+  mask-mode: luminance;
+  right: 10px;
+  bottom: 10px;
+  /*! opacity: 0; */
+}

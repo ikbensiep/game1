@@ -12,6 +12,7 @@
 <meta property="og:image:height" content="704" />
 
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/blend.css">
 	<link rel="stylesheet" href="css/menu.css">
 	<link href="//fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -50,7 +51,7 @@
 				<input type="radio" required name="car" id="car1" value="porsche" data-maxspeed="200"><label for="car1">Porsche</label>
 				<input type="radio" required name="car" id="car2" value="lamborghini" data-maxspeed="220"><label for="car2">Lamborghini</label>
 				<input type="radio" required name="car" id="car3" value="ferrari" data-maxspeed="210"><label for="car3">Ferrari</label>
-				<input type="radio" required name="car" id="car4" value="mercedes" data-maxspeed="240"><label for="car4">Mercedes DTM</label>
+				<input type="radio" required name="car" id="car4" value="mercedes-DTM" data-maxspeed="240"><label for="car4">Mercedes DTM</label>
 			</fieldset>
 
 			<input type="radio" name="option" value="2" id="track-select" checked><label for="track-select"><i class="fa fa-flag-checkered"></i> Track</label>
@@ -71,16 +72,6 @@
 				<input type="radio" name="track" id="track7" value="assen" data-start="[-1200, 6000]" data-angle="330">
 					<label for="track7"><i class="fa">🇳🇱</i> Assen</label>
 			</fieldset>
-
-			<input type="radio" name="option" value="3" id="screen-select"><label for="screen-select"><i class="fa fa-desktop"></i> Screen</label>
-			<fieldset>
-				<!-- <legend>Screen</legend> -->
-				<input type="radio" name="screen" value="mobile" id="screen1"><label for="screen1"><i class="fa fa-tablet fa-rotate-90"></i> 800&times;600</label>
-				<input type="radio" name="screen" value="tablet" id="screen2"><label for="screen2"><i class="fa fa-laptop"></i> 1024&times;768</label>
-				<input type="radio" name="screen" value="desktop" id="screen3"><label for="screen3"><i class="fa fa-desktop"></i> 1920&times;1080</label>
-				<input type="radio" name="screen" value="fullscreen" id="screen4" checked><label for="screen4"><i class="fa fa-tv"></i> Fullscreen</label>
-			</fieldset>
-
 			<input type="radio" name="option" value="4" id="race-settings"><label for="race-settings"><i class="fa fa-car"></i> Race settings</label>
 			<fieldset>
 				<label for="laps"><input type="number" value="3" min="1" max="999" id="laps">Laps</label>
@@ -103,7 +94,12 @@
 	<div class="game-container">
 		<div class='game-layer' layer='world'></div>
 		<div class='game-layer' layer='track'></div>
-		<canvas class='game-layer' layer='car' id="game" width="1024" height="768"></canvas>
+		<canvas id="game" width="1024" height="768"></canvas>
+		<div id="car">
+			<div id="car-sprite"><img src="/img/car/porsche.png" /></div>
+			<div id="car-lights"><img src="/img/car/car-lights.png" /></div>
+			<div id="car-brake-lights"><img src="/img/car/car-brake-lights.png" /></div>
+		</div>
 		<div class='game-layer' layer='elevated'></div>
 		<div class='game-layer' layer='clouds'></div>
 	</div>
@@ -143,12 +139,17 @@
 	</div>
 
 	<div class="preload" style="display:none">
+
 		<img src="track/barcelona.svg" class="barcelona">
 		<img src="track/interlagos.svg" class="interlagos">
 		<img src="track/abu-dhabi.svg" class="abu-dhabi">
 		<img src="track/monza.svg" class="monza">
 		<img src="track/hockenheim.svg" class="hockenheim">
 		<img src="img/screenshot.png" />
+		<img src="img/car/ferrari.png" />
+		<img src="img/car/lamborghini.png" />
+		<img src="img/car/mercedes-DTM.png" />
+		<img src="img/car/porsche.png" />
 		<audio src="sfx/444878__richwise__goodwood-trackday-starts-2.ogg" volume="0.5" loop preload="true"></audio>
 	</div>
 </body>

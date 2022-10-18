@@ -2,6 +2,7 @@
 ## Play the game
 
 [play the demo](http://ikbensiep.github.io/game1)
+
 **note** Use firefox, chrome/edge are slooow! (but they do actually draw the svg nice n' crisp, firefox seems to stretch the original viewbox pixels)?
 
 ## update 16/10/2022

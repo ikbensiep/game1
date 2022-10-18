@@ -2,7 +2,7 @@
 ## Play the game
 
 [play the demo](http://ikbensiep.github.io/game1)
-
+**note** Use firefox, chrome/edge are slooow! (but they do actually draw the svg nice n' crisp, firefox seems to stretch the original viewbox pixels)?
 
 ## update 16/10/2022
 Big performance update by drawing as little as possible on the `<canvas>`. Why do manually what the browser gives you for free? World layers are now html elements with moving background images. Rather than stacking 5 images on top of each other and drawing that onto a canvas and _then_ draw _all that_ every frame inside a `raf` loop was a bit silly. 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>Track inspector</title>
         <style>
             body {
                 height: 100;
@@ -35,9 +36,9 @@
             div>img { 
                 position: absolute; 
                 right: 0;
-                bottom: 0;
+                right: 20%;
                 max-width: 100vh;
-                transition: transform .5s, opacity .2s;
+                transition: transform .5s, all .2s;
             }
 
             div>img:not(.selected) {
@@ -60,7 +61,7 @@
             }
 
             div img:hover {
-                background-color: #001;
+                background-color: #0001;
             }
 
         </style>
@@ -72,6 +73,7 @@
                     <option selected disabled>select track</option>
                     <option value='test-track'>test-track</option>
                     <option value='abu-dhabi'>abu-dhabi</option>
+                    <option value='austin'>austin</option>
                     <option value='assen'>assen</option>
                     <option value='barcelona'>barcelona</option>
                     <option value='monza'>monza</option>

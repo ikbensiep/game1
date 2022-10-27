@@ -26,8 +26,8 @@
      inkscape:pagecheckerboard="1"
      showgrid="false"
      inkscape:zoom="0.70003571"
-     inkscape:cx="189.99031"
-     inkscape:cy="1219.9378"
+     inkscape:cx="114.27988"
+     inkscape:cy="1221.3663"
      inkscape:window-width="1386"
      inkscape:window-height="754"
      inkscape:window-x="2014"
@@ -39,9 +39,10 @@
   <defs
      id="defs1128">
     <style
-       id="style1108">svg &gt; g { opacity: 0}
-svg &gt; g:target { opacity: 1}
-    </style>
+       id="style1108">@supports (-moz-appearance:meterbar) {
+    svg &gt; g{ display: none!important;}
+    svg &gt; g:target {display: inline!important;}
+}</style>
     <linearGradient
        id="linearGradient39808">
       <stop

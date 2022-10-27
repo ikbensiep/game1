@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Track inspector</title>
+        <style>
+            body {
+                height: 100;
+                overflow: hidden;
+            }
+            form {
+                flex: 0 1 30em;
+                position: sticky;
+                z-index: 1;
+            }
+            label {
+                line-height: 2em;
+                cursor: pointer;
+            }
+
+            fieldset.layers label {
+                display: block;
+            }
+
+            img {
+                width: 100%;
+            }
+
+            div { 
+                perspective: 750px; 
+                position: absolute;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+            }
+            div>img { 
+                position: absolute; 
+                right: 0;
+                right: 20%;
+                max-width: 100vh;
+                transition: transform .5s, all .2s;
+            }
+
+            div>img:not(.selected) {
+                opacity: 0;
+            }
+
+
+            div.perspective img:nth-child(1) {--moveFactor: 4;}
+
+            div.perspective img:nth-child(2) {--moveFactor: 2; }
+
+            div.perspective img:nth-child(3) {--moveFactor: 0; }
+            div.perspective img:nth-child(4) {--moveFactor: -2; }
+
+            div.perspective img {
+                --rotate: 30deg;
+                --translateZ: calc(var(--moveFactor) * -4em);
+                --translateY: calc(var(--moveFactor) * -2em);
+                transform: rotateX(var(--rotate)) translateZ(var(--translateZ)) translateY(var(--translateY));
+            }
+
+            div img:hover {
+                background-color: #0001;
+            }
+
+        </style>
+    </head>
+    <body>
+        <form action="#">
+            <fieldset>
+                <select name='track'>
+                    <option selected disabled>select track</option>
+                    <option value='test-track'>test-track</option>
+                    <option value='abu-dhabi'>abu-dhabi</option>
+                    <option value='austin'>austin</option>
+                    <option value='assen'>assen</option>
+                    <option value='barcelona'>barcelona</option>
+                    <option value='monza'>monza</option>
+                    <option value='interlagos'>interlagos</option>
+                    <option value='hockenheim'>hockenheim</option>
+                </select>
+                <label for='perspective'>
+                    <input type='checkbox' name='perspective' id='perspective'/> perspective
+                </label>
+            </fieldset>
+            <fieldset class="layers" disabled>
+                <label><input type="checkbox" value="elevated" name="layer">#elevated</label>
+                <label><input type="checkbox" value="track" name="layer">#track</label>
+                <label><input type="checkbox" value="world" name="layer">#world</label>
+                <label><input type="checkbox" value="path" name="layer">#path</label>
+            </fieldset>
+        </form>
+        <div class="preview">
+            <img src='' alt='#path'/>
+            <img src='' alt='#world'/>
+            <img src='' alt='#track'/>
+            <img src='' alt='#elevated'/>
+        </div>
+        <script>
+            let selectedTrack = '';
+            let layerinputs = document.querySelectorAll('input[name=layer]');
+
+            function changeHandler(e) {
+
+                if (e.target.name == 'perspective') {
+                    const div = document.querySelector('.preview');
+                    div.className = `preview ${e.target.checked ? 'perspective' : ''}`;
+                    
+                }
+                if (e.target.name == 'track') {
+                    changeTrackHandler(e);
+                    (document.querySelector('fieldset.layers')).removeAttribute('disabled');
+                    changeLayerHandler();
+                } 
+                if (e.target.name == 'layer') {
+                    changeLayerHandler(e.target.value);
+                }
+            }
+            
+            function changeTrackHandler (e) {
+                selectedTrack = e.target.value;
+            }
+                
+            function changeLayerHandler () {
+
+                Array.from(layerinputs).map(input => {
+                    let img = document.querySelector(`img[alt="#${input.value}"]`);
+                    img.src = `track/${selectedTrack}.svg#${input.value}`;
+                    
+                    img.className = input.checked ? 'selected' : '';
+                    
+                });
+                
+            }
+            document.addEventListener('change', changeHandler);
+        </script>
+    </body>
+</html>

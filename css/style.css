@@ -39,10 +39,14 @@ body.abu-dhabi,
 	background-color: #ffc107;
 }
 
+body.austin,
+.austin [layer="world"] {
+	background-color: hsl(134, 20%, 28%);
+}
+
 body.assen,
 .assen [layer="world"] {
 	background-color: #2EAD4B;
-	/*! opacity: .5; */
 }
 
 body.barcelona,
@@ -53,8 +57,6 @@ body.barcelona,
 body.interlagos,
 .interlagos [layer="world"] {
 	background-color: #937A65; 
-	/*! background-image: none !important; */
-	background-blend-mode: multiply;
 }
 
 body.hockenheim,
@@ -256,9 +258,28 @@ body[race-start] .game-container {
 }
 
 .game-layer[layer="elevated"] {
-	filter: drop-shadow(25px 25px 10px #0006);
+	filter: drop-shadow(30px 30px 30px #0006);
 	z-index: 12;
+	scale: 1.15;
 }
+
+/*
+.game-layer[layer="elevated"]::before,
+.game-layer[layer="elevated"]::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: inherit;
+}
+.austin .game-layer[layer="elevated"]::before {
+}
+.austin .game-layer[layer="elevated"]::after {	
+}
+*/
+
 .game-layer[layer="clouds"] {
 	background-size: 65536px 32768px;
 	background-repeat: repeat;
@@ -357,7 +378,6 @@ output {
 	width: 320px;
 	height: 320px;
 	position: absolute;
-	bottom: 0;
 	overflow: hidden;
 	border-radius: 50%;
 	opacity: 0;
@@ -367,7 +387,7 @@ output {
 	display: block;
 	width: 30px;
 	height: 15px;
-	background: transparent url("../img/car/porsche-1.png") no-repeat;
+	background: transparent url("/img/car/porsche.png") no-repeat;
 	background-size: cover;
 	background-position: center;
 	position: absolute;

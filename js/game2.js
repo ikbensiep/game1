@@ -10,7 +10,7 @@ Game.prototype = {
 	team: 'porsche',
 	player: 'Player1',
 	gamepad: null,
-	
+	debugmode: false,
 	canvas: null,
 	ctx : null,
 	ocvs : null,
@@ -27,6 +27,7 @@ Game.prototype = {
 	laptime: null,
 	racefinished: false,
 	lastTime: 0,
+	surface: {type: 'track', lastSnapshot: 0},
 	req: null,
 
 	// some magi numbers here
@@ -42,12 +43,14 @@ Game.prototype = {
 	// checking pixel color is faster
 	// can't be too small or the refueling spot and lap timers 
 	// won't trigger!
-	pathscale: 0.2,
+	pathscale: 0.1,
 
 	blip: null,
 	minimap: null,
 
 	cloudiness : Math.random(),
+	smokeParticles: [],
+	rubbers: [],
 
 	setup: function () {
 
@@ -89,7 +92,7 @@ Game.prototype = {
 		// TODO: fix magic number
 		this.maxspeed = parseInt(Number(selectedcar.dataset.maxspeed) / 4);
 
-		document.querySelector('.blip').style.backgroundImage = `url('img/car/${selectedcar.value}-1.png')`;
+		document.querySelector('.blip').style.backgroundImage = `url('img/car/${selectedcar.value}.png')`;
 
 		this.quality = this.setScreenSize();
 		hud = document.querySelector('output');
@@ -138,7 +141,7 @@ Game.prototype = {
 		}
 		
 		// the Path sprite is used to check where the player is in the world
-		// see checkGroundType, line 383
+		// see checkSurfaceType, line 383
 		this.path = new Sprite({
 			name: selectedtrack.value,
 			images: [`track/${selectedtrack.value}.svg#path`],
@@ -203,8 +206,12 @@ Game.prototype = {
 		
 		this.car.layers.car.src = 'img/car/' + selectedcar.value + '.png';
 
+		// Particle state images
+		this.smokeImages = Array.from(document.querySelectorAll('img.smoke')).map( img => img.src);
+		
 		// Particles
-		this.poops = [];
+		this.smokes = [];
+		this.rubbers = [];
 
 		// play starting engine sound
 		this.startengine = new Sound({sound: 'sfx/370276__biholao__acceleration-3.ogg', looping: false});
@@ -221,6 +228,10 @@ Game.prototype = {
 		}.bind(this), false);
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
 	},
+
+	/* -------------- */
+	/* MAIN GAME LOOP */
+	/* -------------- */
 
 	draw : function(timeStamp) {
 		
@@ -261,15 +272,22 @@ Game.prototype = {
 		// checks center pixel in #path image on off screen canvas
 		// returns a string based on detected color
 		// depending on result, car behavior will change
-		var wheresthecar = this.checkGroundType();
 		
+		
+		if(timeStamp - this.surface.lastSnapshot > 200) {
+			this.surface.type = this.checkSurfaceType();
+			this.surface.lastSnapshot = timeStamp;
+		}
+
+		let wheresthecar = this.surface.type;
+
 		// set class to body to update HUD with yellow flag / pit limiter etc
 		let container = document.body;
 		if(!container.classList.contains(wheresthecar)) {
 			container.className = `${this.selectedtrack} ${wheresthecar}`;
 		} 
 
-		if (wheresthecar === 'ontrack') {
+		if (wheresthecar === 'track') {
 			this.car.maxspeed = this.maxspeed; 
 			this.car.opacity = 1;
 		}
@@ -279,16 +297,18 @@ Game.prototype = {
 			// slow down until halted
 			if(this.car.speed > 0) {
 				this.car.maxspeed = 10;
-				this.car.angle += Math.sin(this.floor.x * this.floor.y);
+				this.car.angle += Math.sin(this.floor.x * this.floor.y) * 7;
 			}  
 			
 			// draw dust clouds
-			if( this.car.speed > 1) {
-				this.dropPoop();
+			if( this.car.speed > 2) {
+				if(!this.smokes.length || timeStamp - this.smokes[this.smokes.length - 1].spawn[2] > 1000) {
+				 this.dropSmoke();
+				}
 			}
 			
 			// allow stranded player to accelerate somewhat
-			if (this.car.speed === 3) {
+			if (this.car.speed == 5) {
 				this.car.maxspeed = 20;
 			}
 
@@ -321,35 +341,45 @@ Game.prototype = {
 		this.drawHUD();
 	
 		// 'particle' system
-		if(this.poops.length) {
+		if(this.smokes.length) {
 
 			// poor man's garbage collection
 			// if a particle is too old, off that MF
 			// ain't got no memory for you old man
-			let remainingPoops = this.poops.filter( poop => {
-				return timeStamp - poop.spawn[2]  < 1000; 
+			let remainingsmokes = this.smokes.filter( smoke => {
+				return timeStamp - smoke.spawn[2]  < 1000; 
 			});
 
-			this.poops = [...remainingPoops];
+			this.smokes = [...remainingsmokes];
 
-			this.poops.map(poo => {
-				// make it look alive
-				// actual poo might be quite static
-				// but this is supposed to look like
-				// a smoke cloud
-				poo.angle += Math.random() * 2;
-				poo.x = (this.floor.x - poo.spawn[0]) ;
-				poo.y = this.floor.y - poo.spawn[1];
-				poo.width = poo.width * 1.01;
-				poo.height = poo.width;
-
-				// set opacity to distance from car
-				// poo.opacity = 1 - (Math.abs(this.car.x - poo.x) / this.car.x).toFixed(1);
-				
+			this.smokes.map( (smoke, idx) => {
+				// make it look alive				
+				smoke.angle = smoke.angle - (timeStamp - smoke.spawn[2]) / 500;
+	
+				smoke.x = this.floor.x - smoke.spawn[0] + (smoke.width / 2);
+				smoke.y = this.floor.y - smoke.spawn[1] + (smoke.width / 2);
+				smoke.width = smoke.width * 1.01;
+				smoke.height = smoke.width;
+							
 				// set opacity to particle age
-				poo.opacity = 1 - ( timeStamp - poo.spawn[2] ) / 1000;
+				smoke.opacity = (1 - ( timeStamp - smoke.spawn[2] ) / 1000);
 
-				poo.drawSprite(this.ctx);
+				smoke.drawSprite(this.ctx);
+			});
+		}
+
+		if(this.rubbers.length) {
+			this.rubbers.map(rubber => { 
+				rubber.x = this.floor.x - rubber.spawn[0];
+				rubber.y = this.floor.y - rubber.spawn[1];
+
+				if(rubber.x > 0 && 
+					rubber.x - rubber.width / 2 < this.canvas.width &&
+					rubber.y > 0 &&
+					rubber.y - rubber.height / 2 < this.canvas.height
+					) {
+					rubber.drawSprite(this.ctx)
+				}
 			});
 		}
 
@@ -378,25 +408,44 @@ Game.prototype = {
 		this.req = window.requestAnimationFrame(this.draw.bind(this));
 	},
 
-	dropPoop: function () {
+	dropRubber: function (opacity) {
+		const lastrubber = this.rubbers[this.rubbers.length - 1];
+		if(!lastrubber || (this.lastTime - lastrubber.spawn[2] > 100)) { 
+		let rubber = new Sprite({
+			name: `rubber-${this.rubbers.length}`,
+			images: ['/img/car/tire-rubber-2.png'],
+			x: this.car.x - this.width / 2,
+			y: this.car.y,
+			angle: this.car.angle,
+			state: 0,
+			width: 640 * (this.car.speed / this.car.maxspeed),
+			height: 70,
+			opacity: opacity ? opacity : this.car.speed / this.car.maxspeed,
+			spawn: [this.floor.x - this.car.x, this.floor.y - this.car.y, this.lastTime],
+		});
+		this.rubbers.push(rubber);
+		}
+	},
+
+	dropSmoke: function () {
 		
-		const lastpoop = this.poops[this.poops.length - 1];
+		const lastsmoke = this.smokes[this.smokes.length - 1];
 		
-		// don't draw poop too often, cpu got better things to do
-		if(!lastpoop || (this.lastTime - lastpoop.spawn[2] > 90)) { 
-			let poop = new Sprite({
-				name: `poop-${this.poops.length}`,
-				images: [`img/smoke/smoke${Math.ceil(Math.random() * 11)}.png`],
+		// don't draw smoke too often, cpu got better things to do
+		if(!lastsmoke || (this.lastTime - lastsmoke.spawn[2] > 50)) { 
+			let smoke = new Sprite({
+				name: `smoke-${this.smokes.length}`,
+				images: this.smokeImages,
 				x: this.car.x,
 				y: this.car.y,
-				angle: this.car.angle + 90,
-				state: 0,
+				angle: 20 - Math.random() * 40 + (this.car.angle + 90),
+				state: Math.floor(Math.random() * 10),
 				width: 128,
 				height: 128,
 				opacity: .05,
 				spawn: [this.floor.x - this.car.x, this.floor.y - this.car.y, this.lastTime],
 			});
-			this.poops.push(poop);
+			this.smokes.push(smoke);
 		} 
 	},
 
@@ -426,7 +475,7 @@ Game.prototype = {
 	},
 
 	
-	checkGroundType: function () {
+	checkSurfaceType: function () {
 		
 		// Basically the game engine: sample 1x1 pixel in the center of the screen 
 		// (ie location of the car on top of the game world)
@@ -437,37 +486,52 @@ Game.prototype = {
 		// but this turned out to be inefficient. Instead of drawing those layers on 
 		// the on-screen canvas, I'm now just setting those layers as css background-images
 		// and simply translate the background position on the relevant html elements. 
-		// see index.html (div.game-container)	
-
+		// see index.html (div.game-container)
+		if(this.debugmode) {
+			console.time("get image time");
+		}
 		var image = this.octx.getImageData(this.ocvs.width/2, this.ocvs.height/2, 1,1);
-	
+		if(this.debugmode) {
+			console.timeLog("get image time");
+		}
 		var pixel1 = image.data[0];
 		var pixel2 = image.data[1];
 		var pixel3 = image.data[2];
+		if(this.debugmode) {
+			console.timeEnd("get image time");
+			console.log('---');
+		}
 		
+		// DEBUG PREVIEW
+		// creates a snapshot of the path canvas and adds it to the DOM
+		// uncomment the code below to inspect the snapshot
+		if(this.debugmode) {
+			let debugElement = document.querySelector('img#debugsnapshot');
+			if(! debugElement ) {
+				var el = document.createElement('img');
+				el.id = 'debugsnapshot';
+				el.src = this.ocvs.toDataURL("image/png");
+				document.body.appendChild(el);
+				el.style.opacity = .5;
+			} else {
+				debugElement.src = this.ocvs.toDataURL("image/png");
+			}
+		} else {
+			let debugElement = document.querySelector('img#debugsnapshot');
+			if( debugElement ) {
+				debugElement.parentElement.removeChild(debugElement);
+			}
+		}
+
+		// green: on track
+		if (pixel1 === 0 && pixel2 === 255 && pixel3 === 0) { 
+			return 'track';
+		}
+
 		// red: trigger lap timer by hitting red start/finish line rect (see track.svg#path)
 		if(pixel1 === 255 && pixel2 === 0 && pixel3 === 0) {
 			this.setLapTime();
 		}
-
-		// DEBUG PREVIEW
-		// creates a snapshot of the path canvas and adds it to the DOM
-		// uncomment the code below to inspect the snapshot
-		let debugnode = document.querySelector('img#debugsnapshot');
-		// if(! debugnode ) {
-		// 	var el = document.createElement('img');
-		// 	el.id = 'debugsnapshot';
-		// 	el.src = this.ocvs.toDataURL("image/png");
-		// 	document.body.appendChild(el);
-		// } else {
-		// 	debugnode.src = this.ocvs.toDataURL("image/png");
-		// }
-
-
-		// green: on track
-		if (pixel1 === 0 && pixel2 === 255 && pixel3 === 0) { 
-			return 'ontrack';
-		}	
 
 		// blue: in pits / paddock
 		if (pixel1 === 0 && pixel2 === 0 && pixel3 === 255 ) { 
@@ -722,8 +786,13 @@ Game.prototype = {
 			this.car.state = 1; 
 			
 			// smoke effect for brake lock up
-			if(this.car.speed > this.maxspeed * .25) {
-				this.dropPoop();
+			if(this.car.speed > this.maxspeed * .5) {
+				if( this.car.speed < this.maxspeed * .8) {
+					this.dropSmoke();
+				}
+				if(this.car.speed > this.maxspeed * .5) {
+					this.dropRubber();
+				}
 			}
 
 			if( this.car.speed > 1) {
@@ -775,8 +844,17 @@ Game.prototype = {
 		this.keys[event.keyCode] = false;
 
 		// why not
-		if(event.key == 'd') {
-			this.dropPoop();
+		switch(event.key) {
+			case 's':
+				this.dropSmoke();
+				break;
+			case 'd':
+				this.dropRubber(1);
+				break;
+			case 'f':
+				this.debugmode = !this.debugmode;
+			case 'p':
+				console.log(this.floor);
 		}
 
 		if (event.keyCode == 65 || event.keyCode == 90) {

@@ -11,12 +11,14 @@ Game.prototype = {
 	player: 'Player1',
 	gamepad: null,
 	debugmode: false,
+	debugNode: document.querySelector('img#track-debug'),
 	canvas: null,
 	ctx : null,
 	ocvs : null,
 	octx : null,
 	selectedtrack: null,
 	car : null,
+	carUpgrades: null,
 	track : null,
 	startPosition: null,
 	racelaps : 3,
@@ -33,7 +35,7 @@ Game.prototype = {
 	// some magi numbers here
 	// max speed _should_ be set in html but just in case
 	maxspeed: 100,
-	
+	maxsteer: 0,
 	// turns the 3200px svg into a 32k image
 	// TODO: add car size
 
@@ -64,7 +66,8 @@ Game.prototype = {
 		// TODO: fix gamepad code
 		if(this.gamepad === null) {
 			window.addEventListener("gamepadconnected", function(e) {
-				console.log(e);
+				this.gamepad = navigator.getGamepads()[0];
+				console.log(this.gamepad);
 			});
 		}
 	},
@@ -82,15 +85,24 @@ Game.prototype = {
 			? document.querySelector('input[name=track]:checked') 
 			: document.querySelectorAll('input[name=track]')[randomTrack];
 		document.querySelector('#minimap .track img').src = `track/${selectedtrack.value}.svg#path`;
-
 		this.selectedtrack = selectedtrack.value;
+
 		var randomCar = Math.floor(Math.random() * 3);
 		var selectedcar = document.querySelector('input[name=car]:checked') 
 			? document.querySelector('input[name=car]:checked') 
 			: document.querySelectorAll('input[name=car]')[randomCar];
-		
-		// TODO: fix magic number
+		this.selectedcar = selectedcar.value;
+
 		this.maxspeed = parseInt(Number(selectedcar.dataset.maxspeed) / 4);
+
+		const carUpgrades = document.querySelectorAll('[name=upgrade]:checked');
+		
+		carUpgrades.forEach( (upgrade) => { 
+			
+			this.maxspeed += parseInt(upgrade.dataset.speedBoost);
+			this.maxsteer = Number(upgrade.dataset.steerBoost) || 0;
+			this.carUpgrades += ` ${upgrade.value}`;
+		});
 
 		document.querySelector('.blip').style.backgroundImage = `url('img/car/${selectedcar.value}.png')`;
 
@@ -104,9 +116,9 @@ Game.prototype = {
 		this.canvas = document.getElementById("game");
 		this.canvas.width = (this.quality && this.quality.width ? this.quality.width : 800);
 		this.canvas.height = (this.quality && this.quality.height ? this.quality.height : 600);
-		this.ctx = this.canvas.getContext("2d");
 		// lmao no more frame drop when 'dropping particles' with WebGL enabled 👯
 		WebGL2D.enable(this.canvas); 
+		this.ctx = this.canvas.getContext("2d");
 
 		// the game engine canvas: draws the #path layer to determine on/off track status
 		this.ocvs = document.createElement('canvas');
@@ -158,6 +170,7 @@ Game.prototype = {
 		// #path is only drawn off screen 
 		// here, all layers are initialized with their bg images in the correct location
 		this.gameLayers = document.querySelectorAll('.game-layer');
+
 		Array.from(this.gameLayers).map( layer => {
 			
 			switch (layer.getAttribute('layer')) {
@@ -183,9 +196,9 @@ Game.prototype = {
 			// moving to html layers instead of canvas sprites
 			layers:  {
 				container: document.querySelector('#car'),
-				car: document.querySelector('#car-sprite img'),
-				lights: document.querySelector('#car-lights img'),
-				brakelights: document.querySelector('#car-brake-lights img') 
+				car: document.querySelector('#car-sprite .car'),
+				lights: document.querySelector('#car-lights'),
+				brakelights: document.querySelector('#car-brake-lights') 
 			},
 			images: [
 				'img/car/' + selectedcar.value + '.png'
@@ -204,7 +217,10 @@ Game.prototype = {
 			sound: 'sfx/engine2.ogg'
 		});
 		
-		this.car.layers.car.src = 'img/car/' + selectedcar.value + '.png';
+		const carimg = `img/car/${selectedcar.value}.png`;
+		this.car.layers.car.style.backgroundImage = `url(${carimg})`;
+		this.car.layers.container.className = `${selectedcar.value} ${this.carUpgrades}`;
+		this.car.layers.car.querySelector('img').src = carimg;
 
 		// Particle state images
 		this.smokeImages = Array.from(document.querySelectorAll('img.smoke')).map( img => img.src);
@@ -272,27 +288,22 @@ Game.prototype = {
 		// checks center pixel in #path image on off screen canvas
 		// returns a string based on detected color
 		// depending on result, car behavior will change
-		
-		
 		if(timeStamp - this.surface.lastSnapshot > 200) {
 			this.surface.type = this.checkSurfaceType();
 			this.surface.lastSnapshot = timeStamp;
 		}
 
-		let wheresthecar = this.surface.type;
-
 		// set class to body to update HUD with yellow flag / pit limiter etc
-		let container = document.body;
-		if(!container.classList.contains(wheresthecar)) {
-			container.className = `${this.selectedtrack} ${wheresthecar}`;
-		} 
+		if(!(document.querySelector('.laptimes')).classList.contains(this.surface.type)) {
+			(document.querySelector('.laptimes')).className = `laptimes ${this.surface.type}`;
+		}
 
-		if (wheresthecar === 'track') {
+		if (this.surface.type === 'track') {
 			this.car.maxspeed = this.maxspeed; 
 			this.car.opacity = 1;
 		}
 
-		if (wheresthecar === 'offtrack') {
+		if (this.surface.type === 'offtrack') {
 			
 			// slow down until halted
 			if(this.car.speed > 0) {
@@ -301,20 +312,20 @@ Game.prototype = {
 			}  
 			
 			// draw dust clouds
-			if( this.car.speed > 2) {
+			if( this.car.speed > 20) {
 				if(!this.smokes.length || timeStamp - this.smokes[this.smokes.length - 1].spawn[2] > 1000) {
 				 this.dropSmoke();
 				}
 			}
 			
 			// allow stranded player to accelerate somewhat
-			if (this.car.speed == 5) {
+			if (this.car.speed < 5) {
 				this.car.maxspeed = 20;
 			}
 
 		}
 
-		if (wheresthecar === 'inpits pitbox') {
+		if (this.surface.type === 'inpits pitbox') {
 			if(this.car.fuel < this.car.maxfuel && this.car.speed < 2) {
 				this.car.fuel += 100;
 				
@@ -330,9 +341,11 @@ Game.prototype = {
 			}
 		}
 
-		if (wheresthecar === 'inpits') {
+		if (this.surface.type === 'inpits') {
 			this.car.maxspeed = 15; 
 		}
+
+		this.car.layers.container.className = `${this.selectedcar} ${this.carUpgrades} ${this.surface.type}`;
 
 		// draw current laptime
 		this.updateLaptime();
@@ -356,8 +369,8 @@ Game.prototype = {
 				// make it look alive				
 				smoke.angle = smoke.angle - (timeStamp - smoke.spawn[2]) / 500;
 	
-				smoke.x = this.floor.x - smoke.spawn[0] + (smoke.width / 2);
-				smoke.y = this.floor.y - smoke.spawn[1] + (smoke.width / 2);
+				smoke.x = this.floor.x - smoke.spawn[0];
+				smoke.y = this.floor.y - smoke.spawn[1];
 				smoke.width = smoke.width * 1.01;
 				smoke.height = smoke.width;
 							
@@ -384,15 +397,12 @@ Game.prototype = {
 		}
 
 		// update car sprites
-		this.car.layers.car.style.setProperty('--rotation', `${parseInt(this.car.angle)}deg`);
-		this.car.layers.lights.style.setProperty('--rotation', `${parseInt(this.car.angle)}deg`);
-		this.car.layers.brakelights.style.setProperty('--rotation', `${parseInt(this.car.angle)}deg`);
-
+		this.car.layers.container.style.setProperty('--rotation', `${parseInt(this.car.angle)}deg`)
+		
 		switch(this.car.state) {
 			default:
 			case 0:
-				this.car.layers.container.classList.remove('braking')
-				this.car.layers.container.classList.remove('pitbox');
+				this.car.layers.container.classList.remove('braking');
 				break;
 			case 1:
 				this.car.layers.container.classList.add('braking');
@@ -409,6 +419,8 @@ Game.prototype = {
 	},
 
 	dropRubber: function (opacity) {
+		if (this.surface.type === 'offtrack') return;
+
 		const lastrubber = this.rubbers[this.rubbers.length - 1];
 		if(!lastrubber || (this.lastTime - lastrubber.spawn[2] > 100)) { 
 		let rubber = new Sprite({
@@ -418,7 +430,7 @@ Game.prototype = {
 			y: this.car.y,
 			angle: this.car.angle,
 			state: 0,
-			width: 640 * (this.car.speed / this.car.maxspeed),
+			width: Math.floor(640 * (this.car.speed / this.car.maxspeed)),
 			height: 70,
 			opacity: opacity ? opacity : this.car.speed / this.car.maxspeed,
 			spawn: [this.floor.x - this.car.x, this.floor.y - this.car.y, this.lastTime],
@@ -436,8 +448,8 @@ Game.prototype = {
 			let smoke = new Sprite({
 				name: `smoke-${this.smokes.length}`,
 				images: this.smokeImages,
-				x: this.car.x,
-				y: this.car.y,
+				x: this.floor.x - (this.car.x - this.car.width),
+				y: this.floor.y - (this.car.y - this.car.height),
 				angle: 20 - Math.random() * 40 + (this.car.angle + 90),
 				state: Math.floor(Math.random() * 10),
 				width: 128,
@@ -487,66 +499,44 @@ Game.prototype = {
 		// the on-screen canvas, I'm now just setting those layers as css background-images
 		// and simply translate the background position on the relevant html elements. 
 		// see index.html (div.game-container)
-		if(this.debugmode) {
-			console.time("get image time");
-		}
+		
 		var image = this.octx.getImageData(this.ocvs.width/2, this.ocvs.height/2, 1,1);
-		if(this.debugmode) {
-			console.timeLog("get image time");
-		}
-		var pixel1 = image.data[0];
-		var pixel2 = image.data[1];
-		var pixel3 = image.data[2];
-		if(this.debugmode) {
-			console.timeEnd("get image time");
-			console.log('---');
-		}
 		
 		// DEBUG PREVIEW
 		// creates a snapshot of the path canvas and adds it to the DOM
-		// uncomment the code below to inspect the snapshot
+		
 		if(this.debugmode) {
-			let debugElement = document.querySelector('img#debugsnapshot');
-			if(! debugElement ) {
-				var el = document.createElement('img');
-				el.id = 'debugsnapshot';
-				el.src = this.ocvs.toDataURL("image/png");
-				document.body.appendChild(el);
-				el.style.opacity = .5;
-			} else {
-				debugElement.src = this.ocvs.toDataURL("image/png");
-			}
+			this.debugNode.style.opacity = .5;
+			this.debugNode.src = this.ocvs.toDataURL("image/png");
 		} else {
-			let debugElement = document.querySelector('img#debugsnapshot');
-			if( debugElement ) {
-				debugElement.parentElement.removeChild(debugElement);
-			}
+			this.debugNode.style.opacity = 0;
 		}
 
+		// transparent: offtrack
+		if (image.data[3] === 0) return 'offtrack';
+
 		// green: on track
-		if (pixel1 === 0 && pixel2 === 255 && pixel3 === 0) { 
+		if (image.data[0] === 0 && image.data[1] === 255 && image.data[2] === 0) { 
 			return 'track';
 		}
 
-		// red: trigger lap timer by hitting red start/finish line rect (see track.svg#path)
-		if(pixel1 === 255 && pixel2 === 0 && pixel3 === 0) {
+		// red: trigger lap timer
+		if(image.data[0] === 255 && image.data[1] === 0 && image.data[2] === 0) {
 			this.setLapTime();
 		}
 
 		// blue: in pits / paddock
-		if (pixel1 === 0 && pixel2 === 0 && pixel3 === 255 ) { 
+		if (image.data[0] === 0 && image.data[1] === 0 && image.data[2] === 255 ) { 
 			return 'inpits';
 		}
 		
 		// purple: in pit box (refueling spot)
-		if (pixel1 === 255 && pixel2 === 0 && pixel3 === 255 ) { 
-			return 'inpits pitbox';
+		if (image.data[0] === 255 && image.data[1] === 0 && image.data[2] === 255 ) {
+			if(this.car.speed === 0) {
+				return 'inpits pitbox';
+			}
 		}
 
-		// transparent / black: off track
-		if (pixel1 === 0 && pixel2 === 0 && pixel3 === 0) {
-			return 'offtrack';
-		}
 	},
 
 	setLapTime: function () {
@@ -578,7 +568,14 @@ Game.prototype = {
 		var best = laptimes.slice(0);
 		best.sort();
 		
-		document.querySelector('.laps').innerHTML = `${laptimes.length ? laptimes.length : 1} / ${this.racelaps}`;
+		const currentLap = laptimes.length 
+			? laptimes.length >=this.racelaps
+				? this.racelaps
+				: laptimes.length + 1
+			: 1;
+			
+
+		document.querySelector('.laps').innerHTML = `${currentLap} / ${this.racelaps}`;
 		document.querySelector('.best').innerHTML = best[0] ? best[0] : '-:--.---';
 		document.querySelector('.last').innerHTML = last ? last : '-:--.---';
 
@@ -683,14 +680,13 @@ Game.prototype = {
 			}
 			// update world layers
 			layer.style.backgroundPosition = layerBGPos;
-			
 		});
 	},
 
 	checkGamepad : function () {
 		
 		try {
-			// this.gamepad = navigator.getGamepads()[0];
+			this.gamepad = navigator.getGamepads()[0];
 		} catch (e) {
 			console.log(e);
 		}
@@ -738,7 +734,7 @@ Game.prototype = {
 				}
 
 				if (this.car.speed <= 0) {
-					this.car.speed -= 1;
+					this.car.speed = 0;
 				}
 			}
 
@@ -766,7 +762,6 @@ Game.prototype = {
 			} 
 			
 			if (this.car.speed > this.car.maxspeed) {
-				// todo check for offtrack status and dramatically increase deceleration
 				this.car.speed -= Number(this.car.speed * 0.01).toFixed(2);
 			}
 
@@ -810,21 +805,23 @@ Game.prototype = {
 
 		// steering
 		if (this.keys[37]) {
+			this.car.layers.car.classList.add('steer-left');
 			if(Math.floor(this.car.speed) !== 0) {
 				if( this.car.speed > 20) {
-					this.car.angle -= (40 / this.car.speed) * 2;
+					this.car.angle -= (40 / this.car.speed) * 2 + this.maxsteer;
 				} else {
-					this.car.angle -= 2;
+					this.car.angle -= (2 + this.maxsteer);
 				}
 			}
 			
 		}
 		if (this.keys[39]) {
+			this.car.layers.car.classList.add('steer-right');
 			if(Math.floor(this.car.speed) !== 0) {
 				if(this.car.speed > 20) {
-					this.car.angle += (40 / this.car.speed) * 2;
+					this.car.angle += (40 / this.car.speed) * 2 + this.maxsteer;
 				} else {
-					this.car.angle += 2;
+					this.car.angle += (2  + this.maxsteer);
 				}
 			}
 		}
@@ -842,7 +839,8 @@ Game.prototype = {
 	keyup_handler : function (event) {
 		 
 		this.keys[event.keyCode] = false;
-
+		this.car.layers.car.classList.remove('steer-left');
+		this.car.layers.car.classList.remove('steer-right');
 		// why not
 		switch(event.key) {
 			case 's':
@@ -853,6 +851,7 @@ Game.prototype = {
 				break;
 			case 'f':
 				this.debugmode = !this.debugmode;
+				break;
 			case 'p':
 				console.log(this.floor);
 		}
@@ -922,6 +921,7 @@ window.addEventListener("change", function (e) {
 	}
 
 	if(e.target.name === 'track') {
+
 		trackpreview.className = 'track-preview ' + e.target.value;
 		trackpreview.style.backgroundImage = 
 			`url('track/${e.target.value}.svg#track'), url('track/${e.target.value}.svg#world')`

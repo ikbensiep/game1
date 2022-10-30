@@ -13,7 +13,7 @@ Sound.prototype = {
 	audioCtx: null,
 	sourceBuffer: null,
 	gainNode: null,
-    gain: 0,
+  gain: 0,
 	interval: null,
 
 	init: function () {

@@ -16,10 +16,7 @@
 	<link rel="stylesheet" href="css/menu.css">
 	<link href="//fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-	<script type="text/javascript" src="js/webgl-2d.js"></script>
-	<script type="text/javascript" src="js/sprite.js"></script>
-	<script type="text/javascript" src="js/sfx-engine.js"></script>
-	<script type="text/javascript" src="js/game2.js"></script>
+	
 
 </head>
 <body unresolved>
@@ -34,13 +31,6 @@
 		<div class="track-preview barcelona" style="background-image: url('track/barcelona.svg#track'), url('track/barcelona.svg#world');">
 			<div class="car-preview">
 			</div>
-			<div class="garage">
-				<section class="front"></section>
-				<section class="back"></section>
-				<section class="left"></section>
-				<section class="right"></section>
-				<section class="roof"></section>
-			</div>
 		</div>
 	</div>
 	<form action="#" onsubmit="return false;">
@@ -52,12 +42,15 @@
 				<input type="radio" required name="car" id="car2" value="lamborghini" data-maxspeed="220"><label for="car2">Lamborghini</label>
 				<input type="radio" required name="car" id="car3" value="ferrari" data-maxspeed="210"><label for="car3">Ferrari</label>
 				<input type="radio" required name="car" id="car4" value="mercedes-DTM" data-maxspeed="240"><label for="car4">Mercedes DTM</label>
+				<hr />
+				<input type="radio" name="upgrade" id="wing-1" value="wing-1" data-speed-boost="2" data-steer-boost="0.5"/><label for="wing-1">GT2 wing</label>
+				<input type="radio" name="upgrade" id="wing-2" value="wing-2" data-speed-boost="2" data-steer-boost="1" /><label for="wing-2">GT3 wing</label>
 			</fieldset>
 
 			<input type="radio" name="option" value="2" id="track-select" checked><label for="track-select"><i class="fa fa-flag-checkered"></i> Track</label>
 			<fieldset>
 				<!-- <legend>Track</legend> -->
-				<input type="radio" name="track" id="track7" value="assen" data-start="[-1200, 6000]" data-angle="330">
+				<input type="radio" name="track" id="track7" value="assen" data-start="[-5900, 9650]" data-angle="310">
 				<label for="track7"><i class="fa">🇳🇱</i>Assen</label>
 				<input type="radio" name="track" id="track8" value="austin" data-start="[10250, -7300]" data-angle="60">
 				<label for="track8"><i class="fa">🇺🇸</i>Austin</label>
@@ -98,19 +91,15 @@
 		<div class='game-layer' layer='track'></div>
 		<canvas id="game" width="1024" height="768"></canvas>
 		<div id="car">
-			<div id="car-sprite"><img src="/img/car/porsche.png" /></div>
+			<div id="car-sprite">
+				<div class="car"><img src="/img/car/porsche.png" /></div>
+			</div>
 			<div id="car-lights"><img src="/img/car/car-lights.png" /></div>
 			<div id="car-brake-lights"><img src="/img/car/car-brake-lights.png" /></div>
 		</div>
 		<div class='game-layer' layer='elevated'></div>
 		<div class='game-layer' layer='clouds'></div>
 	</div>
-
-	<output id="speedometer">
-		<div class="needle speed"></div>
-		<span>00</span>
-		<div class="needle fuel" data-gauge-type="F"></div>
-	</output>
 
 	<ol class="laptimes">
 		<li class="laps"></li>
@@ -119,6 +108,19 @@
 		<li class="last" label="last"></li>
 		<li class="fps" fps="0"></li>
 	</ol>
+
+	<output id="speedometer">
+		<div class="needle speed"></div>
+		<span>00</span>
+		<div class="needle fuel" data-gauge-type="F"></div>
+	</output>
+
+	<div class="trackmap" id="minimap">
+		<div class="track">
+			<img src="track/barcelona.svg#path" alt="track map">
+		</div>
+		<div class="blip"></div>
+	</div>
 
 	<ol class="help">
 		<li>
@@ -135,13 +137,6 @@
 		</dl>
 		</li>
 	</ol>
-
-	<div class="trackmap" id="minimap">
-		<div class="track">
-			<img src="track/barcelona.svg#path" alt="track map">
-		</div>
-		<div class="blip"></div>
-	</div>
 
 	<div class="preload" style="display:none">
 
@@ -171,8 +166,11 @@
 		<img src="/img/smoke/smoke8.png" class="smoke"/>
 		<img src="/img/smoke/smoke9.png" class="smoke"/>
 		<img src="/img/smoke/smoke10.png" class="smoke"/>
-
-
 	</div>
+	<img id="track-debug" />
+	<script type="text/javascript" src="js/webgl-2d.js"></script>
+	<script type="text/javascript" src="js/sprite.js"></script>
+	<script type="text/javascript" src="js/sfx-engine.js"></script>
+	<script type="text/javascript" src="js/game2.js"></script>
 </body>
 </html>

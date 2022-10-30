@@ -4,14 +4,18 @@
         <title>Track inspector</title>
         <style>
             body {
-                height: 100;
-                overflow: hidden;
+                height: 100vh;
+                width: 100vw;
+                padding: 0;
+                margin: 0;
             }
+
             form {
                 flex: 0 1 30em;
-                position: sticky;
+                position: fixed;
                 z-index: 1;
             }
+
             label {
                 line-height: 2em;
                 cursor: pointer;
@@ -22,22 +26,20 @@
             }
 
             img {
-                width: 100%;
+                width: 32000px;
+                height: 32000px;
             }
 
             div { 
                 perspective: 750px; 
-                position: absolute;
+                position: fixed;
                 left: 0;
                 top: 0;
                 right: 0;
                 bottom: 0;
+                overflow: auto;
             }
             div>img { 
-                position: absolute; 
-                right: 0;
-                right: 20%;
-                max-width: 100vh;
                 transition: transform .5s, all .2s;
             }
 

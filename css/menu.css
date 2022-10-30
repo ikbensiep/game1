@@ -240,23 +240,14 @@ body[race-start] #minimap {
 	opacity: 1;
 	transform-style: preserve-3d;
 	transition: opacity 3s 1s, transform 2s 1s;
-	transform: rotateX(20deg) rotateZ(0deg) translateY(-70%);
-}
-
-.world:after {
-	content: '';
-	position: absolute;
-	height: 100%;
-	width: 100%;
-	background: white;
-	z-index: 2;
+	transform: rotateX(20deg) rotateZ(0deg) translateY(-10%);
 }
 
 .track-preview {
 	background-position: 50% 0;
 	background-size: 113%;
 	background-repeat: no-repeat;
-	height: 400vh;
+	height: 100%;
 	transform: rotateX(40deg) translateZ(220px) translateY(-30%) rotateZ(-70deg);
 	transform-style: preserve-3d;
 	transform-origin: center;
@@ -322,108 +313,19 @@ body[race-start] #minimap {
 	background-size: 50%;
 }
 
-.track-preview.sochi {
-	background-size: 50%;
-}
-
 .car-preview {
 	position: absolute;
-	animation: grid 20s linear infinite;
-	transform: rotate(var(--rotation));
+	width: 640px;
+	height: 440px;
 	--rotation: 0deg;		
+	transform: rotate(var(--rotation));
 }
 
-.car-preview img {
-	width: 620px;
-}
+.car-preview.porsche {background-image: url('/img/car/porsche.png');}
+.car-preview.ferrari {background-image: url('/img/car/ferrari.png');}
+.car-preview.lamborghini {background-image: url('/img/car/lamborghini.png');}
+.car-preview.mercedes-DTM {background-image: url('/img/car/mercedes-DTM.png');}
 
-.garage {
-	background: #333;
-	visibility: visible;
-	width: 304px;
-	height: 50px;
-	position: absolute;
-	left: 38%;
-	top: 48.5%;
-	transform-origin: left;
-	transform: rotate(1.3deg);
-	transform-style: preserve-3d;
-	box-shadow: 0 0 5px black;
-}
-
-.barcelona .garage {transform: rotate(32deg) translateX(200px) translateY(33px) scale(0.8);}
-.barcelona .car-preview { transform:rotate(var(--rotation)); --rotation: 32deg;}
-
-.interlagos .garage {
-	transform: rotate(1deg) translate(50px, 109px);
-}
-
-.abu-dhabi .garage { transform: translateX(-604px) translateZ(0px) translateY(-350px) rotateZ(48deg);}
-.abu-dhabi .car-preview { transform: translateX(-850%) rotate(50deg);}
-
-.hockenheim .garage {
-    left: 17%;
-    top: 75%;
-    transform: rotate(45deg) translateX(-150px) translateY(-10px);
-}
-
-.sochi .garage {
-	transform: rotate(18deg) translateY(1220px) translateX(1410px);
-	transform-origin: bottom;
-}
-.monza .garage {
-	top: 78%;
-	transform: rotate(30deg) translate(0,30px);
-}
-
-.front,
-.back {
-	position: absolute;
-	width: 100%;
-	height: 29px;
-	transform: rotateX(-90deg);
-	transform-origin: left bottom;
-}
-
-.left,
-.right {
-	position: absolute;
-	height: 44px;
-	width: 27px;
-	transform: rotateX(0deg) rotateY(-270deg) translateY(7px) translateZ(-30px);
-	background: rgb(100, 100, 100);
-	left: 3px;
-	top: 0;
-	transform-origin: right;
-}
-
-.front {
-	top: 42%;
-	background-image: url(../img/pit-texture.png);
-	background-position: left bottom;
-	background-repeat: repeat-x;
-	background-size: 34%, 100%;
-	background-color: red;
-}
-.back {
-	top: 16%;
-	background-image: url(../img/pit-texture.png);
-	background-position: left bottom, left top;
-	background-repeat: repeat-x;
-	background-size: 34%, 100%;
-}
-.right {
-	transform: rotateX(0deg) rotateY(-270deg) translateY(6px) translateZ(274px) translateX(0);
-}
-
-.roof {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	background: #555;
-	transform: translateZ(27px);
-	/*! opacity: .5; */
-}
 body.pause .track-preview {
 	animation: none;
 }
@@ -535,24 +437,6 @@ i.fa {
 	right: calc(50vw - 5em);
 }
 
-.ui-hint button[data-comingsoon]:after {
-	opacity: 0;
-}
-
-button[data-comingsoon]:after {
-	content: "Coming soon!";
-	color: #2EAD3B;
-	background: #f3f3f3;
-	opacity: 0.5;
-	position: fixed;
-	right: 0;
-	top: -3em;
-	opacity: 0;
-	padding: 0.5ex 1ex 0.97ex;
-	border-radius: 0.5ex;
-	animation: slidein .5s .25s 10 alternate cubic-bezier(0, 1.05, 0.58, 1);
-}
-
 @keyframes fade {
 	to {
 		opacity: 1;
@@ -579,17 +463,6 @@ button[data-comingsoon]:after {
 	}
 	to {
 		/*! transform: rotateX(60deg) rotateZ(360deg) translateZ(50px) translateY(20%); */
-	}
-}
-
-@keyframes grid {
-	from {
-		/*! left: 35%; */
-		transform: rotate(var(--rotation)) translateX(0) translateY(0);
-	}
-
-	to {
-		transform: rotate(var(--rotation)) translateX(200%) translateY(0);
 	}
 }
 

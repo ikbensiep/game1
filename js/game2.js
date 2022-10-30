@@ -86,13 +86,12 @@ Game.prototype = {
 			: document.querySelectorAll('input[name=track]')[randomTrack];
 		document.querySelector('#minimap .track img').src = `track/${selectedtrack.value}.svg#path`;
 		this.selectedtrack = selectedtrack.value;
-
 		var randomCar = Math.floor(Math.random() * 3);
 		var selectedcar = document.querySelector('input[name=car]:checked') 
 			? document.querySelector('input[name=car]:checked') 
 			: document.querySelectorAll('input[name=car]')[randomCar];
 		this.selectedcar = selectedcar.value;
-
+		// TODO: fix magic number
 		this.maxspeed = parseInt(Number(selectedcar.dataset.maxspeed) / 4);
 
 		const carUpgrades = document.querySelectorAll('[name=upgrade]:checked');
@@ -170,7 +169,6 @@ Game.prototype = {
 		// #path is only drawn off screen 
 		// here, all layers are initialized with their bg images in the correct location
 		this.gameLayers = document.querySelectorAll('.game-layer');
-
 		Array.from(this.gameLayers).map( layer => {
 			
 			switch (layer.getAttribute('layer')) {
@@ -398,7 +396,7 @@ Game.prototype = {
 
 		// update car sprites
 		this.car.layers.container.style.setProperty('--rotation', `${parseInt(this.car.angle)}deg`)
-		
+
 		switch(this.car.state) {
 			default:
 			case 0:
@@ -420,7 +418,6 @@ Game.prototype = {
 
 	dropRubber: function (opacity) {
 		if (this.surface.type === 'offtrack') return;
-
 		const lastrubber = this.rubbers[this.rubbers.length - 1];
 		if(!lastrubber || (this.lastTime - lastrubber.spawn[2] > 100)) { 
 		let rubber = new Sprite({
@@ -921,7 +918,6 @@ window.addEventListener("change", function (e) {
 	}
 
 	if(e.target.name === 'track') {
-
 		trackpreview.className = 'track-preview ' + e.target.value;
 		trackpreview.style.backgroundImage = 
 			`url('track/${e.target.value}.svg#track'), url('track/${e.target.value}.svg#world')`
